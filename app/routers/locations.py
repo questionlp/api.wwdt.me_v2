@@ -4,7 +4,7 @@
 """FastAPI locations router module for api.wwdt.me"""
 
 from app.dependencies import API_VERSION, load_config
-from typing import List, Optional, Union
+from typing import List, Optional
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
@@ -14,17 +14,17 @@ from wwdtm.location import details, info
 #region Location Models
 class Location(BaseModel):
     id: int
-    city: Optional[str]
-    state: Optional[str]
+    city: Optional[str] = None
+    state: Optional[str] = None
     venue: str
-    slug: str
+    slug: Optional[str] = None
 
 class Locations(BaseModel):
     locations: List[Location]
 
 class LocationRecordingCounts(BaseModel):
-    regular_shows: Optional[int]
-    all_shows: Optional[int]
+    regular_shows: Optional[int] = None
+    all_shows: Optional[int] = None
 
 class LocationRecordingShow(BaseModel):
     show_id: int
@@ -33,11 +33,11 @@ class LocationRecordingShow(BaseModel):
     repeat_show: bool
 
 class LocationRecordings(BaseModel):
-    count: Optional[LocationRecordingCounts]
-    shows: Optional[List[LocationRecordingShow]]
+    count: Optional[LocationRecordingCounts] = None
+    shows: Optional[List[LocationRecordingShow]] = None
 
 class LocationDetails(Location):
-    recordings: Optional[LocationRecordings]
+    recordings: Optional[LocationRecordings] = None
 
 class LocationsDetails(BaseModel):
     locations: List[LocationDetails]

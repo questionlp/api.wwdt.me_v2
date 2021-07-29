@@ -7,9 +7,7 @@ from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import RedirectResponse
 
-from wwdtm import VERSION as wwdtm_version
-
-from app.dependencies import API_VERSION, APP_VERSION
+from app.dependencies import APP_VERSION
 from app.metadata import tags_metadata
 from app.routers import (guests,
                          hosts,
@@ -17,6 +15,7 @@ from app.routers import (guests,
                          panelists,
                          scorekeepers,
                          shows,
+                         version
                          )
 
 app = FastAPI()
@@ -27,7 +26,7 @@ def custom_openapi():
 
     openapi_schema = get_openapi(
         title="Wait Wait Stats API",
-        version=API_VERSION,
+        version=APP_VERSION,
         description="OpenAPI schema for the Wait Wait Don't Tell Me! Stats API",
         routes=app.routes,
         tags=tags_metadata
@@ -40,6 +39,8 @@ app.openapi = custom_openapi
 app.include_router(guests.router)
 app.include_router(hosts.router)
 app.include_router(locations.router)
+
+app.include_router(version.router)
 
 #region Routes
 @app.get("/", include_in_schema=False,

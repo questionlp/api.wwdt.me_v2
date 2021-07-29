@@ -15,7 +15,7 @@ from wwdtm.guest import details, info
 class Guest(BaseModel):
     id: int
     name: str
-    slug: str
+    slug: Optional[str] = None
 
 class Guests(BaseModel):
     guests: List[Guest]
@@ -29,15 +29,15 @@ class GuestAppearance(BaseModel):
     date: str
     best_of: bool
     repeat_show: bool
-    score: Optional[int]
+    score: Optional[int] = None
     score_exception: bool
 
 class GuestAppearances(BaseModel):
     count: Union[GuestAppearanceCounts, int]
-    shows: Optional[List[GuestAppearance]]
+    shows: Optional[List[GuestAppearance]] = None
 
 class GuestDetails(Guest):
-    appearances: Optional[GuestAppearances]
+    appearances: Optional[GuestAppearances] = None
 
 class GuestsDetails(BaseModel):
     guests: List[GuestDetails]

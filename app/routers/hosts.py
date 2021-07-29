@@ -15,8 +15,8 @@ from wwdtm.host import details, info
 class Host(BaseModel):
     id: int
     name: str
-    slug: str
-    gender: Optional[str]
+    slug: Optional[str] = None
+    gender: Optional[str] = None
 
 class Hosts(BaseModel):
     hosts: List[Host]
@@ -34,10 +34,10 @@ class HostAppearance(BaseModel):
 
 class HostAppearances(BaseModel):
     count: Union[HostAppearanceCounts, int]
-    shows: Optional[List[HostAppearance]]
+    shows: Optional[List[HostAppearance]] = None
 
 class HostDetails(Host):
-    appearances: Optional[HostAppearances]
+    appearances: Optional[HostAppearances] = None
 
 class HostsDetails(BaseModel):
     hosts: List[HostDetails]
