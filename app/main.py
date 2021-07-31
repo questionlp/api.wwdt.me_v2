@@ -8,28 +8,31 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.responses import RedirectResponse
 
 from app.dependencies import APP_VERSION
-from app.metadata import tags_metadata
+from app.metadata import api_metadata, tags_metadata
 from app.routers import (guests,
                          hosts,
                          locations,
                          panelists,
                          scorekeepers,
                          shows,
-                         version
+                         version,
                          )
 
-app = FastAPI()
+app = FastAPI(
+    title=api_metadata["title"],
+    description=api_metadata["description"],
+)
 
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
 
     openapi_schema = get_openapi(
-        title="Wait Wait Stats API",
+        title=api_metadata["title"],
         version=APP_VERSION,
-        description="OpenAPI schema for the Wait Wait Don't Tell Me! Stats API",
+        description=api_metadata["description"],
         routes=app.routes,
-        tags=tags_metadata
+        tags=tags_metadata,
     )
 
     app.openapi_schema = openapi_schema

@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2018-2021 Linh Pham
 # api.wwdt.me is relased under the terms of the Apache License 2.0
-"""FastAPI app version router module for api.wwdt.me"""
+"""API routes for Application Version endpoints"""
 
 from app.dependencies import API_VERSION, APP_VERSION
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from wwdtm import VERSION as wwdtm_version
 
 #region Version Models
 class Version(BaseModel):
-    api: str
-    app: str
-    wwdtm: str
+    """Wait Wait Stats API and Application Version Information"""
+    api: str = Field(title="Wait Wait Stats API Version")
+    app: str = Field(title="Application Version")
+    wwdtm: str = Field(title="wwdtm Version")
 
 #endregion
 
@@ -22,10 +23,11 @@ router = APIRouter(
 
 #region Routes
 @router.get("/",
-            summary="Get API and Application Version Information",
+            summary="Retrieve Wait Wait Stats API and Application Version Information",
             response_model=Version, tags=["Version"])
 async def get_version():
-    """Retrurn API, application and wwdtm library version infromation"""
+    """Retrieve Wait Wait Stats API version, application version, and
+    wwdtm library version"""
     return {
         "api": API_VERSION,
         "app": APP_VERSION,

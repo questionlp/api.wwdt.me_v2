@@ -1,46 +1,61 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2018-2021 Linh Pham
 # api.wwdt.me is relased under the terms of the Apache License 2.0
-"""FastAPI locations router module for api.wwdt.me"""
+"""API routes for Locations endpoints"""
 
 from app.dependencies import API_VERSION, load_config
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import BaseModel
+from pydantic import BaseModel, constr, Field, PositiveInt
 from wwdtm.location import details, info
 
 #region Location Models
 class Location(BaseModel):
-    id: int
-    city: Optional[str] = None
-    state: Optional[str] = None
-    venue: str
-    slug: Optional[str] = None
+    """Location Information"""
+    id: PositiveInt = Field(title="Location ID")
+    city: Optional[str] = Field(default=None,
+                                title="City")
+    state: Optional[str] = Field(default=None,
+                                 title="State")
+    venue: str = Field(title="Venue Name")
+    slug: Optional[str] = Field(default=None,
+                                title="Location Slug String")
 
 class Locations(BaseModel):
-    locations: List[Location]
+    """List of Locations"""
+    locations: List[Location] = Field(title="List of Locations")
 
 class LocationRecordingCounts(BaseModel):
-    regular_shows: Optional[int] = None
-    all_shows: Optional[int] = None
+    """Count of Recordings for a Location"""
+    regular_shows: Optional[PositiveInt] = Field(default=None,
+                                                 title="Count of Regular Show Recordings")
+    all_shows: Optional[PositiveInt] = Field(default=None,
+                                             title="Count of All Show Recordings")
 
 class LocationRecordingShow(BaseModel):
-    show_id: int
-    date: str
-    best_of: bool
-    repeat_show: bool
+    """Location Recording Information"""
+    show_id: PositiveInt = Field(title="Show ID")
+    date: str = Field(title="Show Date")
+    best_of: bool = Field(title="Best Of Show")
+    repeat_show: bool = Field(title="Repeat Show")
 
 class LocationRecordings(BaseModel):
-    count: Optional[LocationRecordingCounts] = None
-    shows: Optional[List[LocationRecordingShow]] = None
+    """Loation Information and Recordings"""
+    count: Optional[LocationRecordingCounts] = Field(default=None,
+                                                     title="Count of Show Recordings")
+    shows: Optional[List[LocationRecordingShow]] = Field(default=None,
+                                                         title="List of Show Recordings")
 
 class LocationDetails(Location):
-    recordings: Optional[LocationRecordings] = None
+    """Location Information with Recordings"""
+    recordings: Optional[LocationRecordings] = Field(default=None,
+                                                     title="List of Show Recordings")
 
 class LocationsDetails(BaseModel):
-    locations: List[LocationDetails]
+    """List of Location Details"""
+    locations: List[LocationDetails] = Field(title="List of Location Details")
 
 #endregion
 
@@ -52,10 +67,13 @@ _database_connection = mysql.connector.connect(**_app_config)
 _database_connection.autocommit = True
 
 #region Routes
-@router.get("/", summary="Get Information for All Locations",
+@router.get("/", summary="Retrieve Information for All Locations",
             response_model=Locations, tags=["Locations"])
 async def get_locations():
-    """Retrieve a list of all Locations"""
+    """Retrieve an array of Location objects, each containing:
+    Location ID, city, state, venue, and slug string.
+
+    Results are sorted by: city, state, venue name."""
     try:
         _database_connection.reconnect()
         locations = info.retrieve_all(_database_connection)
@@ -73,10 +91,14 @@ async def get_locations():
 
 
 @router.get("/recordings",
-            summary="Get Information and Recordings for All Locations",
+            summary="Retrieve Information and Recordings for All Locations",
             response_model=LocationsDetails, tags=["Locations"])
 async def get_locations_details():
-    """Retrieve a list of all Locations and their recordings"""
+    """Retrieve an array of Location objects, each containing:
+    Location ID, city, state, venue, slug string, and an array of
+    recordings.
+
+    Results are sorted by: city, state, venue name."""
     try:
         _database_connection.reconnect()
         locations = details.retrieve_all_recordings(_database_connection)
@@ -94,10 +116,11 @@ async def get_locations_details():
 
 
 @router.get("/{location_id}",
-            summary="Get Information by Location ID",
+            summary="Retrieve Information by Location ID",
             response_model=Location, tags=["Locations"])
-async def get_location_by_id(location_id: int):
-    """Retrieve Location information for a given Location ID"""
+async def get_location_by_id(location_id: PositiveInt):
+    """Retrieve a Location object, based on Location ID, containing:
+    Location ID, city, state, venue, and slug string."""
     try:
         _database_connection.reconnect()
         location_info = info.retrieve_by_id(location_id, _database_connection)
@@ -116,11 +139,14 @@ async def get_location_by_id(location_id: int):
 
 
 @router.get("/{location_id}/recordings",
-            summary="Get Information and Recordings by Location ID",
+            summary="Retrieve Information and Recordings by Location ID",
             response_model=LocationDetails, tags=["Locations"])
-async def get_location_recordings_by_id(location_id: int):
-    """Retrieve Location information and recordings for a given Location
-    ID"""
+async def get_location_recordings_by_id(location_id: PositiveInt):
+    """Retrieve a Location object, based on Location ID, containing:
+    Location ID, city, state, venue, slug string, and an array of
+    recordings.
+
+    Recordings are sorted by show date."""
     try:
         _database_connection.reconnect()
         location_recordings = details.retrieve_recordings_by_id(location_id,
@@ -140,10 +166,11 @@ async def get_location_recordings_by_id(location_id: int):
 
 
 @router.get("/slug/{location_slug}",
-            summary="Get Information by Location Slug String",
+            summary="Retrieve Information by Location Slug String",
             response_model=Location, tags=["Locations"])
-async def get_location_by_slug(location_slug: str):
-    """Retrieve Location information for a given Location slug string"""
+async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
+    """Retrieve a location object, based on Location slug string,
+    containing: Location ID, city, state, venue, and slug string."""
     try:
         _database_connection.reconnect()
         location_info = info.retrieve_by_slug(location_slug, _database_connection)
@@ -162,11 +189,14 @@ async def get_location_by_slug(location_slug: str):
 
 
 @router.get("/slug/{location_slug}/recordings",
-            summary="Get Information and Recordings by Location Slug String",
+            summary="Retrieve Information and Recordings by Location Slug String",
             response_model=LocationDetails, tags=["Locations"])
-async def get_location_recordings_by_slug(location_slug: str):
-    """Retrieve Location information and recordings for a given
-    Location slug string"""
+async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace = True)):
+    """Retrieve a Location object, based on Location slug string,
+    containing: Location ID, city, state, venue, slug string, and an
+    array of recordings.
+
+    Recordings are sorted by show date."""
     try:
         _database_connection.reconnect()
         location_details = details.retrieve_recordings_by_slug(location_slug,

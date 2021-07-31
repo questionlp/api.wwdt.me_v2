@@ -1,46 +1,60 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2018-2021 Linh Pham
 # api.wwdt.me is relased under the terms of the Apache License 2.0
-"""FastAPI guests router module for api.wwdt.me"""
+"""API routes for Not My Job Guests endpoints"""
 
 from app.dependencies import API_VERSION, load_config
 from typing import List, Optional, Union
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import BaseModel
+from pydantic import BaseModel, constr, Field, PositiveInt
 from wwdtm.guest import details, info
 
 #region Models
 class Guest(BaseModel):
-    id: int
-    name: str
-    slug: Optional[str] = None
+    """Not My Job Guest Information"""
+    id: PositiveInt = Field(title="Guest ID")
+    name: str = Field(title="Guest Name")
+    slug: Optional[str] = Field(default=None,
+                                title="Guest Slug String")
 
 class Guests(BaseModel):
-    guests: List[Guest]
+    """List of Not My Job Guests"""
+    guests: List[Guest] = Field(title="List of Guests")
 
 class GuestAppearanceCounts(BaseModel):
-    regular_shows: int
-    all_shows: int
+    """Count of Show Appearances"""
+    regular_shows: Optional[PositiveInt] = Field(default=None,
+                                                 title="Count of Regular Show Appearances")
+    all_shows: Optional[PositiveInt] = Field(default=None,
+                                             title="Count of All Show Appearances")
 
 class GuestAppearance(BaseModel):
-    show_id: int
-    date: str
-    best_of: bool
-    repeat_show: bool
-    score: Optional[int] = None
-    score_exception: bool
+    """Appearance Information"""
+    show_id: PositiveInt = Field(title="Show ID")
+    date: str = Field(title="Show Date")
+    best_of: bool = Field(title="Best Of Show")
+    repeat_show: bool = Field(title="Repeat Show")
+    score: Optional[PositiveInt] = Field(default=None,
+                                         title="Guest Score")
+    score_exception: bool = Field(title="Guest Scoring Exception")
 
 class GuestAppearances(BaseModel):
-    count: Union[GuestAppearanceCounts, int]
-    shows: Optional[List[GuestAppearance]] = None
+    """Not My Job Guest Appearances Information"""
+    count: Union[GuestAppearanceCounts,
+                 PositiveInt] = Field(title="Count of Show Appearances")
+    shows: Optional[List[GuestAppearance]] = Field(default=None,
+                                                   title="List of Show Appearances")
 
 class GuestDetails(Guest):
-    appearances: Optional[GuestAppearances] = None
+    """Not My Job Guest Information with Appearances"""
+    appearances: Optional[GuestAppearances] = Field(default=None,
+                                                    title="List of Show Appearances")
 
 class GuestsDetails(BaseModel):
-    guests: List[GuestDetails]
+    """List of Not My Job Guest Details"""
+    guests: List[GuestDetails] = Field(title="List of Guest Details")
 
 #endregion
 
@@ -53,10 +67,13 @@ _database_connection.autocommit = True
 
 #region Routes
 @router.get("/",
-            summary="Get Information for All Not My Job Guests",
+            summary="Retrieve Information for All Not My Job Guests",
             response_model=Guests, tags=["Guests"])
 async def get_guests():
-    """Retrieve a list containing information all Not My Job Guests"""
+    """Retrieve an array of Not My Job Guest objects, each containing:
+    Guest ID, name and slug string.
+
+    Results are sorted by guest name."""
     try:
         _database_connection.reconnect()
         guests = info.retrieve_all(_database_connection)
@@ -74,11 +91,14 @@ async def get_guests():
 
 
 @router.get("/details",
-            summary="Get Information and Appearances for All Not My Job Guests",
+            summary="Retrieve Information and Appearances for All Not My Job Guests",
             response_model=GuestsDetails, tags=["Guests"])
 async def get_guests_details():
-    """Retrieve a list containing information and appearances for all
-    Not My Job Guests"""
+    """Retrieve an array of Not My Job Guest objects, each containing:
+    Guest ID, name, slug string and their appearance details.
+
+    Results are sorted by guest name, with guest apperances sorted
+    by show date."""
     try:
         _database_connection.reconnect()
         guests = details.retrieve_all(_database_connection)
@@ -96,10 +116,11 @@ async def get_guests_details():
 
 
 @router.get("/{guest_id}",
-            summary="Get Information by Not My Job Guest ID",
+            summary="Retrieve Information by Not My Job Guest ID",
             response_model=Guest, tags=["Guests"])
-async def get_guest_by_id(guest_id: int):
-    """Retrieve information for a given Not My Job Guest ID"""
+async def get_guest_by_id(guest_id: PositiveInt):
+    """Retrieve a Not My Job Guest object, based on Guest ID,
+    containing: Guest ID, name and slug string."""
     try:
         _database_connection.reconnect()
         guest_info = info.retrieve_by_id(guest_id, _database_connection)
@@ -118,10 +139,13 @@ async def get_guest_by_id(guest_id: int):
 
 
 @router.get("/{guest_id}/details",
-            summary="Get Information and Appearances by Not My Job Guest ID",
+            summary="Retrieve Information and Appearances by Not My Job Guest ID",
             response_model=GuestDetails, tags=["Guests"])
-async def get_guest_details_by_id(guest_id: int):
-    """Retrieve information and appearances for a given Not My Job Guest ID"""
+async def get_guest_details_by_id(guest_id: PositiveInt):
+    """Retrieve a Not My Job Guest object, based on Guest ID,
+    containing: Guest ID, name, slug string, and their appearance details.
+
+    Guest appearances are sorted by show date."""
     try:
         _database_connection.reconnect()
         guest_details = details.retrieve_by_id(guest_id, _database_connection)
@@ -140,10 +164,11 @@ async def get_guest_details_by_id(guest_id: int):
 
 
 @router.get("/slug/{guest_slug}",
-            summary="Get Information by Guest Slug String",
+            summary="Retrieve Information by Guest Slug String",
             response_model=Guest, tags=["Guests"])
-async def get_guest_by_slug(guest_slug: str):
-    """Retrieve information for a given Not My Job Guest slug string"""
+async def get_guest_by_slug(guest_slug: constr(strip_whitespace = True)):
+    """Retrieve a Not My Job Guest object, based on Guest slug string,
+    containing: Guest ID, name and slug string."""
     try:
         _database_connection.reconnect()
         guest_info = info.retrieve_by_slug(guest_slug, _database_connection)
@@ -162,11 +187,13 @@ async def get_guest_by_slug(guest_slug: str):
 
 
 @router.get("/slug/{guest_slug}/details",
-            summary="Get Information and Appearances by Guest Slug String",
+            summary="Retrieve Information and Appearances by Guest Slug String",
             response_model=GuestDetails, tags=["Guests"])
-async def get_guest_details_by_slug(guest_slug: str):
-    """Retrieve information and appearances for a given Not My Job
-    Guest slug string"""
+async def get_guest_details_by_slug(guest_slug: constr(strip_whitespace = True)):
+    """Retrieve a Not My Job Guest object, based on Guest slug string,
+    containing: Guest ID, name, slug string, and their appearance details.
+
+    Guest appearances are sorted by show date."""
     try:
         _database_connection.reconnect()
         guest_details = details.retrieve_by_slug(guest_slug, _database_connection)

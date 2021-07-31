@@ -1,46 +1,61 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2018-2021 Linh Pham
 # api.wwdt.me is relased under the terms of the Apache License 2.0
-"""FastAPI hosts router module for api.wwdt.me"""
+"""API routes for Show Hosts endpoints"""
 
+from pydantic.networks import PostgresDsn
 from app.dependencies import API_VERSION, load_config
 from typing import List, Optional, Union
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import BaseModel
+from pydantic import BaseModel, constr, Field, PositiveInt
 from wwdtm.host import details, info
 
 #region Host Models
 class Host(BaseModel):
-    id: int
-    name: str
-    slug: Optional[str] = None
-    gender: Optional[str] = None
+    """Host Information"""
+    id: PositiveInt = Field(title="Host ID")
+    name: str = Field(title="Host Name")
+    slug: Optional[str] = Field(default=None,
+                                title="Host Slug String")
+    gender: Optional[str] = Field(default=None,
+                                  title="Host Gender")
 
 class Hosts(BaseModel):
-    hosts: List[Host]
+    """List of Hosts"""
+    hosts: List[Host] = Field(title="List of Hosts")
 
 class HostAppearanceCounts(BaseModel):
-    regular_shows: int
-    all_shows: int
+    """Count of Show Appearances"""
+    regular_shows: Optional[PositiveInt] = Field(default=None,
+                                                 title="Count of Regular Show Appearances")
+    all_shows: Optional[PositiveInt] = Field(default=None,
+                                             title="Count of All Show Appearances")
 
 class HostAppearance(BaseModel):
-    show_id: int
-    date: str
-    best_of: bool
-    repeat_show: bool
-    guest: bool
+    """Appearance Information"""
+    show_id: PositiveInt = Field(title="Show ID")
+    date: str = Field(title="Show Date")
+    best_of: bool = Field(title="Best Of Show")
+    repeat_show: bool = Field(title="Repeat Show")
+    guest: bool = Field(title="Guest Host")
 
 class HostAppearances(BaseModel):
-    count: Union[HostAppearanceCounts, int]
-    shows: Optional[List[HostAppearance]] = None
+    """Host Appearance Information"""
+    count: Union[HostAppearanceCounts,
+                 PositiveInt] = Field(title="Count of Show Appearances")
+    shows: Optional[List[HostAppearance]] = Field(default=None,
+                                                  title="List of Show Appearances")
 
 class HostDetails(Host):
-    appearances: Optional[HostAppearances] = None
+    """Host Information with Appearances"""
+    appearances: Optional[HostAppearances] = Field(default=None,
+                                                   title="List of Show Appearances")
 
 class HostsDetails(BaseModel):
-    hosts: List[HostDetails]
+    """List of Host Details"""
+    hosts: List[HostDetails] = Field(title="List of Host Details")
 
 #endregion
 
@@ -52,10 +67,13 @@ _database_connection = mysql.connector.connect(**_app_config)
 _database_connection.autocommit = True
 
 #region Routes
-@router.get("/", summary="Get Information for All Hosts",
+@router.get("/", summary="Retrieve Information for All Hosts",
             response_model=Hosts, tags=["Hosts"])
 async def get_hosts():
-    """Retrieve a list containing information all Hosts"""
+    """Retrieve an array of Host objects, each containing: Host ID,
+    name, slug string, and gender.
+
+    Results are stored by host name."""
     try:
         _database_connection.reconnect()
         hosts = info.retrieve_all(_database_connection)
@@ -73,11 +91,14 @@ async def get_hosts():
 
 
 @router.get("/details",
-            summary="Get Information and Appearances for All Hosts",
+            summary="Retrieve Information and Appearances for All Hosts",
             response_model=HostsDetails, tags=["Hosts"])
 async def get_hosts_details():
-    """Retrieve a list containing information and appearances for all
-    Hosts"""
+    """Retrieve an array of Host objects, each containing: Host ID,
+    name, slug string, gender, and their appearance details.
+
+    Results are sorted by host name, with host apperances sorted by
+    show date."""
     try:
         _database_connection.reconnect()
         hosts = details.retrieve_all(_database_connection)
@@ -95,10 +116,11 @@ async def get_hosts_details():
 
 
 @router.get("/{host_id}",
-            summary="Get Information by Host ID",
+            summary="Retrieve Information by Host ID",
             response_model=Host, tags=["Hosts"])
-async def get_host_by_id(host_id: int):
-    """Retrieve information for a given Host ID"""
+async def get_host_by_id(host_id: PositiveInt):
+    """Retrieve a Host object, based on Host ID, containing: Host ID,
+    name, slug string, and gender."""
     try:
         _database_connection.reconnect()
         host_info = info.retrieve_by_id(host_id, _database_connection)
@@ -117,10 +139,13 @@ async def get_host_by_id(host_id: int):
 
 
 @router.get("/{host_id}/details",
-            summary="Get Information and Appearances by Host ID",
+            summary="Retrieve Information and Appearances by Host ID",
             response_model=HostDetails, tags=["Hosts"])
-async def get_host_details_by_id(host_id: int):
-    """Retrieve information and appearances for a given Host ID"""
+async def get_host_details_by_id(host_id: PositiveInt):
+    """Retrieve a Host object, based on Host ID, containing: Host ID,
+    name, slug string, gender, and their appearance details.
+
+    Host appearances are sorted by show date."""
     try:
         _database_connection.reconnect()
         host_details = details.retrieve_by_id(host_id, _database_connection)
@@ -139,10 +164,11 @@ async def get_host_details_by_id(host_id: int):
 
 
 @router.get("/slug/{host_slug}",
-            summary="Get Information by Host Slug String",
+            summary="Retrieve Information by Host Slug String",
             response_model=Host, tags=["Hosts"])
-async def get_host_by_slug(host_slug: str):
-    """Retrieve information for a given Host slug string"""
+async def get_host_by_slug(host_slug: constr(strip_whitespace = True)):
+    """Retrieve a Host object, based on Host slug string, containing:
+    Host ID, name, slug string, and gender."""
     try:
         _database_connection.reconnect()
         host_info = info.retrieve_by_slug(host_slug, _database_connection)
@@ -161,11 +187,13 @@ async def get_host_by_slug(host_slug: str):
 
 
 @router.get("/slug/{host_slug}/details",
-            summary="Get Information and Appearances by Host by Slug String",
+            summary="Retrieve Information and Appearances by Host by Slug String",
             response_model=HostDetails, tags=["Hosts"])
-async def get_host_details_by_slug(host_slug: str):
-    """Retrieve information and appearances for a given Host slug
-    string"""
+async def get_host_details_by_slug(host_slug: constr(strip_whitespace = True)):
+    """Retrieve a Host object, based on Host slug string, containing:
+    Host ID, name, slug string, gender, and their appearance details.
+
+    Host appearances are sorted by show date."""
     try:
         _database_connection.reconnect()
         host_details = details.retrieve_by_slug(host_slug, _database_connection)
