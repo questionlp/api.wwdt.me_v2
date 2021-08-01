@@ -4,60 +4,13 @@
 """API routes for Locations endpoints"""
 
 from app.dependencies import API_VERSION, load_config
-from typing import List, Optional
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import BaseModel, constr, Field, PositiveInt
+from pydantic import constr, PositiveInt
 from wwdtm.location import details, info
-
-#region Location Models
-class Location(BaseModel):
-    """Location Information"""
-    id: PositiveInt = Field(title="Location ID")
-    city: Optional[str] = Field(default=None,
-                                title="City")
-    state: Optional[str] = Field(default=None,
-                                 title="State")
-    venue: str = Field(title="Venue Name")
-    slug: Optional[str] = Field(default=None,
-                                title="Location Slug String")
-
-class Locations(BaseModel):
-    """List of Locations"""
-    locations: List[Location] = Field(title="List of Locations")
-
-class LocationRecordingCounts(BaseModel):
-    """Count of Recordings for a Location"""
-    regular_shows: Optional[PositiveInt] = Field(default=None,
-                                                 title="Count of Regular Show Recordings")
-    all_shows: Optional[PositiveInt] = Field(default=None,
-                                             title="Count of All Show Recordings")
-
-class LocationRecordingShow(BaseModel):
-    """Location Recording Information"""
-    show_id: PositiveInt = Field(title="Show ID")
-    date: str = Field(title="Show Date")
-    best_of: bool = Field(title="Best Of Show")
-    repeat_show: bool = Field(title="Repeat Show")
-
-class LocationRecordings(BaseModel):
-    """Loation Information and Recordings"""
-    count: Optional[LocationRecordingCounts] = Field(default=None,
-                                                     title="Count of Show Recordings")
-    shows: Optional[List[LocationRecordingShow]] = Field(default=None,
-                                                         title="List of Show Recordings")
-
-class LocationDetails(Location):
-    """Location Information with Recordings"""
-    recordings: Optional[LocationRecordings] = Field(default=None,
-                                                     title="List of Show Recordings")
-
-class LocationsDetails(BaseModel):
-    """List of Location Details"""
-    locations: List[LocationDetails] = Field(title="List of Location Details")
-
-#endregion
+from app.models.locations import (Location, Locations,
+                                  LocationDetails, LocationsDetails)
 
 router = APIRouter(
     prefix=f"/v{API_VERSION}/locations"

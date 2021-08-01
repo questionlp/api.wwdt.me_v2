@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.openapi.utils import get_openapi
 from fastapi.responses import RedirectResponse
 
-from app.dependencies import APP_VERSION
+from app.config import APP_VERSION
 from app.metadata import api_metadata, tags_metadata
 from app.routers import (guests,
                          hosts,
@@ -21,6 +21,7 @@ from app.routers import (guests,
 app = FastAPI(
     title=api_metadata["title"],
     description=api_metadata["description"],
+    version=APP_VERSION,
 )
 
 def custom_openapi():
@@ -29,10 +30,10 @@ def custom_openapi():
 
     openapi_schema = get_openapi(
         title=api_metadata["title"],
-        version=APP_VERSION,
         description=api_metadata["description"],
         routes=app.routes,
         tags=tags_metadata,
+        version=APP_VERSION,
     )
 
     app.openapi_schema = openapi_schema
@@ -42,7 +43,8 @@ app.openapi = custom_openapi
 app.include_router(guests.router)
 app.include_router(hosts.router)
 app.include_router(locations.router)
-
+app.include_router(panelists.router)
+app.include_router(scorekeepers.router)
 app.include_router(version.router)
 
 #region Routes

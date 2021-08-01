@@ -4,59 +4,12 @@
 """API routes for Not My Job Guests endpoints"""
 
 from app.dependencies import API_VERSION, load_config
-from typing import List, Optional, Union
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import BaseModel, constr, Field, PositiveInt
+from pydantic import constr, PositiveInt
 from wwdtm.guest import details, info
-
-#region Models
-class Guest(BaseModel):
-    """Not My Job Guest Information"""
-    id: PositiveInt = Field(title="Guest ID")
-    name: str = Field(title="Guest Name")
-    slug: Optional[str] = Field(default=None,
-                                title="Guest Slug String")
-
-class Guests(BaseModel):
-    """List of Not My Job Guests"""
-    guests: List[Guest] = Field(title="List of Guests")
-
-class GuestAppearanceCounts(BaseModel):
-    """Count of Show Appearances"""
-    regular_shows: Optional[PositiveInt] = Field(default=None,
-                                                 title="Count of Regular Show Appearances")
-    all_shows: Optional[PositiveInt] = Field(default=None,
-                                             title="Count of All Show Appearances")
-
-class GuestAppearance(BaseModel):
-    """Appearance Information"""
-    show_id: PositiveInt = Field(title="Show ID")
-    date: str = Field(title="Show Date")
-    best_of: bool = Field(title="Best Of Show")
-    repeat_show: bool = Field(title="Repeat Show")
-    score: Optional[PositiveInt] = Field(default=None,
-                                         title="Guest Score")
-    score_exception: bool = Field(title="Guest Scoring Exception")
-
-class GuestAppearances(BaseModel):
-    """Not My Job Guest Appearances Information"""
-    count: Union[GuestAppearanceCounts,
-                 PositiveInt] = Field(title="Count of Show Appearances")
-    shows: Optional[List[GuestAppearance]] = Field(default=None,
-                                                   title="List of Show Appearances")
-
-class GuestDetails(Guest):
-    """Not My Job Guest Information with Appearances"""
-    appearances: Optional[GuestAppearances] = Field(default=None,
-                                                    title="List of Show Appearances")
-
-class GuestsDetails(BaseModel):
-    """List of Not My Job Guest Details"""
-    guests: List[GuestDetails] = Field(title="List of Guest Details")
-
-#endregion
+from app.models.guests import (Guest, Guests, GuestDetails, GuestsDetails)
 
 router = APIRouter(
     prefix=f"/v{API_VERSION}/guests"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2018-2021 Linh Pham
 # api.wwdt.me is relased under the terms of the Apache License 2.0
-"""Application Dependencies for api.wwdt.me"""
+"""Application Configuration"""
 
 import os
 from typing import Any, Dict
