@@ -3,36 +3,42 @@
 # api.wwdt.me is relased under the terms of the Apache License 2.0
 """FastAPI Metdata for api.wwdt.me"""
 
-api_metadata = {
-    "description": ("Wait Wait Don't Tell Me Stats API provides endpoints "
-                    "to query data for Not My Job Guests, Show Hosts, "
-                    "Recording Locations, Panelists, Scorekeepers, and Shows."),
-    "title": "Wait Wait Don't Tell Me Stats API v2.0",
-}
+from typing import Dict, List
 
-tags_metadata = [
+app_title: str = "Wait Wait Don't Tell Me Stats API v2.0"
+app_description: str = """
+Wait Wait Don't Tell Me Stats API provides endpoints to query data for Not My
+Job Guests, Show Hosts, Recording Locations, Panelists, Scorekeepers, and
+Shows.
+"""
+
+tags_metadata: List[Dict[str, str]] = [
     {
         "name": "Guests",
-        "description": "Retrieve data and details for Not My Job guests",
+        "description": "Retrieve information and appearances for Not My Job Guests",
     },
     {
         "name": "Hosts",
-        "description": "Retrieve data and details for hosts",
+        "description": "Retrieve information and appearances for Hosts",
     },
     {
         "name": "Locations",
-        "description": "Retrieve data and details for show recording locations",
+        "description": "Retrieve information and appearances for Locations",
     },
     {
         "name": "Panelists",
-        "description": "Retrieve data and details for panelists",
+        "description": "Retrieve information, statistics and appearances for Panelists",
     },
     {
         "name": "Scorekeepers",
-        "description": "Retrieve data and details for scorekeepers",
+        "description": "Retrieve information and appearances for Scorekeepers",
     },
     {
         "name": "Shows",
-        "description": "Retrieve data and details for shows",
+        "description": "Retrieve information and details for Shows",
+    },
+    {
+        "name": "Version",
+        "description": "Retrieve Wait Wait Stats API and Application Version Information",
     },
 ]
