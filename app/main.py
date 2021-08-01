@@ -18,11 +18,7 @@ from app.routers import (guests,
                          version,
                          )
 
-app = FastAPI(
-    title=api_metadata["title"],
-    description=api_metadata["description"],
-    version=APP_VERSION,
-)
+app = FastAPI()
 
 def custom_openapi():
     if app.openapi_schema:
@@ -34,6 +30,14 @@ def custom_openapi():
         routes=app.routes,
         tags=tags_metadata,
         version=APP_VERSION,
+        contact={
+            "name": "Linh Pham",
+            "email": "dev@wwdt.me",
+        },
+        license_info={
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+        }
     )
 
     app.openapi_schema = openapi_schema

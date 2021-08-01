@@ -3,7 +3,7 @@
 # api.wwdt.me is relased under the terms of the Apache License 2.0
 """API routes for Hosts endpoints"""
 
-from app.dependencies import API_VERSION, load_config
+from app.config import API_VERSION, load_config
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError

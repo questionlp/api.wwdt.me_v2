@@ -3,7 +3,7 @@
 # api.wwdt.me is relased under the terms of the Apache License 2.0
 """API routes for Application Version endpoints"""
 
-from app.dependencies import API_VERSION, APP_VERSION
+from app.config import API_VERSION, APP_VERSION
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from wwdtm import VERSION as wwdtm_version
