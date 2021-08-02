@@ -2,9 +2,9 @@
 
 ## Overview
 
-API service, written in Python and build on FastAPI, that provides endpoints
-to query guest, host, location, panelist, scorekeeper and show data from the
-Wait Wait Don't Tell Me! Stats database.
+API service, written in Python and build on [FastAPI](https://fastapi.tiangolo.com/),
+that provides endpoints to query guest, host, location, panelist, scorekeeper
+and show data from the [Wait Wait Don't Tell Me! Stats database](https://github.com/questionlp/wwdtm_database).
 
 ## Requirements
 
@@ -14,9 +14,9 @@ Wait Wait Don't Tell Me! Stats database.
 
 ## Changes from v1.0
 
-The new v2.0 brings not only a significant change on web frameworks, from Flask
-to FastAPI, but also breaks compatibility with v1.0 and in terms of API
-documentation.
+The new v2.0 brings not only a significant change on web frameworks, from
+[Flask](https://flask.palletsprojects.com/) to FastAPI, but also breaks
+compatibility with v1.0 and in terms of API documentation.
 
 ### API Routes
 
@@ -30,7 +30,7 @@ across both versions. This allows for easier migration from v1.0 to v2.0
 by only changing one part of the request URL.
 
 ### Breaking Backwards Compatibility
-The new version moves away from using (JSend)[https://github.com/omniti-labs/jsend]
+The new version moves away from using [JSend](https://github.com/omniti-labs/jsend)
 specification for JSON response format. The change was made to keep the
 response data simple and leverage FastAPI's validation and response handling.
 
@@ -42,13 +42,14 @@ returned unencapsulated and directly to the user agent.
 ### Documentation Changes
 
 Documentation for v1.0 of the API was handled as an external project based on
-the dormant (Docbox)[https://github.com/tmcw/docbox] documentation system.
+the dormant [Docbox](https://github.com/tmcw/docbox) documentation system.
 
-With v2.0 being built on FastAPI, which is based on OpenAPI, the framework
-can be set up to present API documentation through SwaggerUI and/or Redoc.
-To facilitate that, v2.0 makes significant use of Pydantic to build out the
-objects and includes much of the documentation while declaring routes and
-within Python docstrings.
+With v2.0 being built on FastAPI, which is based on [OpenAPI](https://www.openapis.org/),
+the framework can be set up to present API documentation through
+[Swagger UI](https://swagger.io/tools/swagger-ui/) and/or
+[Redoc](https://github.com/Redocly/redoc). To facilitate that, v2.0 makes
+significant use of Pydantic to build out the objects and includes much of the
+documentation while declaring routes and within Python docstrings.
 
 ## Installation
 
@@ -56,7 +57,8 @@ within Python docstrings.
 
 ## Code of Conduct
 
-This projects follows version 2.1 of the Contributor Convenant's Code of
+This projects follows version 2.1 of the
+[Contributor Convenant's](https://www.contributor-covenant.org/) Code of
 Conduct. A copy of the [Code of Conduct](CODE_OF_CONDUCT.md) document is
 included in this repository.
 
