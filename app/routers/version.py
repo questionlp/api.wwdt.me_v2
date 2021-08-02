@@ -24,7 +24,8 @@ router = APIRouter(
 #region Routes
 @router.get("/",
             summary="Retrieve Wait Wait Stats API and Application Version Information",
-            response_model=Version, tags=["Version"])
+            response_model=Version,
+            tags=["Version"])
 async def get_version():
     """Retrieve Wait Wait Stats API version, application version, and
     wwdtm library version"""

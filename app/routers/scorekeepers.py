@@ -21,7 +21,8 @@ _database_connection = mysql.connector.connect(**_app_config)
 _database_connection.autocommit = True
 
 #region Routes
-@router.get("/", summary="Retrieve Information for All Scorekeepers",
+@router.get("/",
+summary="Retrieve Information for All Scorekeepers",
             response_model=Scorekeepers,
             tags=["Scorekeepers"])
 async def get_scorekeepers():

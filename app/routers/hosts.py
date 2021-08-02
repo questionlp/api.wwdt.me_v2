@@ -19,8 +19,10 @@ _database_connection = mysql.connector.connect(**_app_config)
 _database_connection.autocommit = True
 
 #region Routes
-@router.get("/", summary="Retrieve Information for All Hosts",
-            response_model=Hosts, tags=["Hosts"])
+@router.get("/",
+            summary="Retrieve Information for All Hosts",
+            response_model=Hosts,
+            tags=["Hosts"])
 async def get_hosts():
     """Retrieve an array of Host objects, each containing: Host ID,
     name, slug string, and gender.
@@ -44,7 +46,8 @@ async def get_hosts():
 
 @router.get("/details",
             summary="Retrieve Information and Appearances for All Hosts",
-            response_model=HostsDetails, tags=["Hosts"])
+            response_model=HostsDetails,
+            tags=["Hosts"])
 async def get_hosts_details():
     """Retrieve an array of Host objects, each containing: Host ID,
     name, slug string, gender, and their appearance details.
@@ -69,7 +72,8 @@ async def get_hosts_details():
 
 @router.get("/{host_id}",
             summary="Retrieve Information by Host ID",
-            response_model=Host, tags=["Hosts"])
+            response_model=Host,
+            tags=["Hosts"])
 async def get_host_by_id(host_id: PositiveInt):
     """Retrieve a Host object, based on Host ID, containing: Host ID,
     name, slug string, and gender."""
@@ -92,7 +96,8 @@ async def get_host_by_id(host_id: PositiveInt):
 
 @router.get("/{host_id}/details",
             summary="Retrieve Information and Appearances by Host ID",
-            response_model=HostDetails, tags=["Hosts"])
+            response_model=HostDetails,
+            tags=["Hosts"])
 async def get_host_details_by_id(host_id: PositiveInt):
     """Retrieve a Host object, based on Host ID, containing: Host ID,
     name, slug string, gender, and their appearance details.
@@ -117,7 +122,8 @@ async def get_host_details_by_id(host_id: PositiveInt):
 
 @router.get("/slug/{host_slug}",
             summary="Retrieve Information by Host Slug String",
-            response_model=Host, tags=["Hosts"])
+            response_model=Host,
+            tags=["Hosts"])
 async def get_host_by_slug(host_slug: constr(strip_whitespace = True)):
     """Retrieve a Host object, based on Host slug string, containing:
     Host ID, name, slug string, and gender."""
@@ -140,7 +146,8 @@ async def get_host_by_slug(host_slug: constr(strip_whitespace = True)):
 
 @router.get("/slug/{host_slug}/details",
             summary="Retrieve Information and Appearances by Host by Slug String",
-            response_model=HostDetails, tags=["Hosts"])
+            response_model=HostDetails,
+            tags=["Hosts"])
 async def get_host_details_by_slug(host_slug: constr(strip_whitespace = True)):
     """Retrieve a Host object, based on Host slug string, containing:
     Host ID, name, slug string, gender, and their appearance details.

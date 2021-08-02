@@ -20,8 +20,10 @@ _database_connection = mysql.connector.connect(**_app_config)
 _database_connection.autocommit = True
 
 #region Routes
-@router.get("/", summary="Retrieve Information for All Locations",
-            response_model=Locations, tags=["Locations"])
+@router.get("/",
+            summary="Retrieve Information for All Locations",
+            response_model=Locations,
+            tags=["Locations"])
 async def get_locations():
     """Retrieve an array of Location objects, each containing:
     Location ID, city, state, venue, and slug string.
@@ -45,7 +47,8 @@ async def get_locations():
 
 @router.get("/recordings",
             summary="Retrieve Information and Recordings for All Locations",
-            response_model=LocationsDetails, tags=["Locations"])
+            response_model=LocationsDetails,
+            tags=["Locations"])
 async def get_locations_details():
     """Retrieve an array of Location objects, each containing:
     Location ID, city, state, venue, slug string, and an array of
@@ -93,7 +96,8 @@ async def get_location_by_id(location_id: PositiveInt):
 
 @router.get("/{location_id}/recordings",
             summary="Retrieve Information and Recordings by Location ID",
-            response_model=LocationDetails, tags=["Locations"])
+            response_model=LocationDetails,
+            tags=["Locations"])
 async def get_location_recordings_by_id(location_id: PositiveInt):
     """Retrieve a Location object, based on Location ID, containing:
     Location ID, city, state, venue, slug string, and an array of
@@ -120,7 +124,8 @@ async def get_location_recordings_by_id(location_id: PositiveInt):
 
 @router.get("/slug/{location_slug}",
             summary="Retrieve Information by Location Slug String",
-            response_model=Location, tags=["Locations"])
+            response_model=Location,
+            tags=["Locations"])
 async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
     """Retrieve a location object, based on Location slug string,
     containing: Location ID, city, state, venue, and slug string."""
@@ -143,7 +148,8 @@ async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
 
 @router.get("/slug/{location_slug}/recordings",
             summary="Retrieve Information and Recordings by Location Slug String",
-            response_model=LocationDetails, tags=["Locations"])
+            response_model=LocationDetails,
+            tags=["Locations"])
 async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace = True)):
     """Retrieve a Location object, based on Location slug string,
     containing: Location ID, city, state, venue, slug string, and an

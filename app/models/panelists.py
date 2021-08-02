@@ -3,7 +3,7 @@
 # api.wwdt.me is relased under the terms of the Apache License 2.0
 """Panelists Models"""
 
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from pydantic import BaseModel, Field, PositiveInt
 
 #region Panelist Models
@@ -125,5 +125,23 @@ class PanelistsDetails(BaseModel):
     """List of Panelists's Information, Statistics and Appearances"""
     panelists: Optional[List[PanelistDetails]] = Field(default=None,
                                                        title="List of Panelist Details")
+
+class PanelistScoresList(BaseModel):
+    """Object containing a list of Panelist Appearances as Show Dates
+    and a list of corresponding Panelist scores"""
+    shows: Optional[List[str]] = Field(default=None,
+                                       title="List of Panelist Appearances as Show Dates")
+    scores: Optional[List[int]] = Field(default=None,
+                                        title="List of Panelist Scores")
+
+class ScoresOrderedPair(BaseModel):
+    __root__: Tuple = Field(title="Ordered Pair containing Show Date and Score")
+
+class PanelistScoresOrderedPair(BaseModel):
+    """Tuple containing Panelist appearance as Show Date and their
+    score for that show"""
+    scores: Optional[List[ScoresOrderedPair]] = Field(default=None,
+                                                    title="List of Ordered Pairs containing "
+                                                          "Show Date and Score")
 
 #endregion
