@@ -9,7 +9,7 @@ from typing import Any, Dict
 from dotenv import find_dotenv, load_dotenv
 
 API_VERSION="2.0"
-APP_VERSION="1.0.0a1"
+APP_VERSION="2.0.0a1"
 
 def load_config() -> Dict[str, Any]:
     load_dotenv(find_dotenv())
