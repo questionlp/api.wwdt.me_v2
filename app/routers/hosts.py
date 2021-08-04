@@ -19,7 +19,7 @@ _database_connection = mysql.connector.connect(**_app_config)
 _database_connection.autocommit = True
 
 #region Routes
-@router.get("/",
+@router.get("",
             summary="Retrieve Information for All Hosts",
             response_model=Hosts,
             tags=["Hosts"])

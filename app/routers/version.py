@@ -22,7 +22,7 @@ router = APIRouter(
 )
 
 #region Routes
-@router.get("/",
+@router.get("",
             summary="Retrieve Wait Wait Stats API and Application Version Information",
             response_model=Version,
             tags=["Version"])
