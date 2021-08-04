@@ -1,1 +1,0 @@
-This directory is used to store access and error logs for Gunicorn.
