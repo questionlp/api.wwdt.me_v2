@@ -53,7 +53,9 @@ documentation while declaring routes and within Python docstrings.
 
 ## Installation
 
-*TODO: Documentation to come*
+Refer to [INSTALLING.md](INSTALLING.md) for information on how to set up an
+instance of this web application that can be served through
+[Gunicorn](https://gunicorn.org) and [NGINX](https://nginx.org/).
 
 ## Code of Conduct
 

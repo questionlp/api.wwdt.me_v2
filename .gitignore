@@ -1,13 +1,20 @@
 # Ignore venv directory
 venv/
 
-# Ignore the default configuration file
+# Ignore the default configuration files
+.env
 config.json
+gunicorn.conf.py
 
 # Ignore uWSGI configuration and related files
 uwsgi.ini
 uwsgi.service
 *.sock
+
+# Ignore local log directory
+_log/access.log
+_log/error.log
+
 
 # Ignore robots.txt
 static/robots.txt
