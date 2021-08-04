@@ -15,6 +15,6 @@
 bind = "unix:/tmp/gunicorn-wwdtmapi.sock"
 workers = 2
 worker_class = "uvicorn.workers.UvicornWorker"
-accesslog = "_log/access.log"
-errorlog = "_log/error.log"
+accesslog = ".log/access.log"
+errorlog = ".log/error.log"
 umask = 0o007
