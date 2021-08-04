@@ -114,8 +114,8 @@ The following NGINX configuration snippet provides a starting point for serving
 up the application.
 
 ```nginx
-upstream wwdtmapi_fastapi {
-    server unix:/tmp/wwdtmapi_fastapi.sock fail_timeout=0;
+upstream gunicorn-wwdtmapi {
+    server unix:/tmp/gunicorn-wwdtmapi.sock fail_timeout=0;
 }
 
 server {
@@ -125,7 +125,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
 		proxy_set_header Host $http_host;
 		proxy_redirect off;
-		proxy_pass http://wwdtmapi_fastapi;
+		proxy_pass http://gunicorn-wwdtmapi;
     }
 }
 ```
