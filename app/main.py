@@ -13,7 +13,9 @@ from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
 from app.config import APP_VERSION
-from app.metadata import app_description, app_title, tags_metadata
+from app.metadata import (app_metadata,
+                          tags_metadata,
+                          )
 from app.routers import (guests,
                          hosts,
                          locations,
@@ -24,18 +26,12 @@ from app.routers import (guests,
                          )
 
 app = FastAPI(
-    title=app_title,
-    description=app_description,
+    title=app_metadata["title"],
+    description=app_metadata["description"],
     openapi_tags=tags_metadata,
     version=APP_VERSION,
-    contact={
-        "name": "Linh Pham",
-        "email": "dev@wwdt.me",
-    },
-    license_info={
-        "name": "Apache 2.0",
-        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
-    },
+    contact=app_metadata["contact_info"],
+    license_info=app_metadata["license_info"],
     openapi_url="/v2.0/openapi.json",
     redoc_url="/v2.0/docs",
     docs_url="/v2.0/openapi",
