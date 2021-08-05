@@ -6,24 +6,21 @@
 from fastapi import FastAPI
 from fastapi.responses import (HTMLResponse,
                                PlainTextResponse,
-                               RedirectResponse,
-                               )
+                               RedirectResponse)
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
 from app.config import APP_VERSION
 from app.metadata import (app_metadata,
-                          tags_metadata,
-                          )
+                          tags_metadata)
 from app.routers import (guests,
                          hosts,
                          locations,
                          panelists,
                          scorekeepers,
                          shows,
-                         version,
-                         )
+                         version)
 
 app = FastAPI(
     title=app_metadata["title"],
@@ -39,50 +36,43 @@ app = FastAPI(
 
 app.mount("/static",
           StaticFiles(directory="static"),
-          name="static",
-          )
+          name="static")
 templates = Jinja2Templates(directory="templates")
 
 #region Generic Routes
 @app.get("/",
          include_in_schema=False,
-         response_class=HTMLResponse,
-         )
+         response_class=HTMLResponse)
 async def default_page(request: Request):
     return templates.TemplateResponse("index.html", {"request": request} )
 
 @app.get("/favicon.ico",
          include_in_schema=False,
-         response_class=RedirectResponse,
-         )
+         response_class=RedirectResponse)
 async def favicon():
     return RedirectResponse("/static/favicon.ico", status_code=301)
 
 @app.get("/robots.txt",
          include_in_schema=False,
-         response_class=PlainTextResponse,
-         )
+         response_class=PlainTextResponse)
 async def robots_txt():
     return ""
 
 @app.get("/docs",
          include_in_schema=False,
-         response_class=RedirectResponse,
-         )
+         response_class=RedirectResponse)
 async def redoc_redirect():
     return RedirectResponse("/v2.0/docs", status_code=301)
 
 @app.get("/redoc",
          include_in_schema=False,
-         response_class=RedirectResponse,
-         )
+         response_class=RedirectResponse)
 async def redoc_redirect():
     return RedirectResponse("/v2.0/docs", status_code=301)
 
 @app.get("/v2.0/redoc",
          include_in_schema=False,
-         response_class=RedirectResponse,
-         )
+         response_class=RedirectResponse)
 async def redoc_redirect_sub():
     return RedirectResponse("/v2.0/docs", status_code=301)
 
