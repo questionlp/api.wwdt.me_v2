@@ -5,11 +5,16 @@
 
 from typing import Dict, List
 
-app_title: str = "Wait Wait Don't Tell Me Stats API v2.0"
+app_title: str = "Wait Wait Don't Tell Me Stats API"
 app_description: str = """
 Wait Wait Don't Tell Me Stats API provides endpoints to query data for Not My
 Job Guests, Show Hosts, Recording Locations, Panelists, Scorekeepers, and
 Shows.
+
+You can explore and test the API through [Swagger UI](/docs).
+
+Source code for this application is available on
+[GitHub](https://github.com/questionlp/api.wwdt.me_fastapi).
 """
 
 tags_metadata: List[Dict[str, str]] = [
