@@ -3,7 +3,7 @@
 # api.wwdt.me is relased under the terms of the Apache License 2.0
 """API routes for Locations endpoints"""
 
-from app.config import API_VERSION, load_config
+from app.config import API_VERSION, load_database_config
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
@@ -15,8 +15,8 @@ from app.models.locations import (Location, Locations,
 router = APIRouter(
     prefix=f"/v{API_VERSION}/locations"
 )
-_app_config = load_config()
-_database_connection = mysql.connector.connect(**_app_config)
+_database_config = load_database_config()
+_database_connection = mysql.connector.connect(**_database_config)
 _database_connection.autocommit = True
 
 #region Routes

@@ -11,7 +11,7 @@ from dotenv import find_dotenv, load_dotenv
 API_VERSION="2.0"
 APP_VERSION="2.0.0a1"
 
-def load_config() -> Dict[str, Any]:
+def load_database_config() -> Dict[str, Any]:
     load_dotenv(find_dotenv())
     return {
         "host": os.getenv("DATABASE_HOST"),
@@ -24,4 +24,3 @@ def load_config() -> Dict[str, Any]:
         "charset": os.getenv("DATABASE_CHARSET", "utf8mb4"),
         "collation": os.getenv("DATABASE_COLLATION", "utf8mb4_unicode_ci"),
     }
-

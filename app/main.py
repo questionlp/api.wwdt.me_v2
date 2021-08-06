@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
-from app.config import APP_VERSION
+from app.config import API_VERSION, APP_VERSION
 from app.metadata import (app_metadata,
                           tags_metadata)
 from app.routers import (guests,
@@ -29,9 +29,9 @@ app = FastAPI(
     version=APP_VERSION,
     contact=app_metadata["contact_info"],
     license_info=app_metadata["license_info"],
-    openapi_url="/v2.0/openapi.json",
-    redoc_url="/v2.0/docs",
-    docs_url="/v2.0/openapi",
+    openapi_url=f"/v{API_VERSION}/openapi.json",
+    redoc_url=f"/v{API_VERSION}/docs",
+    docs_url=f"/v{API_VERSION}/openapi",
 )
 
 app.mount("/static",
@@ -61,20 +61,20 @@ async def robots_txt():
 @app.get("/docs",
          include_in_schema=False,
          response_class=RedirectResponse)
-async def redoc_redirect():
-    return RedirectResponse("/v2.0/docs", status_code=301)
+async def redoc_redirect_docs():
+    return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
 @app.get("/redoc",
          include_in_schema=False,
          response_class=RedirectResponse)
-async def redoc_redirect():
-    return RedirectResponse("/v2.0/docs", status_code=301)
+async def redoc_redirect_redoc():
+    return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
-@app.get("/v2.0/redoc",
+@app.get(f"/v{API_VERSION}/redoc",
          include_in_schema=False,
          response_class=RedirectResponse)
 async def redoc_redirect_sub():
-    return RedirectResponse("/v2.0/docs", status_code=301)
+    return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
 
 #endregion
