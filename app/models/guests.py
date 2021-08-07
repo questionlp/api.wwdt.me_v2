@@ -33,7 +33,8 @@ class GuestAppearance(BaseModel):
     repeat_show: bool = Field(title="Repeat Show")
     score: Optional[int] = Field(default=None,
                                  title="Guest Score")
-    score_exception: bool = Field(title="Guest Scoring Exception")
+    score_exception: Optional[bool] = Field(default=None,
+                                            title="Guest Scoring Exception")
 
 class GuestAppearances(BaseModel):
     """Not My Job Guest Appearances Information"""
