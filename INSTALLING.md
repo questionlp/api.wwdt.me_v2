@@ -94,14 +94,14 @@ that between `ExecStart=` and `gunicorn`
 Save the file and run the following commands to enable and start the new service:
 
 ```bash
-sudo systemctl enable wwdtmapi_fastapi
-sudo systemctl start wwdtmapi_fastapi
+sudo systemctl enable gunicorn-wwdtmapi
+sudo systemctl start gunicorn-wwdtmapi
 ```
 
 Verify that the service started by running the following command:
 
 ```bash
-sudo systemctl status wwdtmapi_fastapi
+sudo systemctl status gunicorn-wwdtmapi
 ```
 
 ## Serving the Application Through NGINX
@@ -110,8 +110,9 @@ Once the service is up and running, NGINX can be configured to proxy requests
 to Gunicorn. NGINX can also be set up to cache responses and provide additional
 access controls that may not be feasible with Gunicorn.
 
-The following NGINX configuration snippet provides a starting point for serving
-up the application.
+Add the following NGINX configuration snippet either to your base `nginx.conf`
+or to a virtual site configuration file. The configuration settings provides a
+starting point for serving up the application.
 
 ```nginx
 upstream gunicorn-wwdtmapi {
@@ -129,3 +130,12 @@ server {
     }
 }
 ```
+
+The application will handle all of the core URL routing needs, including:
+the `/v2.0` base for all endpoints, `/v2.0/docs` for Redoc API documentation
+and `/v2.0/openapi` for Swagger UI.
+
+NGINX can also be configured to cache API responses. NGINX has documentation
+on configuring and enable proxy caching in their
+[ngx_http_proxy_module](https://nginx.org/en/docs/http/ngx_http_proxy_module.html)
+module documentation.
