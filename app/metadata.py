@@ -3,8 +3,6 @@
 # api.wwdt.me is relased under the terms of the Apache License 2.0
 """FastAPI Metdata for api.wwdt.me"""
 
-from typing import Dict, List
-
 app_metadata = {
     "title": "Wait Wait Don't Tell Me Stats API",
     "description": """
@@ -25,7 +23,7 @@ Source code for this application is available on
     },
 }
 
-tags_metadata: List[Dict[str, str]] = [
+tags_metadata = [
     {
         "name": "Guests",
         "description": "Retrieve information and appearances for Not My Job Guests",

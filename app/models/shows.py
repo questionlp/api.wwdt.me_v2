@@ -46,6 +46,7 @@ class ShowScorekeeper(BaseModel):
                                 title="Scorekeeper Slug String")
     description: Optional[str] = Field(default=None,
                                        title="Scorekeeper Description")
+    guest: bool = Field(title="Guest Scorekeeper")
 
 class ShowPanelist(BaseModel):
     """Show Panelist Information"""
@@ -109,5 +110,9 @@ class ShowDetails(Show):
 class ShowsDetails(BaseModel):
     """List of Show Details"""
     shows: List[ShowDetails] = Field(title="List of Show Information and Additional Details")
+
+class ShowDates(BaseModel):
+    """List of Show Dates in ISO format (YYYY-MM-DD)"""
+    shows: List[str] = Field(title="List of Show Dates")
 
 #endregion

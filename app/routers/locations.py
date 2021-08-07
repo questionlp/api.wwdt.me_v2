@@ -33,7 +33,8 @@ async def get_locations():
         _database_connection.reconnect()
         locations = info.retrieve_all(_database_connection)
         if not locations:
-            raise HTTPException(status_code=404, detail="No locations found")
+            raise HTTPException(status_code=404,
+                                detail="No locations found")
         else:
             return {"locations": locations}
     except ProgrammingError:
@@ -59,7 +60,8 @@ async def get_locations_details():
         _database_connection.reconnect()
         locations = details.retrieve_all_recordings(_database_connection)
         if not locations:
-            raise HTTPException(status_code=404, detail="No locations found")
+            raise HTTPException(status_code=404,
+                                detail="No locations found")
         else:
             return {"locations": locations}
     except ProgrammingError:
@@ -71,6 +73,65 @@ async def get_locations_details():
                                    "locations from the database")
 
 
+@router.get("/slug/{location_slug}",
+            summary="Retrieve Information by Location Slug String",
+            response_model=Location,
+            tags=["Locations"])
+async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
+    """Retrieve a location object, based on Location slug string,
+    containing: Location ID, city, state, venue, and slug string."""
+    try:
+        _database_connection.reconnect()
+        location_info = info.retrieve_by_slug(location_slug,
+                                              _database_connection)
+        if not location_info:
+            raise HTTPException(status_code=404,
+                                detail=f"Location slug string {location_slug} not found")
+        else:
+            return location_info
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Location slug string {location_slug} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve location information")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve location information")
+
+
+@router.get("/slug/{location_slug}/recordings",
+            summary="Retrieve Information and Recordings by Location Slug String",
+            response_model=LocationDetails,
+            tags=["Locations"])
+async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace = True)):
+    """Retrieve a Location object, based on Location slug string,
+    containing: Location ID, city, state, venue, slug string, and an
+    array of recordings.
+
+    Recordings are sorted by show date."""
+    try:
+        _database_connection.reconnect()
+        location_details = details.retrieve_recordings_by_slug(location_slug,
+                                                               _database_connection)
+        if not location_details:
+            raise HTTPException(status_code=404,
+                                detail=f"Location slug string {location_slug} not found")
+        else:
+            return location_details
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Location slug string {location_slug} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve location information")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve location information")
+
+
 @router.get("/{location_id}",
             summary="Retrieve Information by Location ID",
             response_model=Location, tags=["Locations"])
@@ -79,12 +140,16 @@ async def get_location_by_id(location_id: PositiveInt):
     Location ID, city, state, venue, and slug string."""
     try:
         _database_connection.reconnect()
-        location_info = info.retrieve_by_id(location_id, _database_connection)
+        location_info = info.retrieve_by_id(location_id,
+                                            _database_connection)
         if not location_info:
             raise HTTPException(status_code=404,
                                 detail=f"Location ID {location_id} not found")
         else:
             return location_info
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Location ID {location_id} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
                             detail="Unable to retrieve location information")
@@ -113,58 +178,9 @@ async def get_location_recordings_by_id(location_id: PositiveInt):
                                 detail=f"Location ID {location_id} not found")
         else:
             return location_recordings
-    except ProgrammingError:
-        raise HTTPException(status_code=500,
-                            detail="Unable to retrieve location information")
-    except DatabaseError:
-        raise HTTPException(status_code=500,
-                            detail="Database error occurred while trying to "
-                                   "retrieve location information")
-
-
-@router.get("/slug/{location_slug}",
-            summary="Retrieve Information by Location Slug String",
-            response_model=Location,
-            tags=["Locations"])
-async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
-    """Retrieve a location object, based on Location slug string,
-    containing: Location ID, city, state, venue, and slug string."""
-    try:
-        _database_connection.reconnect()
-        location_info = info.retrieve_by_slug(location_slug, _database_connection)
-        if not location_info:
-            raise HTTPException(status_code=404,
-                                detail=f"Location slug string {location_slug} not found")
-        else:
-            return location_info
-    except ProgrammingError:
-        raise HTTPException(status_code=500,
-                            detail="Unable to retrieve location information")
-    except DatabaseError:
-        raise HTTPException(status_code=500,
-                            detail="Database error occurred while trying to "
-                                   "retrieve location information")
-
-
-@router.get("/slug/{location_slug}/recordings",
-            summary="Retrieve Information and Recordings by Location Slug String",
-            response_model=LocationDetails,
-            tags=["Locations"])
-async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace = True)):
-    """Retrieve a Location object, based on Location slug string,
-    containing: Location ID, city, state, venue, slug string, and an
-    array of recordings.
-
-    Recordings are sorted by show date."""
-    try:
-        _database_connection.reconnect()
-        location_details = details.retrieve_recordings_by_slug(location_slug,
-                                                               _database_connection)
-        if not location_details:
-            raise HTTPException(status_code=404,
-                                detail=f"Location ID {location_slug} not found")
-        else:
-            return location_details
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Location ID {location_id} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
                             detail="Unable to retrieve location information")

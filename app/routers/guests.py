@@ -32,7 +32,8 @@ async def get_guests():
         _database_connection.reconnect()
         guests = info.retrieve_all(_database_connection)
         if not guests:
-            raise HTTPException(status_code=404, detail="No guests found")
+            raise HTTPException(status_code=404,
+                                detail="No guests found")
         else:
             return {"guests": guests}
     except ProgrammingError:
@@ -58,7 +59,8 @@ async def get_guests_details():
         _database_connection.reconnect()
         guests = details.retrieve_all(_database_connection)
         if not guests:
-            raise HTTPException(status_code=404, detail="No guests found")
+            raise HTTPException(status_code=404,
+                                detail="No guests found")
         else:
             return {"guests": guests}
     except ProgrammingError:
@@ -70,56 +72,6 @@ async def get_guests_details():
                                    "guests from the database")
 
 
-@router.get("/{guest_id}",
-            summary="Retrieve Information by Not My Job Guest ID",
-            response_model=Guest,
-            tags=["Guests"])
-async def get_guest_by_id(guest_id: PositiveInt):
-    """Retrieve a Not My Job Guest object, based on Guest ID,
-    containing: Guest ID, name and slug string."""
-    try:
-        _database_connection.reconnect()
-        guest_info = info.retrieve_by_id(guest_id, _database_connection)
-        if not guest_info:
-            raise HTTPException(status_code=404,
-                                detail=f"Guest ID {guest_id} not found")
-        else:
-            return guest_info
-    except ProgrammingError:
-        raise HTTPException(status_code=500,
-                            detail="Unable to retrieve guest information")
-    except DatabaseError:
-        raise HTTPException(status_code=500,
-                            detail="Database error occurred while trying to "
-                                   "retrieve guest information")
-
-
-@router.get("/{guest_id}/details",
-            summary="Retrieve Information and Appearances by Not My Job Guest ID",
-            response_model=GuestDetails,
-            tags=["Guests"])
-async def get_guest_details_by_id(guest_id: PositiveInt):
-    """Retrieve a Not My Job Guest object, based on Guest ID,
-    containing: Guest ID, name, slug string, and their appearance details.
-
-    Guest appearances are sorted by show date."""
-    try:
-        _database_connection.reconnect()
-        guest_details = details.retrieve_by_id(guest_id, _database_connection)
-        if not guest_details:
-            raise HTTPException(status_code=404,
-                                detail=f"Guest ID {guest_id} not found")
-        else:
-            return guest_details
-    except ProgrammingError:
-        raise HTTPException(status_code=500,
-                            detail="Unable to retrieve guest information")
-    except DatabaseError:
-        raise HTTPException(status_code=500,
-                            detail="Database error occurred while trying to "
-                                   "retrieve guest information")
-
-
 @router.get("/slug/{guest_slug}",
             summary="Retrieve Information by Guest Slug String",
             response_model=Guest,
@@ -129,12 +81,16 @@ async def get_guest_by_slug(guest_slug: constr(strip_whitespace = True)):
     containing: Guest ID, name and slug string."""
     try:
         _database_connection.reconnect()
-        guest_info = info.retrieve_by_slug(guest_slug, _database_connection)
+        guest_info = info.retrieve_by_slug(guest_slug,
+                                           _database_connection)
         if not guest_info:
             raise HTTPException(status_code=404,
                                 detail=f"Guest slug string {guest_slug} not found")
         else:
             return guest_info
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Guest slug string {guest_slug} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
                             detail="Unable to retrieve guest information")
@@ -155,12 +111,74 @@ async def get_guest_details_by_slug(guest_slug: constr(strip_whitespace = True))
     Guest appearances are sorted by show date."""
     try:
         _database_connection.reconnect()
-        guest_details = details.retrieve_by_slug(guest_slug, _database_connection)
+        guest_details = details.retrieve_by_slug(guest_slug,
+                                                 _database_connection)
         if not guest_details:
             raise HTTPException(status_code=404,
-                                detail=f"Guest ID {guest_slug} not found")
+                                detail=f"Guest slug string {guest_slug} not found")
         else:
             return guest_details
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Guest slug string {guest_slug} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve guest information")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve guest information")
+
+
+@router.get("/{guest_id}",
+            summary="Retrieve Information by Not My Job Guest ID",
+            response_model=Guest,
+            tags=["Guests"])
+async def get_guest_by_id(guest_id: PositiveInt):
+    """Retrieve a Not My Job Guest object, based on Guest ID,
+    containing: Guest ID, name and slug string."""
+    try:
+        _database_connection.reconnect()
+        guest_info = info.retrieve_by_id(guest_id,
+                                         _database_connection)
+        if not guest_info:
+            raise HTTPException(status_code=404,
+                                detail=f"Guest ID {guest_id} not found")
+        else:
+            return guest_info
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Guest ID {guest_id} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve guest information")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve guest information")
+
+
+@router.get("/{guest_id}/details",
+            summary="Retrieve Information and Appearances by Not My Job Guest ID",
+            response_model=GuestDetails,
+            tags=["Guests"])
+async def get_guest_details_by_id(guest_id: PositiveInt):
+    """Retrieve a Not My Job Guest object, based on Guest ID,
+    containing: Guest ID, name, slug string, and their appearance details.
+
+    Guest appearances are sorted by show date."""
+    try:
+        _database_connection.reconnect()
+        guest_details = details.retrieve_by_id(guest_id,
+                                               _database_connection)
+        if not guest_details:
+            raise HTTPException(status_code=404,
+                                detail=f"Guest ID {guest_id} not found")
+        else:
+            return guest_details
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Guest ID {guest_id} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
                             detail="Unable to retrieve guest information")

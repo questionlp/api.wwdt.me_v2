@@ -22,7 +22,7 @@ _database_connection.autocommit = True
 
 #region Routes
 @router.get("",
-summary="Retrieve Information for All Scorekeepers",
+            summary="Retrieve Information for All Scorekeepers",
             response_model=Scorekeepers,
             tags=["Scorekeepers"])
 async def get_scorekeepers():
@@ -73,6 +73,65 @@ async def get_scorekeepers_details():
                                    "scorekeepers from the database")
 
 
+@router.get("/slug/{scorekeeper_slug}",
+            summary="Retrieve Information by Scorekeeper Slug String",
+            response_model=Scorekeeper,
+            tags=["Scorekeepers"])
+async def get_scorekeeper_by_slug(scorekeeper_slug: constr(strip_whitespace = True)):
+    """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
+    containing: Scorekeeper ID, name, slug string, and gender."""
+    try:
+        _database_connection.reconnect()
+        scorekeeper_info = info.retrieve_by_slug(scorekeeper_slug,
+                                                 _database_connection)
+        if not scorekeeper_info:
+            raise HTTPException(status_code=404,
+                                detail=f"Scorekeeper slug string {scorekeeper_slug} not found")
+        else:
+            return scorekeeper_info
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Scorekeeper slug string {scorekeeper_slug} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve scorekeeper information")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve scorekeeper information")
+
+
+@router.get("/slug/{scorekeeper_slug}/details",
+            summary="Retrieve Information and Appearances by Scorekeeper by Slug String",
+            response_model=ScorekeeperDetails,
+            tags=["Scorekeepers"])
+async def get_scorekeeper_details_by_slug(scorekeeper_slug: constr(strip_whitespace = True)):
+    """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
+    containing: Scorekeeper ID, name, slug string, gender, and their
+    appearance details.
+
+    Scorekeeper appearances are sorted by show date."""
+    try:
+        _database_connection.reconnect()
+        scorekeeper_details = details.retrieve_by_slug(scorekeeper_slug,
+                                                       _database_connection)
+        if not scorekeeper_details:
+            raise HTTPException(status_code=404,
+                                detail=f"Scorekeeper slug string {scorekeeper_slug} not found")
+        else:
+            return scorekeeper_details
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Scorekeeper slug string {scorekeeper_slug} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve scorekeeper information")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve scorekeeper information")
+
+
 @router.get("/{scorekeeper_id}",
             summary="Retrieve Information by Scorekeeper ID",
             response_model=Scorekeeper,
@@ -89,6 +148,9 @@ async def get_scorekeeper_by_id(scorekeeper_id: PositiveInt):
                                 detail=f"Scorekeeper ID {scorekeeper_id} not found")
         else:
             return scorekeeper_info
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Scorekeeper ID {scorekeeper_id} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
                             detail="Unable to retrieve scorekeeper information")
@@ -117,59 +179,9 @@ async def get_scorekeeper_details_by_id(scorekeeper_id: PositiveInt):
                                 detail=f"Scorekeeper ID {scorekeeper_id} not found")
         else:
             return scorekeeper_details
-    except ProgrammingError:
-        raise HTTPException(status_code=500,
-                            detail="Unable to retrieve scorekeeper information")
-    except DatabaseError:
-        raise HTTPException(status_code=500,
-                            detail="Database error occurred while trying to "
-                                   "retrieve scorekeeper information")
-
-
-@router.get("/slug/{scorekeeper_slug}",
-            summary="Retrieve Information by Scorekeeper Slug String",
-            response_model=Scorekeeper,
-            tags=["Scorekeepers"])
-async def get_scorekeeper_by_slug(scorekeeper_slug: constr(strip_whitespace = True)):
-    """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
-    containing: Scorekeeper ID, name, slug string, and gender."""
-    try:
-        _database_connection.reconnect()
-        scorekeeper_info = info.retrieve_by_slug(scorekeeper_slug,
-                                                 _database_connection)
-        if not scorekeeper_info:
-            raise HTTPException(status_code=404,
-                                detail=f"Scorekeeper slug string {scorekeeper_slug} not found")
-        else:
-            return scorekeeper_info
-    except ProgrammingError:
-        raise HTTPException(status_code=500,
-                            detail="Unable to retrieve scorekeeper information")
-    except DatabaseError:
-        raise HTTPException(status_code=500,
-                            detail="Database error occurred while trying to "
-                                   "retrieve scorekeeper information")
-
-
-@router.get("/slug/{scorekeeper_slug}/details",
-            summary="Retrieve Information and Appearances by Scorekeeper by Slug String",
-            response_model=ScorekeeperDetails,
-            tags=["Scorekeepers"])
-async def get_scorekeeper_details_by_slug(scorekeeper_slug: constr(strip_whitespace = True)):
-    """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
-    containing: Scorekeeper ID, name, slug string, gender, and their
-    appearance details.
-
-    Scorekeeper appearances are sorted by show date."""
-    try:
-        _database_connection.reconnect()
-        scorekeeper_details = details.retrieve_by_slug(scorekeeper_slug,
-                                                       _database_connection)
-        if not scorekeeper_details:
-            raise HTTPException(status_code=404,
-                                detail=f"Scorekeeper ID {scorekeeper_slug} not found")
-        else:
-            return scorekeeper_details
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Scorekeeper ID {scorekeeper_id} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
                             detail="Unable to retrieve scorekeeper information")
