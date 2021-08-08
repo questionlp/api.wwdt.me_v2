@@ -45,31 +45,32 @@ async def get_hosts():
                                    "hosts from the database")
 
 
-@router.get("/details",
-            summary="Retrieve Information and Appearances for All Hosts",
-            response_model=HostsDetails,
+@router.get("/id/{host_id}",
+            summary="Retrieve Information by Host ID",
+            response_model=Host,
             tags=["Hosts"])
-async def get_hosts_details():
-    """Retrieve an array of Host objects, each containing: Host ID,
-    name, slug string, gender, and their appearance details.
-
-    Results are sorted by host name, with host apperances sorted by
-    show date."""
+async def get_host_by_id(host_id: PositiveInt):
+    """Retrieve a Host object, based on Host ID, containing: Host ID,
+    name, slug string, and gender."""
     try:
         _database_connection.reconnect()
-        hosts = details.retrieve_all(_database_connection)
-        if not hosts:
+        host_info = info.retrieve_by_id(host_id,
+                                        _database_connection)
+        if not host_info:
             raise HTTPException(status_code=404,
-                                detail="No hosts found")
+                                detail=f"Host ID {host_id} not found")
         else:
-            return {"hosts": hosts}
+            return host_info
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Host ID {host_id} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
-                            detail="Unable to retrieve hosts from the database")
+                            detail="Unable to retrieve host information")
     except DatabaseError:
         raise HTTPException(status_code=500,
-                            detail="Database error occurred while retrieving "
-                                   "hosts from the database")
+                            detail="Database error occurred while trying to "
+                                   "retrieve host information")
 
 
 @router.get("/slug/{host_slug}",
@@ -100,65 +101,34 @@ async def get_host_by_slug(host_slug: constr(strip_whitespace = True)):
                                    "retrieve host information")
 
 
-@router.get("/slug/{host_slug}/details",
-            summary="Retrieve Information and Appearances by Host by Slug String",
-            response_model=HostDetails,
+@router.get("/details",
+            summary="Retrieve Information and Appearances for All Hosts",
+            response_model=HostsDetails,
             tags=["Hosts"])
-async def get_host_details_by_slug(host_slug: constr(strip_whitespace = True)):
-    """Retrieve a Host object, based on Host slug string, containing:
-    Host ID, name, slug string, gender, and their appearance details.
+async def get_hosts_details():
+    """Retrieve an array of Host objects, each containing: Host ID,
+    name, slug string, gender, and their appearance details.
 
-    Host appearances are sorted by show date."""
+    Results are sorted by host name, with host apperances sorted by
+    show date."""
     try:
         _database_connection.reconnect()
-        host_details = details.retrieve_by_slug(host_slug,
-                                                _database_connection)
-        if not host_details:
+        hosts = details.retrieve_all(_database_connection)
+        if not hosts:
             raise HTTPException(status_code=404,
-                                detail=f"Host slug string {host_slug} not found")
+                                detail="No hosts found")
         else:
-            return host_details
-    except ValueError:
-        raise HTTPException(status_code=404,
-                            detail=f"Host slug string {host_slug} not found")
+            return {"hosts": hosts}
     except ProgrammingError:
         raise HTTPException(status_code=500,
-                            detail="Unable to retrieve host information")
+                            detail="Unable to retrieve hosts from the database")
     except DatabaseError:
         raise HTTPException(status_code=500,
-                            detail="Database error occurred while trying to "
-                                   "retrieve host information")
+                            detail="Database error occurred while retrieving "
+                                   "hosts from the database")
 
 
-@router.get("/{host_id}",
-            summary="Retrieve Information by Host ID",
-            response_model=Host,
-            tags=["Hosts"])
-async def get_host_by_id(host_id: PositiveInt):
-    """Retrieve a Host object, based on Host ID, containing: Host ID,
-    name, slug string, and gender."""
-    try:
-        _database_connection.reconnect()
-        host_info = info.retrieve_by_id(host_id,
-                                        _database_connection)
-        if not host_info:
-            raise HTTPException(status_code=404,
-                                detail=f"Host ID {host_id} not found")
-        else:
-            return host_info
-    except ValueError:
-        raise HTTPException(status_code=404,
-                            detail=f"Host ID {host_id} not found")
-    except ProgrammingError:
-        raise HTTPException(status_code=500,
-                            detail="Unable to retrieve host information")
-    except DatabaseError:
-        raise HTTPException(status_code=500,
-                            detail="Database error occurred while trying to "
-                                   "retrieve host information")
-
-
-@router.get("/{host_id}/details",
+@router.get("/details/id/{host_id}",
             summary="Retrieve Information and Appearances by Host ID",
             response_model=HostDetails,
             tags=["Hosts"])
@@ -179,6 +149,36 @@ async def get_host_details_by_id(host_id: PositiveInt):
     except ValueError:
         raise HTTPException(status_code=404,
                             detail=f"Host ID {host_id} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve host information")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve host information")
+
+
+@router.get("/details/slug/{host_slug}",
+            summary="Retrieve Information and Appearances by Host by Slug String",
+            response_model=HostDetails,
+            tags=["Hosts"])
+async def get_host_details_by_slug(host_slug: constr(strip_whitespace = True)):
+    """Retrieve a Host object, based on Host slug string, containing:
+    Host ID, name, slug string, gender, and their appearance details.
+
+    Host appearances are sorted by show date."""
+    try:
+        _database_connection.reconnect()
+        host_details = details.retrieve_by_slug(host_slug,
+                                                _database_connection)
+        if not host_details:
+            raise HTTPException(status_code=404,
+                                detail=f"Host slug string {host_slug} not found")
+        else:
+            return host_details
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Host slug string {host_slug} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
                             detail="Unable to retrieve host information")
