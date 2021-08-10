@@ -39,9 +39,10 @@ due to the way objects are built and returned from
 the version of the specification that FastAPI supports, does not provide
 analogs for those types in its specification.
 
-This issue doesn't come up when querying the API through Swagger UI; but,
-importing the OpenAPI JSON into Postman running queries and/or tests will
-result in warnings and/or errors regarding incorrect type returned.
+This issue doesn't come up when querying the API through Swagger UI or directly
+using Postman; but, if you've imported the generated OpenAPI JSON into Postman,
+then run queries and/or tests, it will result in warnings and/or errors being
+reported about type mismatches (i.e.: returns `null` instead of a string).
 
 ## Installation
 
