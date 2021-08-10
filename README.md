@@ -2,25 +2,27 @@
 
 ## Overview
 
-API service, written in Python and build on [FastAPI](https://fastapi.tiangolo.com/),
-that provides endpoints to query guest, host, location, panelist, scorekeeper
-and show data from the [Wait Wait Don't Tell Me! Stats database](https://github.com/questionlp/wwdtm_database).
+The Stats API is written in Python and is built on
+[FastAPI](https://fastapi.tiangolo.com/) and provides endpoints that can be
+used to query guest, host, location, panelist, scorekeeper, and show data from
+a copy of the [Wait Wait Don't Tell Me! Stats database](https://github.com/questionlp/wwdtm_database).
 
 ## Requirements
 
 - Python 3.8 or newer
-- MySQL or MariaDB database containing data from the Wait Wait... Don't Tell
-  Me! Stats Page database
+- MySQL or MariaDB Server hosting a version of the aforementioned Wait Wait
+Don't Tell Me! Stats database
 
 ## Changes from v1.0
 
-The new v2.0 brings not only a significant change on web frameworks, from
-[Flask](https://flask.palletsprojects.com/) to FastAPI, but also breaks
-compatibility with v1.0 and in terms of API documentation.
+Stats API v2.0 not only brings a significant change on web frameworks,
+migrating from [Flask](https://flask.palletsprojects.com/) to FastAPI, but
+also breaks compatibility with v1.0 and in terms of API documentation.
 
-The [API-CHANGES.md](API-CHANGES.md) document details the changes that were
-made from v1.0 to v2.0, including: API response object, API endpoints and API
-documentation.
+For additional details on the breaking changes that the new version brings,
+refer to the [API-CHANGES.md](API-CHANGES.md) document. The document details
+the new API response object format, changes in API endpoints, and migrating
+to OpenAPI-based documentation.
 
 ## Installation
 
