@@ -30,12 +30,18 @@ to OpenAPI-based documentation.
 
 ## Known Issues
 
-The models used in this application make significant use of `Optional`,
-`Union`, and `Tuple` types in properties due to the way
-[libwwdtm](https://github.com/questionlp/libwwdtm) was originally designed.
-Unfortunately, OpenAPI 3.0, the version of the specification that FastAPI
-supports, does not provide analogs for those types in that version of the
-specification.
+### OpenAPI 3.0 Specification and Response Models
+
+The application makes significant use of `Optional`, `Union`, and `Tuple`
+types in the properties for the various response models. This is a necessity
+due to the way objects are built and returned from
+[libwwdtm](https://github.com/questionlp/libwwdtm). Unfortunately, OpenAPI 3.0,
+the version of the specification that FastAPI supports, does not provide
+analogs for those types in its specification.
+
+This issue doesn't come up when querying the API through Swagger UI; but,
+importing the OpenAPI JSON into Postman running queries and/or tests will
+result in warnings and/or errors regarding incorrect type returned.
 
 ## Installation
 
