@@ -34,7 +34,7 @@ The following tables list out the changes in API endpoints from v1.0 to v2.0.
 |------------------------------------|------------------------------------|
 | /v1.0/guests                       | /v2.0/guests                       |
 | /v1.0/guests/`id`                  | /v2.0/guests/id/`id`               |
-| /v1.0/guests/`id`/details          | /v2.0/guests/details/`id`          |
+| /v1.0/guests/`id`/details          | /v2.0/guests/details/id/`id`       |
 | /v1.0/guests/details               | /v2.0/guests/details               |
 | /v1.0/guests/slug/`slug`           | /v2.0/guests/slug/`slug`           |
 | /v1.0/guests/slug/`slug`/details   | /v2.0/guests/details/slug/`slug`   |
@@ -45,7 +45,7 @@ The following tables list out the changes in API endpoints from v1.0 to v2.0.
 |------------------------------------|------------------------------------|
 | /v1.0/hosts                        | /v2.0/hosts                        |
 | /v1.0/hosts/`id`                   | /v2.0/hosts/id/`id`                |
-| /v1.0/hosts/`id`/details           | /v2.0/hosts/details/`id`           |
+| /v1.0/hosts/`id`/details           | /v2.0/hosts/details/id/`id`        |
 | /v1.0/hosts/details                | /v2.0/hosts/details                |
 | /v1.0/hosts/slug/`slug`            | /v2.0/hosts/slug/`slug`            |
 | /v1.0/hosts/slug/`slug`/details    | /v2.0/hosts/details/slug/`slug`    |
@@ -56,7 +56,7 @@ The following tables list out the changes in API endpoints from v1.0 to v2.0.
 |------------------------------------|----------------------------------------|
 | /v1.0/locations                    | /v2.0/locations                        |
 | /v1.0/locations/`id`               | /v2.0/locations/id/`id`                |
-| /v1.0/locations/`id`/recordings    | /v2.0/locations/recordings/`id`        |
+| /v1.0/locations/`id`/recordings    | /v2.0/locations/recordings/id/`id`     |
 | /v1.0/locations/recordings         | /v2.0/locations/recordings             |
 | *N/A*                              | /v2.0/locations/slug/`slug`            |
 | *N/A*                              | /v2.0/locations/recordings/slug/`slug` |
@@ -82,7 +82,7 @@ The following tables list out the changes in API endpoints from v1.0 to v2.0.
 |------------------------------------|------------------------------------|
 | /v1.0/scorekeepers                 | /v2.0/scorekeepers                 |
 | /v1.0/scorekeepers/`id`            | /v2.0/scorekeepers/id/`id`         |
-| /v1.0/scorekeepers/`id`/details    | /v2.0/scorekeepers/details/`id`    |
+| /v1.0/scorekeepers/`id`/details    | /v2.0/scorekeepers/details/id/`id` |
 | /v1.0/scorekeepers/details         | /v2.0/scorekeepers/details         |
 | /v1.0/scorekeepers/slug/`slug`     | /v2.0/scorekeepers/slug/`slug`     |
 | /v1.0/scorekeepers/slug/`slug`/details | /v2.0/scorekeepers/details/slug/`slug` |
