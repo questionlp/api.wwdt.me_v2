@@ -105,3 +105,15 @@ The following tables list out the changes in API endpoints from v1.0 to v2.0.
 | /v1.0/shows/details                | /v2.0/shows/details                |
 | /v1.0/shows/recent                 | /v2.0/shows/recent                 |
 | /v1.0/shows/recent/details         | /v2.0/shows/details/recent         |
+
+## Documentation Changes
+
+Documentation for v1.0 of the API was handled as an external project based on
+the dormant [Docbox](https://github.com/tmcw/docbox) documentation system.
+
+With v2.0 being built on FastAPI, which is based on [OpenAPI](https://www.openapis.org/),
+the framework can be set up to present API documentation through
+[Swagger UI](https://swagger.io/tools/swagger-ui/) and/or
+[Redoc](https://github.com/Redocly/redoc). To facilitate that, v2.0 makes
+significant use of Pydantic to build out the objects and includes much of the
+documentation while declaring routes and within Python docstrings.

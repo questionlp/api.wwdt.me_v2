@@ -18,38 +18,9 @@ The new v2.0 brings not only a significant change on web frameworks, from
 [Flask](https://flask.palletsprojects.com/) to FastAPI, but also breaks
 compatibility with v1.0 and in terms of API documentation.
 
-### API Routes
-
-To signify the change in API version, all endpoints for v2.0 will be served
-with a route prefix of `v2.0` instead of `v1.0`. v1.0 will still be made
-available for some time and will be served using the existing Flask-based
-codebase.
-
-An effort was made to keep the remaining portions of the endpoints the same
-across both versions. This allows for easier migration from v1.0 to v2.0
-by only changing one part of the request URL.
-
-### Breaking Backwards Compatibility
-The new version moves away from using [JSend](https://github.com/omniti-labs/jsend)
-specification for JSON response format. The change was made to keep the
-response data simple and leverage FastAPI's validation and response handling.
-
-As such, queries against corresponding endpoints will return JSON that does not
-have the JSend response wrapper. Successful requests to v1.0 returns data
-within the `data` property of the returned object. In v2.0, the data is
-returned unencapsulated and directly to the user agent.
-
-### Documentation Changes
-
-Documentation for v1.0 of the API was handled as an external project based on
-the dormant [Docbox](https://github.com/tmcw/docbox) documentation system.
-
-With v2.0 being built on FastAPI, which is based on [OpenAPI](https://www.openapis.org/),
-the framework can be set up to present API documentation through
-[Swagger UI](https://swagger.io/tools/swagger-ui/) and/or
-[Redoc](https://github.com/Redocly/redoc). To facilitate that, v2.0 makes
-significant use of Pydantic to build out the objects and includes much of the
-documentation while declaring routes and within Python docstrings.
+The [API-CHANGES.md](API-CHANGES.md) document details the changes that were
+made from v1.0 to v2.0, including: API response object, API endpoints and API
+documentation.
 
 ## Installation
 
