@@ -26,6 +26,8 @@ _database_connection.autocommit = True
             summary="Retrieve Information for All Panelists",
             response_model=Panelists,
             tags=["Panelists"])
+@router.head("",
+             include_in_schema=False)
 async def get_panelists():
     """Retrieve an array of Panelist objects, each containing: Panelist
     ID, name, slug string, and gender.
@@ -51,6 +53,8 @@ async def get_panelists():
             summary="Retrieve Information by Panelist ID",
             response_model=Panelist,
             tags=["Panelists"])
+@router.head("/id/{panelist_id}",
+             include_in_schema=False)
 async def get_panelist_by_id(panelist_id: PositiveInt):
     """Retrieve a Panelist object, based on Panelist ID, containing:
     Panelist ID, name, slug string, and gender."""
@@ -79,6 +83,8 @@ async def get_panelist_by_id(panelist_id: PositiveInt):
             summary="Retrieve Information by Panelist Slug String",
             response_model=Panelist,
             tags=["Panelists"])
+@router.head("/slug/{panelist_slug}",
+             include_in_schema=False)
 async def get_panelist_by_slug(panelist_slug: constr(strip_whitespace = True)):
     """Retrieve a Panelist object, based on Panelist slug string,
     containing: Panelist ID, name, slug string, and gender."""
@@ -107,6 +113,8 @@ async def get_panelist_by_slug(panelist_slug: constr(strip_whitespace = True)):
             summary="Retrieve Information, Statistics, and Appearances for All Panelists",
             response_model=PanelistsDetails,
             tags=["Panelists"])
+@router.head("/details",
+             include_in_schema=False)
 async def get_panelists_details():
     """Retrieve an array of Panelists objects, each containing:
     Panelists ID, name, slug string, gender, and their statistics
@@ -134,6 +142,8 @@ async def get_panelists_details():
             summary="Retrieve Information, Statistics, and Appearances by Panelist ID",
             response_model=PanelistDetails,
             tags=["Panelists"])
+@router.head("/details/id/{panelist_id}",
+             include_in_schema=False)
 async def get_panelist_details_by_id(panelist_id: PositiveInt):
     """Retrieve a Panelist object, based on Panelist ID, containing:
     Panelist ID, name, slug string, gender, and their statistics and
@@ -165,6 +175,8 @@ async def get_panelist_details_by_id(panelist_id: PositiveInt):
             summary="Retrieve Information, Statistics and Appearances by Panelist by Slug String",
             response_model=PanelistDetails,
             tags=["Panelists"])
+@router.head("/details/slug/{panelist_slug}",
+             include_in_schema=False)
 async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace = True)):
     """Retrieve a Panelist object, based on Panelist slug string,
     containing: Panelist ID, name, slug string, gender, and their
@@ -192,13 +204,12 @@ async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace = 
                                    "retrieve panelist information")
 
 
-
-
-
 @router.get("/scores/id/{panelist_id}",
             summary="Retrieve Panelist Scores for Each Appearance by Panelist ID",
             response_model=PanelistScoresList,
             tags=["Panelists"])
+@router.head("/scores/id/{panelist_id}",
+             include_in_schema=False)
 async def get_panelist_scores_by_id(panelist_id: PositiveInt):
     """Retrieve Panelist scores, based on Panelist ID, as a pair of
     lists, one list of show dates and one list of corresponding scores."""
@@ -227,6 +238,8 @@ async def get_panelist_scores_by_id(panelist_id: PositiveInt):
             summary="Retrieve Panelist Scores for Each Appearance by Panelist Slug String",
             response_model=PanelistScoresList,
             tags=["Panelists"])
+@router.head("/scores/slug/{panelist_slug}",
+             include_in_schema=False)
 async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace = True)):
     """Retrieve Panelist scores, based on Panelist slug string, as a
     pair of lists, one list of show dates and one list of corresponding
@@ -256,6 +269,8 @@ async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace = T
             summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist ID",
             response_model=PanelistScoresOrderedPair,
             tags=["Panelists"])
+@router.head("/scores/ordered-pair/id/{panelist_id}",
+             include_in_schema=False)
 async def get_panelist_scores_ordered_pair_by_id(panelist_id: PositiveInt):
     """Retrieve Panelist scores, based on Panelist ID, as ordered
     pairs, each pair containing the show date and the corresponding
@@ -288,6 +303,8 @@ async def get_panelist_scores_ordered_pair_by_id(panelist_id: PositiveInt):
             summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist Slug String",
             response_model=PanelistScoresOrderedPair,
             tags=["Panelists"])
+@router.head("/scores/ordered-pair/slug/{panelist_slug}",
+             include_in_schema=False)
 async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_whitespace = True)):
     """Retrieve Panelist scores, based on Panelist slug string, as
     ordered pairs, each pair containing the show date and the
@@ -314,6 +331,5 @@ async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_w
         raise HTTPException(status_code=500,
                             detail="Database error occurred while trying to "
                                    "retrieve panelist scores")
-
 
 #endregion
