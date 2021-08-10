@@ -7,6 +7,10 @@ The Stats API is written in Python and is built on
 used to query guest, host, location, panelist, scorekeeper, and show data from
 a copy of the [Wait Wait Don't Tell Me! Stats database](https://github.com/questionlp/wwdtm_database).
 
+If you're looking for the previous version of the Stats API, check out the
+[api.wwdt.me](https://github.com/questionlp/api.wwdt.me) repository on
+GitHub.
+
 ## Requirements
 
 - Python 3.8 or newer
