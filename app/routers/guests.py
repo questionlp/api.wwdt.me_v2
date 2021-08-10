@@ -23,6 +23,8 @@ _database_connection.autocommit = True
             summary="Retrieve Information for All Not My Job Guests",
             response_model=Guests,
             tags=["Guests"])
+@router.head("",
+             include_in_schema=False)
 async def get_guests():
     """Retrieve an array of Not My Job Guest objects, each containing:
     Guest ID, name and slug string.
@@ -49,6 +51,8 @@ async def get_guests():
             summary="Retrieve Information by Not My Job Guest ID",
             response_model=Guest,
             tags=["Guests"])
+@router.head("/id/{guest_id}",
+             include_in_schema=False)
 async def get_guest_by_id(guest_id: PositiveInt):
     """Retrieve a Not My Job Guest object, based on Guest ID,
     containing: Guest ID, name and slug string."""
@@ -77,6 +81,8 @@ async def get_guest_by_id(guest_id: PositiveInt):
             summary="Retrieve Information by Guest Slug String",
             response_model=Guest,
             tags=["Guests"])
+@router.head("/slug/{guest_slug}",
+             include_in_schema=False)
 async def get_guest_by_slug(guest_slug: constr(strip_whitespace = True)):
     """Retrieve a Not My Job Guest object, based on Guest slug string,
     containing: Guest ID, name and slug string."""
@@ -105,6 +111,8 @@ async def get_guest_by_slug(guest_slug: constr(strip_whitespace = True)):
             summary="Retrieve Information and Appearances for All Not My Job Guests",
             response_model=GuestsDetails,
             tags=["Guests"])
+@router.head("/details",
+             include_in_schema=False)
 async def get_guests_details():
     """Retrieve an array of Not My Job Guest objects, each containing:
     Guest ID, name, slug string and their appearance details.
@@ -132,6 +140,8 @@ async def get_guests_details():
             summary="Retrieve Information and Appearances by Not My Job Guest ID",
             response_model=GuestDetails,
             tags=["Guests"])
+@router.head("/details/id/{guest_id}",
+             include_in_schema=False)
 async def get_guest_details_by_id(guest_id: PositiveInt):
     """Retrieve a Not My Job Guest object, based on Guest ID,
     containing: Guest ID, name, slug string, and their appearance details.
@@ -162,6 +172,8 @@ async def get_guest_details_by_id(guest_id: PositiveInt):
             summary="Retrieve Information and Appearances by Guest Slug String",
             response_model=GuestDetails,
             tags=["Guests"])
+@router.head("/details/slug/{guest_slug}",
+             include_in_schema=False)
 async def get_guest_details_by_slug(guest_slug: constr(strip_whitespace = True)):
     """Retrieve a Not My Job Guest object, based on Guest slug string,
     containing: Guest ID, name, slug string, and their appearance details.

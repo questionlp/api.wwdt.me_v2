@@ -24,6 +24,8 @@ _database_connection.autocommit = True
             summary="Retrieve Information for All Locations",
             response_model=Locations,
             tags=["Locations"])
+@router.head("",
+             include_in_schema=False)
 async def get_locations():
     """Retrieve an array of Location objects, each containing:
     Location ID, city, state, venue, and slug string.
@@ -49,6 +51,8 @@ async def get_locations():
 @router.get("/id/{location_id}",
             summary="Retrieve Information by Location ID",
             response_model=Location, tags=["Locations"])
+@router.head("/id/{location_id}",
+             include_in_schema=False)
 async def get_location_by_id(location_id: PositiveInt):
     """Retrieve a Location object, based on Location ID, containing:
     Location ID, city, state, venue, and slug string."""
@@ -77,6 +81,8 @@ async def get_location_by_id(location_id: PositiveInt):
             summary="Retrieve Information by Location Slug String",
             response_model=Location,
             tags=["Locations"])
+@router.head("/slug/{location_slug}",
+             include_in_schema=False)
 async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
     """Retrieve a location object, based on Location slug string,
     containing: Location ID, city, state, venue, and slug string."""
@@ -105,6 +111,8 @@ async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
             summary="Retrieve Information and Recordings for All Locations",
             response_model=LocationsDetails,
             tags=["Locations"])
+@router.head("/recordings",
+             include_in_schema=False)
 async def get_locations_details():
     """Retrieve an array of Location objects, each containing:
     Location ID, city, state, venue, slug string, and an array of
@@ -128,13 +136,12 @@ async def get_locations_details():
                                    "locations from the database")
 
 
-
-
-
 @router.get("/recordings/id/{location_id}",
             summary="Retrieve Information and Recordings by Location ID",
             response_model=LocationDetails,
             tags=["Locations"])
+@router.head("/recordings/id/{location_id}",
+             include_in_schema=False)
 async def get_location_recordings_by_id(location_id: PositiveInt):
     """Retrieve a Location object, based on Location ID, containing:
     Location ID, city, state, venue, slug string, and an array of
@@ -166,6 +173,8 @@ async def get_location_recordings_by_id(location_id: PositiveInt):
             summary="Retrieve Information and Recordings by Location Slug String",
             response_model=LocationDetails,
             tags=["Locations"])
+@router.head("/recordings/slug/{location_slug}",
+             include_in_schema=False)
 async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace = True)):
     """Retrieve a Location object, based on Location slug string,
     containing: Location ID, city, state, venue, slug string, and an

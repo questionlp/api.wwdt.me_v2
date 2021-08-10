@@ -23,6 +23,8 @@ _database_connection.autocommit = True
             summary="Retrieve Information for All Hosts",
             response_model=Hosts,
             tags=["Hosts"])
+@router.head("",
+             include_in_schema=False)
 async def get_hosts():
     """Retrieve an array of Host objects, each containing: Host ID,
     name, slug string, and gender.
@@ -49,6 +51,8 @@ async def get_hosts():
             summary="Retrieve Information by Host ID",
             response_model=Host,
             tags=["Hosts"])
+@router.head("/id/{host_id}",
+             include_in_schema=False)
 async def get_host_by_id(host_id: PositiveInt):
     """Retrieve a Host object, based on Host ID, containing: Host ID,
     name, slug string, and gender."""
@@ -77,6 +81,8 @@ async def get_host_by_id(host_id: PositiveInt):
             summary="Retrieve Information by Host Slug String",
             response_model=Host,
             tags=["Hosts"])
+@router.head("/slug/{host_slug}",
+             include_in_schema=False)
 async def get_host_by_slug(host_slug: constr(strip_whitespace = True)):
     """Retrieve a Host object, based on Host slug string, containing:
     Host ID, name, slug string, and gender."""
@@ -105,6 +111,8 @@ async def get_host_by_slug(host_slug: constr(strip_whitespace = True)):
             summary="Retrieve Information and Appearances for All Hosts",
             response_model=HostsDetails,
             tags=["Hosts"])
+@router.head("/details",
+             include_in_schema=False)
 async def get_hosts_details():
     """Retrieve an array of Host objects, each containing: Host ID,
     name, slug string, gender, and their appearance details.
@@ -132,6 +140,8 @@ async def get_hosts_details():
             summary="Retrieve Information and Appearances by Host ID",
             response_model=HostDetails,
             tags=["Hosts"])
+@router.head("/details/id/{host_id}",
+             include_in_schema=False)
 async def get_host_details_by_id(host_id: PositiveInt):
     """Retrieve a Host object, based on Host ID, containing: Host ID,
     name, slug string, gender, and their appearance details.
@@ -162,6 +172,8 @@ async def get_host_details_by_id(host_id: PositiveInt):
             summary="Retrieve Information and Appearances by Host by Slug String",
             response_model=HostDetails,
             tags=["Hosts"])
+@router.head("/details/slug/{host_slug}",
+             include_in_schema=False)
 async def get_host_details_by_slug(host_slug: constr(strip_whitespace = True)):
     """Retrieve a Host object, based on Host slug string, containing:
     Host ID, name, slug string, gender, and their appearance details.
