@@ -28,6 +28,15 @@ refer to the [API-CHANGES.md](API-CHANGES.md) document. The document details
 the new API response object format, changes in API endpoints, and migrating
 to OpenAPI-based documentation.
 
+## Known Issues
+
+The models used in this application make significant use of `Optional`,
+`Union`, and `Tuple` types in properties due to the way
+[libwwdtm](https://github.com/questionlp/libwwdtm) was originally designed.
+Unfortunately, OpenAPI 3.0, the version of the specification that FastAPI
+supports, does not provide analogs for those types in that version of the
+specification.
+
 ## Installation
 
 Refer to [INSTALLING.md](INSTALLING.md) for information on how to set up an
