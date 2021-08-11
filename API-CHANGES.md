@@ -24,9 +24,10 @@ Requests that lead to no data being found will return a response object with a
 key/value pair containing a brief message and either an HTTP status code of
 `404 Not Found`.
 
-## Endpoint Changes
+## API Endpoint Changes
 
-The following tables list out the changes in API endpoints from v1.0 to v2.0.
+The following tables list out the changes in API endpoints paths from v1.0 to
+v2.0. Also, v2.0 adds two new Location enpoints and one new Shows endpoint.
 
 ### Guests
 
