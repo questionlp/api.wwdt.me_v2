@@ -26,6 +26,8 @@ router = APIRouter(
             summary="Retrieve Wait Wait Stats API and Application Version Information",
             response_model=Version,
             tags=["Version"])
+@router.head("",
+             include_in_schema=False)
 async def get_version():
     """Retrieve Wait Wait Stats API version, application version, and
     wwdtm library version"""

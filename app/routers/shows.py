@@ -24,6 +24,8 @@ _database_connection.autocommit = True
             summary="Retrieve Information for All Shows",
             response_model=Shows,
             tags=["Shows"])
+@router.head("",
+             include_in_schema=False)
 async def get_shows():
     """Retrieve an array of Show objects, each containing: Show ID,
     date and basic information.
@@ -50,6 +52,8 @@ async def get_shows():
             summary="Retrieve Information by Show ID",
             response_model=Show,
             tags=["Shows"])
+@router.head("/id/{show_id}",
+             include_in_schema=False)
 async def get_show_by_id(show_id: PositiveInt):
     """Retrieve a Show object, based on Show ID, containing: Show ID,
     date and basic information."""
@@ -74,9 +78,11 @@ async def get_show_by_id(show_id: PositiveInt):
 
 
 @router.get("/date/iso/{show_date}",
-            summary="Retrieve Information ",
+            summary="Retrieve Information for Shows by Year, Month, and Day using ISO format date",
             response_model=Show,
             tags=["Shows"])
+@router.head("/date/iso/{show_date}",
+             include_in_schema=False)
 async def get_show_by_date_string(show_date: constr(strip_whitespace=True)):
     """Retrieve a Show object, based on show date in ISO format
     (YYYY-MM-DD), containing: Show ID, date and basic information."""
@@ -105,6 +111,8 @@ async def get_show_by_date_string(show_date: constr(strip_whitespace=True)):
             summary="Retrieve Information for Shows by Year",
             response_model=Shows,
             tags=["Shows"])
+@router.head("/date/{year}",
+             include_in_schema=False)
 async def get_shows_by_year(year: PositiveInt):
     """Retrieve an array of Show objects, based on year, containing:
     Show ID, date and basic information.
@@ -134,6 +142,8 @@ async def get_shows_by_year(year: PositiveInt):
             summary="Retrieve Information for Shows by Year and Month",
             response_model=Shows,
             tags=["Shows"])
+@router.head("/date/{year}/{month}",
+             include_in_schema=False)
 async def get_shows_by_year_month(year: PositiveInt,
                                   month: PositiveInt):
     """Retrieve an array of Show objects, based on year and month,
@@ -164,6 +174,8 @@ async def get_shows_by_year_month(year: PositiveInt,
             summary="Retrieve Information for a Show by Year, Month, and Day",
             response_model=Show,
             tags=["Shows"])
+@router.head("/date/{year}/{month}/{day}",
+             include_in_schema=False)
 async def get_show_by_date(year: PositiveInt,
                            month: PositiveInt,
                            day: PositiveInt):
@@ -194,6 +206,8 @@ async def get_show_by_date(year: PositiveInt,
             summary="Retrieve All Show Dates",
             response_model=ShowDates,
             tags=["Shows"])
+@router.head("/dates",
+             include_in_schema=False)
 async def get_all_show_dates():
     """Retrieve an array of all show dates in ISO format (YYYY-MM-DD).
 
@@ -219,6 +233,8 @@ async def get_all_show_dates():
             summary="Retrieve Detailed Information for All Shows",
             response_model=ShowsDetails,
             tags=["Shows"])
+@router.head("/details",
+             include_in_schema=False)
 async def get_shows_details():
     """Retrieve an array of Show objects, each containing: Show ID,
     date, Host, Scorekeeper, Panelists, Guests and other information.
@@ -242,9 +258,11 @@ async def get_shows_details():
 
 
 @router.get("/details/date/iso/{show_date}",
-            summary="Retrieve Detailed Information for Shows by Year, Month, and Day",
+            summary="Retrieve Detailed Information for Shows by Year, Month, and Day using ISO format date",
             response_model=ShowDetails,
             tags=["Shows"])
+@router.head("/details/date/iso/{show_date}",
+             include_in_schema=False)
 async def get_show_details_by_date(show_date: constr(strip_whitespace=True)):
     """Retrieve an array of Show objects, based on show date in ISO
     format (YYYY-MM-DD), containing: Show ID, date, Host, Scorekeeper,
@@ -274,6 +292,8 @@ async def get_show_details_by_date(show_date: constr(strip_whitespace=True)):
             summary="Retrieve Detailed Information for Shows by Year",
             response_model=ShowsDetails,
             tags=["Shows"])
+@router.head("/details/date/{year}",
+             include_in_schema=False)
 async def get_shows_details_by_year(year: PositiveInt):
     """Retrieve an array of Show objects, based on year, containing:
     Show ID, date, Host, Scorekeeper, Panelists, Guests and other
@@ -304,6 +324,8 @@ async def get_shows_details_by_year(year: PositiveInt):
             summary="Retrieve Detailed Information for Shows by Year and Month",
             response_model=ShowsDetails,
             tags=["Shows"])
+@router.head("/details/date/{year}/{month}",
+             include_in_schema=False)
 async def get_shows_details_by_year_month(year: PositiveInt,
                                           month: PositiveInt):
     """Retrieve an array of Show objects, based on year and month,
@@ -335,6 +357,8 @@ async def get_shows_details_by_year_month(year: PositiveInt,
             summary="Retrieve Detailed Information for a Show by Year, Month, and Day",
             response_model=ShowDetails,
             tags=["Shows"])
+@router.head("/details/date/{year}/{month}/{day}",
+             include_in_schema=False)
 async def get_show_details_by_date(year: PositiveInt,
                                    month: PositiveInt,
                                    day: PositiveInt):
@@ -366,6 +390,8 @@ async def get_show_details_by_date(year: PositiveInt,
             summary="Retrieve Detailed Information by Show ID",
             response_model=ShowDetails,
             tags=["Shows"])
+@router.head("/details/id/{show_id}",
+             include_in_schema=False)
 async def get_show_details_by_id(show_id: PositiveInt):
     """Retrieve a Show object, based on Show ID, containing: Show ID,
     date, Host, Scorekeeper, Panelists, Guests and other information."""
@@ -393,6 +419,8 @@ async def get_show_details_by_id(show_id: PositiveInt):
             summary="Retrieve Detailed Information for Recent Shows",
             response_model=ShowsDetails,
             tags=["Shows"])
+@router.head("/details/recent",
+             include_in_schema=False)
 async def get_shows_recent_details():
     """Retrieve an array of Show objects for recent shows, each
     containing: Show ID, date, Host, Scorekeeper, Panelists, Guests
@@ -420,6 +448,8 @@ async def get_shows_recent_details():
             summary="Retrieve Information for Recent Shows",
             response_model=Shows,
             tags=["Shows"])
+@router.head("/recent",
+             include_in_schema=False)
 async def get_shows_recent():
     """Retrieve an array of Show objects for recent shows, each
     containing: Show ID, date and basic information.

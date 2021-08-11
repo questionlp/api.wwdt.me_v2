@@ -25,6 +25,8 @@ _database_connection.autocommit = True
             summary="Retrieve Information for All Scorekeepers",
             response_model=Scorekeepers,
             tags=["Scorekeepers"])
+@router.head("",
+             include_in_schema=False)
 async def get_scorekeepers():
     """Retrieve an array of Scorekeepers objects, each containing:
     Scorekeepers ID, name, slug string, and gender.
@@ -50,6 +52,8 @@ async def get_scorekeepers():
             summary="Retrieve Information by Scorekeeper ID",
             response_model=Scorekeeper,
             tags=["Scorekeepers"])
+@router.head("/id/{scorekeeper_id}",
+             include_in_schema=False)
 async def get_scorekeeper_by_id(scorekeeper_id: PositiveInt):
     """Retrieve a Scorekeeper object, based on Scorekeeper ID,
     containing: Scorekeeper ID, name, slug string, and gender."""
@@ -78,6 +82,8 @@ async def get_scorekeeper_by_id(scorekeeper_id: PositiveInt):
             summary="Retrieve Information by Scorekeeper Slug String",
             response_model=Scorekeeper,
             tags=["Scorekeepers"])
+@router.head("/slug/{scorekeeper_slug}",
+             include_in_schema=False)
 async def get_scorekeeper_by_slug(scorekeeper_slug: constr(strip_whitespace = True)):
     """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
     containing: Scorekeeper ID, name, slug string, and gender."""
@@ -106,6 +112,8 @@ async def get_scorekeeper_by_slug(scorekeeper_slug: constr(strip_whitespace = Tr
             summary="Retrieve Information and Appearances for All Scorekeepers",
             response_model=ScorekeepersDetails,
             tags=["Scorekeepers"])
+@router.head("/details",
+             include_in_schema=False)
 async def get_scorekeepers_details():
     """Retrieve an array of Scorekeepers objects, each containing:
     Scorekeepers ID, name, slug string, gender, and their appearance
@@ -133,6 +141,8 @@ async def get_scorekeepers_details():
             summary="Retrieve Information and Appearances by Scorekeeper ID",
             response_model=ScorekeeperDetails,
             tags=["Scorekeepers"])
+@router.head("/details/id/{scorekeeper_id}",
+             include_in_schema=False)
 async def get_scorekeeper_details_by_id(scorekeeper_id: PositiveInt):
     """Retrieve a Scorekeeper object, based on Scorekeeper ID,
     containing: Scorekeeper ID, name, slug string, gender, and their
@@ -164,6 +174,8 @@ async def get_scorekeeper_details_by_id(scorekeeper_id: PositiveInt):
             summary="Retrieve Information and Appearances by Scorekeeper by Slug String",
             response_model=ScorekeeperDetails,
             tags=["Scorekeepers"])
+@router.head("/details/slug/{scorekeeper_slug}",
+             include_in_schema=False)
 async def get_scorekeeper_details_by_slug(scorekeeper_slug: constr(strip_whitespace = True)):
     """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
     containing: Scorekeeper ID, name, slug string, gender, and their

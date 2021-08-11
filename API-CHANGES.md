@@ -102,6 +102,7 @@ The following tables list out the changes in API endpoints from v1.0 to v2.0.
 | /v1.0/shows/date/`year`/`month`/`day`/details | /v2.0/shows/details/date/`year`/`month`/`day` |
 | /v1.0/shows/date/iso/`yyyy-mm-dd`  | /v2.0/shows/date/iso/`yyyy-mm-dd`  |
 | /v1.0/shows/date/iso/`yyyy-mm-dd`/details | /v2.0/shows/details/iso/`yyyy-mm-dd` |
+| *N/A*                              | /v2.0/shows/dates/                 |
 | /v1.0/shows/details                | /v2.0/shows/details                |
 | /v1.0/shows/recent                 | /v2.0/shows/recent                 |
 | /v1.0/shows/recent/details         | /v2.0/shows/details/recent         |
