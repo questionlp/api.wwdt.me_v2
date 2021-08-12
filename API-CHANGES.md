@@ -103,7 +103,7 @@ v2.0. Also, v2.0 adds two new Location enpoints and one new Shows endpoint.
 | /v1.0/shows/date/`year`/`month`/`day`/details | /v2.0/shows/details/date/`year`/`month`/`day` |
 | /v1.0/shows/date/iso/`yyyy-mm-dd`  | /v2.0/shows/date/iso/`yyyy-mm-dd`  |
 | /v1.0/shows/date/iso/`yyyy-mm-dd`/details | /v2.0/shows/details/iso/`yyyy-mm-dd` |
-| *N/A*                              | /v2.0/shows/dates/                 |
+| *N/A*                              | /v2.0/shows/dates                  |
 | /v1.0/shows/details                | /v2.0/shows/details                |
 | /v1.0/shows/recent                 | /v2.0/shows/recent                 |
 | /v1.0/shows/recent/details         | /v2.0/shows/details/recent         |
