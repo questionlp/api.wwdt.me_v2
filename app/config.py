@@ -23,4 +23,5 @@ def load_database_config() -> Dict[str, Any]:
         "compress": bool(os.getenv("DATABASE_COMPRESSION", True)),
         "charset": os.getenv("DATABASE_CHARSET", "utf8mb4"),
         "collation": os.getenv("DATABASE_COLLATION", "utf8mb4_unicode_ci"),
+        "time_zone": os.getenv("DATABASE_TIME_ZONE", "UTC"),
     }
