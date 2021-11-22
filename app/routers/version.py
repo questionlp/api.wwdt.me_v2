@@ -5,23 +5,15 @@
 
 from app.config import API_VERSION, APP_VERSION
 from fastapi import APIRouter
-from pydantic import BaseModel, Field
 from wwdtm import VERSION as wwdtm_version
-
-#region Version Models
-class Version(BaseModel):
-    """Wait Wait Stats API and Application Version Information"""
-    api: str = Field(title="Wait Wait Stats API Version")
-    app: str = Field(title="Application Version")
-    wwdtm: str = Field(title="wwdtm Version")
-
-#endregion
+from app.models.version import Version
 
 router = APIRouter(
     prefix=f"/v{API_VERSION}/version"
 )
 
-#region Routes
+
+# region Routes
 @router.get("",
             summary="Retrieve Wait Wait Stats API and Application Version Information",
             response_model=Version,
@@ -37,4 +29,4 @@ async def get_version():
         "wwdtm": wwdtm_version,
     }
 
-#endregion
+# endregion
