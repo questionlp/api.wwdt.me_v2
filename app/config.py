@@ -3,26 +3,26 @@
 # api.wwdt.me is relased under the terms of the Apache License 2.0
 """Application Configuration"""
 
-import os
+import json
 from typing import Any, Dict
-
-from dotenv import find_dotenv, load_dotenv
 
 API_VERSION = "2.0"
 APP_VERSION = "2.0.0-alpha.1"
 
 
-def load_database_config() -> Dict[str, Any]:
-    load_dotenv(find_dotenv())
-    return {
-        "host": os.getenv("DATABASE_HOST"),
-        "user": os.getenv("DATABASE_USER"),
-        "password": os.getenv("DATABASE_PASSWORD"),
-        "database": os.getenv("DATABASE_NAME"),
-        "port": os.getenv("DATABASE_PORT", 3306),
-        "raise_on_warnings": bool(os.getenv("DATABASE_RAISE_ON_WARNINGS", True)),
-        "compress": bool(os.getenv("DATABASE_COMPRESSION", False)),
-        "charset": os.getenv("DATABASE_CHARSET", "utf8mb4"),
-        "collation": os.getenv("DATABASE_COLLATION", "utf8mb4_unicode_ci"),
-        "time_zone": os.getenv("DATABASE_TIME_ZONE", "UTC"),
-    }
+def load_database_config(config_file: str = "config.json") -> Dict[str, Any]:
+    """Reads in database configuration values from a configuration
+    JSON file and returns a dictionary with the values.
+
+    :param config_file: Path to the configuration JSON file
+    :type config_file: str, optional
+    :return: Dictionary containing database configuration settings
+    :rtype: Dict[str, Any]
+    """
+    with open("config.json", "r") as config_file:
+        config_dict = json.load(config_file)
+
+    if "database" in config_dict:
+        return config_dict["database"]
+    else:
+        return {}
