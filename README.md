@@ -5,11 +5,11 @@
 The Stats API is written in Python and is built on
 [FastAPI](https://fastapi.tiangolo.com/) and provides endpoints that can be
 used to query guest, host, location, panelist, scorekeeper, and show data from
-a copy of the [Wait Wait Don't Tell Me! Stats database](https://github.com/questionlp/wwdtm_database).
+a copy of the
+[Wait Wait Don't Tell Me! Stats database](https://github.com/questionlp/wwdtm_database).
 
-If you're looking for the previous version of the Stats API, check out the
-[api.wwdt.me](https://github.com/questionlp/api.wwdt.me) repository on
-GitHub.
+If you're looking for the version 1.0 of the API, check out the
+[api.wwdt.me](https://github.com/questionlp/api.wwdt.me) repository.
 
 ## Requirements
 
@@ -35,7 +35,7 @@ to OpenAPI-based documentation.
 The application makes significant use of `Optional`, `Union`, and `Tuple`
 types in the properties for the various response models. This is a necessity
 due to the way objects are built and returned from
-[libwwdtm](https://github.com/questionlp/libwwdtm). Unfortunately, OpenAPI 3.0,
+[wwdtm](https://github.com/questionlp/wwdtm). Unfortunately, OpenAPI 3.0,
 the version of the specification that FastAPI supports, does not provide
 analogs for those types in its specification.
 
