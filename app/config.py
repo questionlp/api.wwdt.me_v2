@@ -8,8 +8,9 @@ from typing import Any, Dict
 
 from dotenv import find_dotenv, load_dotenv
 
-API_VERSION="2.0"
-APP_VERSION="2.0.0a1"
+API_VERSION = "2.0"
+APP_VERSION = "2.0.0-alpha.1"
+
 
 def load_database_config() -> Dict[str, Any]:
     load_dotenv(find_dotenv())
@@ -20,7 +21,7 @@ def load_database_config() -> Dict[str, Any]:
         "database": os.getenv("DATABASE_NAME"),
         "port": os.getenv("DATABASE_PORT", 3306),
         "raise_on_warnings": bool(os.getenv("DATABASE_RAISE_ON_WARNINGS", True)),
-        "compress": bool(os.getenv("DATABASE_COMPRESSION", True)),
+        "compress": bool(os.getenv("DATABASE_COMPRESSION", False)),
         "charset": os.getenv("DATABASE_CHARSET", "utf8mb4"),
         "collation": os.getenv("DATABASE_COLLATION", "utf8mb4_unicode_ci"),
         "time_zone": os.getenv("DATABASE_TIME_ZONE", "UTC"),
