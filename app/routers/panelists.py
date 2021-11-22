@@ -7,12 +7,14 @@ from app.config import API_VERSION, load_database_config
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import constr, PositiveInt
-from wwdtm.panelist import details, info
-from app.models.panelists import (Panelist, Panelists,
-                                  PanelistDetails, PanelistsDetails,
-                                  PanelistScoresList,
-                                  PanelistScoresOrderedPair)
+from pydantic import conint, constr
+from wwdtm.panelist import Panelist, PanelistScores
+from app.models.panelists import (Panelist as ModelsPanelist,
+                                  Panelists as ModelsPanelists,
+                                  PanelistDetails as ModelsPanelistDetails,
+                                  PanelistsDetails as ModelsPanelistsDetails,
+                                  PanelistScoresList as ModelsPanelistScoresList,
+                                  PanelistScoresOrderedPair as ModelsPanelistScoresOrderedPair)
 
 router = APIRouter(
     prefix=f"/v{API_VERSION}/panelists"
@@ -21,10 +23,11 @@ _database_config = load_database_config()
 _database_connection = mysql.connector.connect(**_database_config)
 _database_connection.autocommit = True
 
-#region Routes
+
+# region Routes
 @router.get("",
             summary="Retrieve Information for All Panelists",
-            response_model=Panelists,
+            response_model=ModelsPanelists,
             tags=["Panelists"])
 @router.head("",
              include_in_schema=False)
@@ -34,8 +37,8 @@ async def get_panelists():
 
     Results are sorted by panelist name."""
     try:
-        _database_connection.reconnect()
-        panelists = info.retrieve_all(_database_connection)
+        panelist = Panelist(database_connection=_database_connection)
+        panelists = panelist.retrieve_all()
         if not panelists:
             raise HTTPException(status_code=404, detail="No panelists found")
         else:
@@ -51,17 +54,16 @@ async def get_panelists():
 
 @router.get("/id/{panelist_id}",
             summary="Retrieve Information by Panelist ID",
-            response_model=Panelist,
+            response_model=ModelsPanelist,
             tags=["Panelists"])
 @router.head("/id/{panelist_id}",
              include_in_schema=False)
-async def get_panelist_by_id(panelist_id: PositiveInt):
+async def get_panelist_by_id(panelist_id: conint(ge=0, lt=2**31)):
     """Retrieve a Panelist object, based on Panelist ID, containing:
     Panelist ID, name, slug string, and gender."""
     try:
-        _database_connection.reconnect()
-        panelist_info = info.retrieve_by_id(panelist_id,
-                                            _database_connection)
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_info = panelist.retrieve_by_id(panelist_id)
         if not panelist_info:
             raise HTTPException(status_code=404,
                                 detail=f"Panelist ID {panelist_id} not found")
@@ -81,17 +83,16 @@ async def get_panelist_by_id(panelist_id: PositiveInt):
 
 @router.get("/slug/{panelist_slug}",
             summary="Retrieve Information by Panelist Slug String",
-            response_model=Panelist,
+            response_model=ModelsPanelist,
             tags=["Panelists"])
 @router.head("/slug/{panelist_slug}",
              include_in_schema=False)
-async def get_panelist_by_slug(panelist_slug: constr(strip_whitespace = True)):
+async def get_panelist_by_slug(panelist_slug: constr(strip_whitespace=True)):
     """Retrieve a Panelist object, based on Panelist slug string,
     containing: Panelist ID, name, slug string, and gender."""
     try:
-        _database_connection.reconnect()
-        panelist_info = info.retrieve_by_slug(panelist_slug,
-                                              _database_connection)
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_info = panelist.retrieve_by_slug(panelist_slug)
         if not panelist_info:
             raise HTTPException(status_code=404,
                                 detail=f"Panelist slug string {panelist_slug} not found")
@@ -111,7 +112,7 @@ async def get_panelist_by_slug(panelist_slug: constr(strip_whitespace = True)):
 
 @router.get("/details",
             summary="Retrieve Information, Statistics, and Appearances for All Panelists",
-            response_model=PanelistsDetails,
+            response_model=ModelsPanelistsDetails,
             tags=["Panelists"])
 @router.head("/details",
              include_in_schema=False)
@@ -123,8 +124,8 @@ async def get_panelists_details():
     Results are sorted by panelist name, with panelist apperances
     sorted by show date."""
     try:
-        _database_connection.reconnect()
-        panelists = details.retrieve_all(_database_connection)
+        panelist = Panelist(database_connection=_database_connection)
+        panelists = panelist.retrieve_all_details()
         if not panelists:
             raise HTTPException(status_code=404, detail="No panelists found")
         else:
@@ -140,20 +141,19 @@ async def get_panelists_details():
 
 @router.get("/details/id/{panelist_id}",
             summary="Retrieve Information, Statistics, and Appearances by Panelist ID",
-            response_model=PanelistDetails,
+            response_model=ModelsPanelistDetails,
             tags=["Panelists"])
 @router.head("/details/id/{panelist_id}",
              include_in_schema=False)
-async def get_panelist_details_by_id(panelist_id: PositiveInt):
+async def get_panelist_details_by_id(panelist_id: conint(ge=0, lt=2**31)):
     """Retrieve a Panelist object, based on Panelist ID, containing:
     Panelist ID, name, slug string, gender, and their statistics and
     appearance details.
 
     Panelist appearances are sorted by show date."""
     try:
-        _database_connection.reconnect()
-        panelist_details = details.retrieve_by_id(panelist_id,
-                                                  _database_connection)
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_details = panelist.retrieve_details_by_id(panelist_id)
         if not panelist_details:
             raise HTTPException(status_code=404,
                                 detail=f"Panelist ID {panelist_id} not found")
@@ -173,20 +173,19 @@ async def get_panelist_details_by_id(panelist_id: PositiveInt):
 
 @router.get("/details/slug/{panelist_slug}",
             summary="Retrieve Information, Statistics and Appearances by Panelist by Slug String",
-            response_model=PanelistDetails,
+            response_model=ModelsPanelistDetails,
             tags=["Panelists"])
 @router.head("/details/slug/{panelist_slug}",
              include_in_schema=False)
-async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace = True)):
+async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace=True)):
     """Retrieve a Panelist object, based on Panelist slug string,
     containing: Panelist ID, name, slug string, gender, and their
     statistics and appearance details.
 
     Panelist appearances are sorted by show date."""
     try:
-        _database_connection.reconnect()
-        panelist_details = details.retrieve_by_slug(panelist_slug,
-                                                    _database_connection)
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_details = panelist.retrieve_details_by_slug(panelist_slug)
         if not panelist_details:
             raise HTTPException(status_code=404,
                                 detail=f"Panelist slug string {panelist_slug} not found")
@@ -206,22 +205,21 @@ async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace = 
 
 @router.get("/scores/id/{panelist_id}",
             summary="Retrieve Panelist Scores for Each Appearance by Panelist ID",
-            response_model=PanelistScoresList,
+            response_model=ModelsPanelistScoresList,
             tags=["Panelists"])
 @router.head("/scores/id/{panelist_id}",
              include_in_schema=False)
-async def get_panelist_scores_by_id(panelist_id: PositiveInt):
+async def get_panelist_scores_by_id(panelist_id: conint(ge=0, lt=2**31)):
     """Retrieve Panelist scores, based on Panelist ID, as a pair of
     lists, one list of show dates and one list of corresponding scores."""
     try:
-        _database_connection.reconnect()
-        panelist_scores = info.retrieve_scores_list_by_id(panelist_id,
-                                                          _database_connection)
-        if not panelist_scores:
+        panelist_scores = PanelistScores(database_connection=_database_connection)
+        scores = panelist_scores.retrieve_scores_list_by_id(panelist_id)
+        if not scores:
             raise HTTPException(status_code=404,
                                 detail=f"Scoring data for Panelist ID {panelist_id} not found")
         else:
-            return panelist_scores
+            return scores
     except ValueError:
         raise HTTPException(status_code=404,
                             detail=f"Panelist ID {panelist_id} not found")
@@ -236,23 +234,22 @@ async def get_panelist_scores_by_id(panelist_id: PositiveInt):
 
 @router.get("/scores/slug/{panelist_slug}",
             summary="Retrieve Panelist Scores for Each Appearance by Panelist Slug String",
-            response_model=PanelistScoresList,
+            response_model=ModelsPanelistScoresList,
             tags=["Panelists"])
 @router.head("/scores/slug/{panelist_slug}",
              include_in_schema=False)
-async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace = True)):
+async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=True)):
     """Retrieve Panelist scores, based on Panelist slug string, as a
     pair of lists, one list of show dates and one list of corresponding
     scores."""
     try:
-        _database_connection.reconnect()
-        panelist_scores = info.retrieve_scores_list_by_slug(panelist_slug,
-                                                            _database_connection)
-        if not panelist_scores:
+        panelist_scores = PanelistScores(database_connection=_database_connection)
+        scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug)
+        if not scores:
             raise HTTPException(status_code=404,
                                 detail=f"Scoring data for Panelist slug string {panelist_slug} not found")
         else:
-            return panelist_scores
+            return scores
     except ValueError:
         raise HTTPException(status_code=404,
                             detail=f"Panelist slug string {panelist_slug} not found")
@@ -267,11 +264,11 @@ async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace = T
 
 @router.get("/scores/ordered-pair/id/{panelist_id}",
             summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist ID",
-            response_model=PanelistScoresOrderedPair,
+            response_model=ModelsPanelistScoresOrderedPair,
             tags=["Panelists"])
 @router.head("/scores/ordered-pair/id/{panelist_id}",
              include_in_schema=False)
-async def get_panelist_scores_ordered_pair_by_id(panelist_id: PositiveInt):
+async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2**31)):
     """Retrieve Panelist scores, based on Panelist ID, as ordered
     pairs, each pair containing the show date and the corresponding
     score.
@@ -279,14 +276,13 @@ async def get_panelist_scores_ordered_pair_by_id(panelist_id: PositiveInt):
     **Note**: OpenAPI 3.0 does not support representation of tuples in
     models. The output is in the form of `(str, int)`."""
     try:
-        _database_connection.reconnect()
-        panelist_scores = info.retrieve_scores_ordered_pair_by_id(panelist_id,
-                                                                  _database_connection)
-        if not panelist_scores:
+        panelist_scores = PanelistScores(database_connection=_database_connection)
+        scores = panelist_scores.retrieve_scores_ordered_pair_by_id(panelist_id)
+        if not scores:
             raise HTTPException(status_code=404,
                                 detail=f"Scoring data for Panelist ID {panelist_id} not found")
         else:
-            return {"scores": panelist_scores}
+            return {"scores": scores}
     except ValueError:
         raise HTTPException(status_code=404,
                             detail=f"Panelist ID {panelist_id} not found")
@@ -301,11 +297,11 @@ async def get_panelist_scores_ordered_pair_by_id(panelist_id: PositiveInt):
 
 @router.get("/scores/ordered-pair/slug/{panelist_slug}",
             summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist Slug String",
-            response_model=PanelistScoresOrderedPair,
+            response_model=ModelsPanelistScoresOrderedPair,
             tags=["Panelists"])
 @router.head("/scores/ordered-pair/slug/{panelist_slug}",
              include_in_schema=False)
-async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_whitespace = True)):
+async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_whitespace=True)):
     """Retrieve Panelist scores, based on Panelist slug string, as
     ordered pairs, each pair containing the show date and the
     corresponding score.
@@ -313,14 +309,13 @@ async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_w
     **Note**: OpenAPI 3.0 does not support representation of tuples in
     models. The output is in the form of `(str, int)`."""
     try:
-        _database_connection.reconnect()
-        panelist_scores = info.retrieve_scores_ordered_pair_by_slug(panelist_slug,
-                                                                    _database_connection)
-        if not panelist_scores:
+        panelist_scores = PanelistScores(database_connection=_database_connection)
+        scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(panelist_slug)
+        if not scores:
             raise HTTPException(status_code=404,
                                 detail=f"Scoring data for Panelist slug string {panelist_slug} not found")
         else:
-            return {"scores": panelist_scores}
+            return {"scores": scores}
     except ValueError:
         raise HTTPException(status_code=404,
                             detail=f"Panelist slug string {panelist_slug} not found")
@@ -332,4 +327,4 @@ async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_w
                             detail="Database error occurred while trying to "
                                    "retrieve panelist scores")
 
-#endregion
+# endregion

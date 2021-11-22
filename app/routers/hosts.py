@@ -7,9 +7,12 @@ from app.config import API_VERSION, load_database_config
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import constr, PositiveInt
-from wwdtm.host import details, info
-from app.models.hosts import (Host, Hosts, HostDetails, HostsDetails)
+from pydantic import conint, constr
+from wwdtm.host import Host
+from app.models.hosts import (Host as ModelsHost,
+                              Hosts as ModelsHosts,
+                              HostDetails as ModelsHostDetails,
+                              HostsDetails as ModelsHostsDetails)
 
 router = APIRouter(
     prefix=f"/v{API_VERSION}/hosts"
@@ -18,10 +21,11 @@ _database_config = load_database_config()
 _database_connection = mysql.connector.connect(**_database_config)
 _database_connection.autocommit = True
 
-#region Routes
+
+# region Routes
 @router.get("",
             summary="Retrieve Information for All Hosts",
-            response_model=Hosts,
+            response_model=ModelsHosts,
             tags=["Hosts"])
 @router.head("",
              include_in_schema=False)
@@ -31,8 +35,8 @@ async def get_hosts():
 
     Results are sorted by host name."""
     try:
-        _database_connection.reconnect()
-        hosts = info.retrieve_all(_database_connection)
+        host = Host(database_connection=_database_connection)
+        hosts = host.retrieve_all()
         if not hosts:
             raise HTTPException(status_code=404,
                                 detail="No hosts found")
@@ -49,17 +53,16 @@ async def get_hosts():
 
 @router.get("/id/{host_id}",
             summary="Retrieve Information by Host ID",
-            response_model=Host,
+            response_model=ModelsHost,
             tags=["Hosts"])
 @router.head("/id/{host_id}",
              include_in_schema=False)
-async def get_host_by_id(host_id: PositiveInt):
+async def get_host_by_id(host_id: conint(ge=0, lt=2**31)):
     """Retrieve a Host object, based on Host ID, containing: Host ID,
     name, slug string, and gender."""
     try:
-        _database_connection.reconnect()
-        host_info = info.retrieve_by_id(host_id,
-                                        _database_connection)
+        host = Host(database_connection=_database_connection)
+        host_info = host.retrieve_by_id(host_id)
         if not host_info:
             raise HTTPException(status_code=404,
                                 detail=f"Host ID {host_id} not found")
@@ -79,17 +82,16 @@ async def get_host_by_id(host_id: PositiveInt):
 
 @router.get("/slug/{host_slug}",
             summary="Retrieve Information by Host Slug String",
-            response_model=Host,
+            response_model=ModelsHost,
             tags=["Hosts"])
 @router.head("/slug/{host_slug}",
              include_in_schema=False)
-async def get_host_by_slug(host_slug: constr(strip_whitespace = True)):
+async def get_host_by_slug(host_slug: constr(strip_whitespace=True)):
     """Retrieve a Host object, based on Host slug string, containing:
     Host ID, name, slug string, and gender."""
     try:
-        _database_connection.reconnect()
-        host_info = info.retrieve_by_slug(host_slug,
-                                          _database_connection)
+        host = Host(database_connection=_database_connection)
+        host_info = host.retrieve_by_slug(host_slug)
         if not host_info:
             raise HTTPException(status_code=404,
                                 detail=f"Host slug string {host_slug} not found")
@@ -109,7 +111,7 @@ async def get_host_by_slug(host_slug: constr(strip_whitespace = True)):
 
 @router.get("/details",
             summary="Retrieve Information and Appearances for All Hosts",
-            response_model=HostsDetails,
+            response_model=ModelsHostsDetails,
             tags=["Hosts"])
 @router.head("/details",
              include_in_schema=False)
@@ -120,8 +122,8 @@ async def get_hosts_details():
     Results are sorted by host name, with host apperances sorted by
     show date."""
     try:
-        _database_connection.reconnect()
-        hosts = details.retrieve_all(_database_connection)
+        host = Host(database_connection=_database_connection)
+        hosts = host.retrieve_all_details()
         if not hosts:
             raise HTTPException(status_code=404,
                                 detail="No hosts found")
@@ -138,19 +140,18 @@ async def get_hosts_details():
 
 @router.get("/details/id/{host_id}",
             summary="Retrieve Information and Appearances by Host ID",
-            response_model=HostDetails,
+            response_model=ModelsHostDetails,
             tags=["Hosts"])
 @router.head("/details/id/{host_id}",
              include_in_schema=False)
-async def get_host_details_by_id(host_id: PositiveInt):
+async def get_host_details_by_id(host_id: conint(ge=0, lt=2**31)):
     """Retrieve a Host object, based on Host ID, containing: Host ID,
     name, slug string, gender, and their appearance details.
 
     Host appearances are sorted by show date."""
     try:
-        _database_connection.reconnect()
-        host_details = details.retrieve_by_id(host_id,
-                                              _database_connection)
+        host = Host(database_connection=_database_connection)
+        host_details = host.retrieve_details_by_id(host_id)
         if not host_details:
             raise HTTPException(status_code=404,
                                 detail=f"Host ID {host_id} not found")
@@ -170,19 +171,18 @@ async def get_host_details_by_id(host_id: PositiveInt):
 
 @router.get("/details/slug/{host_slug}",
             summary="Retrieve Information and Appearances by Host by Slug String",
-            response_model=HostDetails,
+            response_model=ModelsHostDetails,
             tags=["Hosts"])
 @router.head("/details/slug/{host_slug}",
              include_in_schema=False)
-async def get_host_details_by_slug(host_slug: constr(strip_whitespace = True)):
+async def get_host_details_by_slug(host_slug: constr(strip_whitespace=True)):
     """Retrieve a Host object, based on Host slug string, containing:
     Host ID, name, slug string, gender, and their appearance details.
 
     Host appearances are sorted by show date."""
     try:
-        _database_connection.reconnect()
-        host_details = details.retrieve_by_slug(host_slug,
-                                                _database_connection)
+        host = Host(database_connection=_database_connection)
+        host_details = host.retrieve_details_by_slug(host_slug)
         if not host_details:
             raise HTTPException(status_code=404,
                                 detail=f"Host slug string {host_slug} not found")
@@ -199,4 +199,4 @@ async def get_host_details_by_slug(host_slug: constr(strip_whitespace = True)):
                             detail="Database error occurred while trying to "
                                    "retrieve host information")
 
-#endregion
+# endregion

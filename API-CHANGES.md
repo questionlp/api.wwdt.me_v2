@@ -5,6 +5,15 @@ Don't Tell Me! Stats API. v2.0 brings changes in both the response objects and
 in API endpoint URLs for Guests, Hosts, Locations, Panelists, Scorekeeper, and
 Shows.
 
+## wwdtm Library Change
+
+Version 2.0 of the API now makes use of the new version of the
+[wwdtm](https://github.com/questionlp/wwdtm) library that includes significant
+architectural changes and more robust type hinting information. The new type
+hinting information has been critical to implementing
+[Pydantic](https://pydantic-docs.helpmanual.io/) models, type constraints,
+and return object validation.
+
 ## Response Object Changes
 
 Response objects returned by v1.0 of the Stats API followed the

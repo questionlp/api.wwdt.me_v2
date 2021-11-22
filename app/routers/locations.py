@@ -7,10 +7,12 @@ from app.config import API_VERSION, load_database_config
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import constr, PositiveInt
-from wwdtm.location import details, info
-from app.models.locations import (Location, Locations,
-                                  LocationDetails, LocationsDetails)
+from pydantic import conint, constr
+from wwdtm.location import Location
+from app.models.locations import (Location as ModelsLocation,
+                                  Locations as ModelsLocations,
+                                  LocationDetails as ModelsLocationDetails,
+                                  LocationsDetails as ModelsLocationsDetails)
 
 router = APIRouter(
     prefix=f"/v{API_VERSION}/locations"
@@ -19,10 +21,11 @@ _database_config = load_database_config()
 _database_connection = mysql.connector.connect(**_database_config)
 _database_connection.autocommit = True
 
-#region Routes
+
+# region Routes
 @router.get("",
             summary="Retrieve Information for All Locations",
-            response_model=Locations,
+            response_model=ModelsLocations,
             tags=["Locations"])
 @router.head("",
              include_in_schema=False)
@@ -32,8 +35,8 @@ async def get_locations():
 
     Results are sorted by: city, state, venue name."""
     try:
-        _database_connection.reconnect()
-        locations = info.retrieve_all(_database_connection)
+        location = Location(database_connection=_database_connection)
+        locations = location.retrieve_all()
         if not locations:
             raise HTTPException(status_code=404,
                                 detail="No locations found")
@@ -50,16 +53,16 @@ async def get_locations():
 
 @router.get("/id/{location_id}",
             summary="Retrieve Information by Location ID",
-            response_model=Location, tags=["Locations"])
+            response_model=ModelsLocation,
+            tags=["Locations"])
 @router.head("/id/{location_id}",
              include_in_schema=False)
-async def get_location_by_id(location_id: PositiveInt):
+async def get_location_by_id(location_id: conint(ge=0, lt=2**31)):
     """Retrieve a Location object, based on Location ID, containing:
     Location ID, city, state, venue, and slug string."""
     try:
-        _database_connection.reconnect()
-        location_info = info.retrieve_by_id(location_id,
-                                            _database_connection)
+        location = Location(database_connection=_database_connection)
+        location_info = location.retrieve_by_id(location_id)
         if not location_info:
             raise HTTPException(status_code=404,
                                 detail=f"Location ID {location_id} not found")
@@ -79,17 +82,16 @@ async def get_location_by_id(location_id: PositiveInt):
 
 @router.get("/slug/{location_slug}",
             summary="Retrieve Information by Location Slug String",
-            response_model=Location,
+            response_model=ModelsLocation,
             tags=["Locations"])
 @router.head("/slug/{location_slug}",
              include_in_schema=False)
-async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
+async def get_location_by_slug(location_slug: constr(strip_whitespace=True)):
     """Retrieve a location object, based on Location slug string,
     containing: Location ID, city, state, venue, and slug string."""
     try:
-        _database_connection.reconnect()
-        location_info = info.retrieve_by_slug(location_slug,
-                                              _database_connection)
+        location = Location(database_connection=_database_connection)
+        location_info = location.retrieve_by_slug(location_slug)
         if not location_info:
             raise HTTPException(status_code=404,
                                 detail=f"Location slug string {location_slug} not found")
@@ -109,7 +111,7 @@ async def get_location_by_slug(location_slug: constr(strip_whitespace = True)):
 
 @router.get("/recordings",
             summary="Retrieve Information and Recordings for All Locations",
-            response_model=LocationsDetails,
+            response_model=ModelsLocationsDetails,
             tags=["Locations"])
 @router.head("/recordings",
              include_in_schema=False)
@@ -120,8 +122,8 @@ async def get_locations_details():
 
     Results are sorted by: city, state, venue name."""
     try:
-        _database_connection.reconnect()
-        locations = details.retrieve_all_recordings(_database_connection)
+        location = Location(database_connection=_database_connection)
+        locations = location.retrieve_all_details()
         if not locations:
             raise HTTPException(status_code=404,
                                 detail="No locations found")
@@ -138,20 +140,19 @@ async def get_locations_details():
 
 @router.get("/recordings/id/{location_id}",
             summary="Retrieve Information and Recordings by Location ID",
-            response_model=LocationDetails,
+            response_model=ModelsLocationDetails,
             tags=["Locations"])
 @router.head("/recordings/id/{location_id}",
              include_in_schema=False)
-async def get_location_recordings_by_id(location_id: PositiveInt):
+async def get_location_recordings_by_id(location_id: conint(ge=0, lt=2**31)):
     """Retrieve a Location object, based on Location ID, containing:
     Location ID, city, state, venue, slug string, and an array of
     recordings.
 
     Recordings are sorted by show date."""
     try:
-        _database_connection.reconnect()
-        location_recordings = details.retrieve_recordings_by_id(location_id,
-                                                                _database_connection)
+        location = Location(database_connection=_database_connection)
+        location_recordings = location.retrieve_details_by_id(location_id)
         if not location_recordings:
             raise HTTPException(status_code=404,
                                 detail=f"Location ID {location_id} not found")
@@ -171,20 +172,19 @@ async def get_location_recordings_by_id(location_id: PositiveInt):
 
 @router.get("/recordings/slug/{location_slug}",
             summary="Retrieve Information and Recordings by Location Slug String",
-            response_model=LocationDetails,
+            response_model=ModelsLocationDetails,
             tags=["Locations"])
 @router.head("/recordings/slug/{location_slug}",
              include_in_schema=False)
-async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace = True)):
+async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace=True)):
     """Retrieve a Location object, based on Location slug string,
     containing: Location ID, city, state, venue, slug string, and an
     array of recordings.
 
     Recordings are sorted by show date."""
     try:
-        _database_connection.reconnect()
-        location_details = details.retrieve_recordings_by_slug(location_slug,
-                                                               _database_connection)
+        location = Location(database_connection=_database_connection)
+        location_details = location.retrieve_details_by_slug(location_slug)
         if not location_details:
             raise HTTPException(status_code=404,
                                 detail=f"Location slug string {location_slug} not found")
@@ -201,4 +201,4 @@ async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace
                             detail="Database error occurred while trying to "
                                    "retrieve location information")
 
-#endregion
+# endregion

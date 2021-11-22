@@ -27,9 +27,9 @@ pip install -U pip setuptools wheel
 pip install -r requirements.txt
 ```
 
-Next, make a copy of the `.env.dist` file and name it `.env`. Edit the `.env`
-file and fill in the required database connection information and any other
-settings that are specific to your environment.
+Next, make a copy of the `config.json.dist` file and name it `config.json`.
+Edit the `config.json` file and fill in the required database connection
+information and any other settings that are specific to your environment.
 
 To validate the installation, start up `uvicorn` using the following command
 while in the application root directory and with the virtual environment
@@ -50,7 +50,7 @@ can load configuration options from a `gunicorn.conf.py` file located in the
 same directory that Gunicorn is launched from.
 
 A template configuration file is included in the repository called
-`gunicorn.conf.dist.py`. A copy of that file should be made and named
+`gunicorn.conf.py.dist`. A copy of that file should be made and named
 `gunicorn.conf.py` and the configuration options reviewed. The following
 options may need to be changed depending on the environment in which the
 application is being deployed:
@@ -73,7 +73,7 @@ options avaiable, check out the [Gunicorn documentation site](https://docs.gunic
 ## Setting up a Gunicorn systemd Service
 
 A template `systemd` service file is included in the repository named 
-`gunicorn-wwdtmapi.dist.service`. That service file provides the commands and
+`gunicorn-wwdtmapi.service.dist`. That service file provides the commands and
 arguments used to start a Gunicorn instance to serve up the application. A copy
 of that template file can be modified and installed under `/etc/systemd/system`.
 

@@ -12,7 +12,8 @@
             "args": [
                 "app.main:app"
             ],
-            "jinja": true
+            "jinja": true,
+            "justMyCode": false
         }
     ]
 }

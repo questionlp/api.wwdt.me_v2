@@ -39,12 +39,14 @@ app.mount("/static",
           name="static")
 templates = Jinja2Templates(directory="templates")
 
-#region Generic Routes
+
+# region Generic Routes
 @app.get("/",
          include_in_schema=False,
          response_class=HTMLResponse)
 async def default_page(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request} )
+    return templates.TemplateResponse("index.html", {"request": request})
+
 
 @app.get("/favicon.ico",
          include_in_schema=False,
@@ -52,11 +54,13 @@ async def default_page(request: Request):
 async def favicon():
     return RedirectResponse("/static/favicon.ico", status_code=301)
 
+
 @app.get("/robots.txt",
          include_in_schema=False,
          response_class=PlainTextResponse)
 async def robots_txt():
     return ""
+
 
 @app.get("/docs",
          include_in_schema=False,
@@ -64,11 +68,13 @@ async def robots_txt():
 async def redoc_redirect_docs():
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
+
 @app.get("/redoc",
          include_in_schema=False,
          response_class=RedirectResponse)
 async def redoc_redirect_redoc():
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
+
 
 @app.get(f"/v{API_VERSION}/redoc",
          include_in_schema=False,
@@ -76,8 +82,7 @@ async def redoc_redirect_redoc():
 async def redoc_redirect_sub():
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
-
-#endregion
+# endregion
 
 # Add the router modules for Guests, Hosts, Locations, Panelists,
 # Scorekeepers, Shows and Version
