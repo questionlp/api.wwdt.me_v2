@@ -3,9 +3,11 @@
 # api.wwdt.me is relased under the terms of the Apache License 2.0
 """FastAPI main application for api.wwdt.me"""
 
-from fastapi import FastAPI
-from fastapi.responses import (HTMLResponse,
-                               PlainTextResponse,
+from os.path import exists
+
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import (FileResponse,
+                               HTMLResponse,
                                RedirectResponse)
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -57,9 +59,18 @@ async def favicon():
 
 @app.get("/robots.txt",
          include_in_schema=False,
-         response_class=PlainTextResponse)
+         response_class=FileResponse)
 async def robots_txt():
-    return ""
+    """ Attempts to serve up static/robots.txt or
+    static/robots.txt.dist to the requester. Raise a 404 error if
+    neither file are found.
+    """
+    if exists("static/robots.txt"):
+        return "static/robots.txt"
+    elif exists("static/robots.txt.dist"):
+        return "static/robots.txt.dist"
+    else:
+        raise HTTPException(status_code=404)
 
 
 @app.get("/docs",

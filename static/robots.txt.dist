@@ -1,0 +1,7 @@
+# Template robots.txt file
+#
+# Make a copy of this file, name it robots.txt and modify the file as required.
+
+User-agent: *
+Disallow: /v1.0/
+Disallow: /v2.0/
