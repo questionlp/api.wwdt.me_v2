@@ -1,0 +1,93 @@
+# -*- coding: utf-8 -*-
+# Copyright (c) 2018-2021 Linh Pham
+# api.wwdt.me is released under the terms of the Apache License 2.0
+"""Testing /v2.0/scorekeepers routes
+"""
+from fastapi.testclient import TestClient
+import pytest
+
+from app.main import app
+from app.config import API_VERSION
+
+client = TestClient(app)
+
+
+def test_scorekeepers():
+    """Test /v2.0/scorekeepers route"""
+
+    response = client.get(f"/v{API_VERSION}/scorekeepers")
+    scorekeepers = response.json()
+
+    assert response.status_code == 200
+    assert "scorekeepers" in scorekeepers
+    assert "id" in scorekeepers["scorekeepers"][0]
+    assert "name" in scorekeepers["scorekeepers"][0]
+    assert "slug" in scorekeepers["scorekeepers"][0]
+
+
+@pytest.mark.parametrize("scorekeeper_id", [11])
+def test_scorekeepers_id(scorekeeper_id: int):
+    """Test /v2.0/scorekeepers/id/{scorekeeper_id} route"""
+
+    response = client.get(f"/v{API_VERSION}/scorekeepers/id/{scorekeeper_id}")
+    scorekeeper = response.json()
+
+    assert response.status_code == 200
+    assert "id" in scorekeeper
+    assert "name" in scorekeeper
+    assert "slug" in scorekeeper
+
+
+@pytest.mark.parametrize("scorekeeper_slug", ["bill-kurtis"])
+def test_scorekeepers_slug(scorekeeper_slug: str):
+    """Test /v2.0/scorekeepers/slug/{scorekeeper_slug} route"""
+
+    response = client.get(f"/v{API_VERSION}/scorekeepers/slug/{scorekeeper_slug}")
+    scorekeeper = response.json()
+
+    assert response.status_code == 200
+    assert "id" in scorekeeper
+    assert "name" in scorekeeper
+    assert "slug" in scorekeeper
+
+
+def test_scorekeepers_details():
+    """Test /v2.0/scorekeepers/details route"""
+
+    response = client.get(f"/v{API_VERSION}/scorekeepers/details")
+    scorekeepers = response.json()
+
+    assert response.status_code == 200
+    assert "scorekeepers" in scorekeepers
+    assert "id" in scorekeepers["scorekeepers"][0]
+    assert "name" in scorekeepers["scorekeepers"][0]
+    assert "slug" in scorekeepers["scorekeepers"][0]
+    assert "appearances" in scorekeepers["scorekeepers"][0]
+
+
+@pytest.mark.parametrize("scorekeeper_id", [11])
+def test_scorekeepers_details_id(scorekeeper_id: int):
+    """Test /v2.0/scorekeepers/details/id/{scorekeeper_id} route"""
+
+    response = client.get(f"/v{API_VERSION}/scorekeepers/details/id/{scorekeeper_id}")
+    scorekeeper = response.json()
+
+    assert response.status_code == 200
+    assert "id" in scorekeeper
+    assert "name" in scorekeeper
+    assert "slug" in scorekeeper
+    assert "appearances" in scorekeeper
+
+
+@pytest.mark.parametrize("scorekeeper_slug", ["bill-kurtis"])
+def test_scorekeepers_details_slug(scorekeeper_slug: str):
+    """Test /v2.0/scorekeepers/details/slug/{scorekeeper_slug} route"""
+
+    response = client.get(f"/v{API_VERSION}/scorekeepers/details/slug/{scorekeeper_slug}")
+    scorekeeper = response.json()
+
+    assert response.status_code == 200
+    assert "id" in scorekeeper
+    assert "name" in scorekeeper
+    assert "slug" in scorekeeper
+    assert "appearances" in scorekeeper
