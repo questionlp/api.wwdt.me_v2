@@ -331,8 +331,8 @@ async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_w
                                    "retrieve panelist scores")
 
 
-@router.get("/scores/ordered-pair/id/{panelist_id}",
-            summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist ID",
+@router.get("/scores/grouped-ordered-pair/id/{panelist_id}",
+            summary="Retrieve Panelist Scores as Grouped Ordered Pairs by Panelist ID",
             response_model=ModelsPanelistScoresOrderedPair,
             tags=["Panelists"])
 @router.head("/scores/ordered-pair/id/{panelist_id}",
@@ -364,8 +364,8 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(panelist_id: conint(ge=
                                    "retrieve panelist scores")
 
 
-@router.get("/scores/ordered-pair/slug/{panelist_slug}",
-            summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist Slug String",
+@router.get("/scores/grouped-ordered-pair/slug/{panelist_slug}",
+            summary="Retrieve Panelist Scores as Grouped Ordered Pairs by Panelist Slug String",
             response_model=ModelsPanelistScoresOrderedPair,
             tags=["Panelists"])
 @router.head("/scores/ordered-pair/slug/{panelist_slug}",
