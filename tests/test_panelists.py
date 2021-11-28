@@ -118,7 +118,7 @@ def test_panelists_scores_slug(panelist_slug: str):
 
 @pytest.mark.parametrize("panelist_id", [30])
 def test_panelists_scores_ordered_pair_id(panelist_id: int):
-    """Test /v2.0/panelists/scores/id/{panelist_id} route"""
+    """Test /v2.0/panelists/scores/ordered-pair/id/{panelist_id} route"""
 
     response = client.get(f"/v{API_VERSION}/panelists/scores/ordered-pair/id/{panelist_id}")
     scores = response.json()
@@ -129,9 +129,31 @@ def test_panelists_scores_ordered_pair_id(panelist_id: int):
 
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
 def test_panelists_scores_ordered_pair_slug(panelist_slug: str):
-    """Test /v2.0/panelists/scores/slug/{panelist_slug} route"""
+    """Test /v2.0/panelists/scores/ordered-pair/slug/{panelist_slug} route"""
 
     response = client.get(f"/v{API_VERSION}/panelists/scores/ordered-pair/slug/{panelist_slug}")
+    scores = response.json()
+
+    assert response.status_code == 200
+    assert "scores" in scores
+
+
+@pytest.mark.parametrize("panelist_id", [30])
+def test_panelists_scores_grouped_ordered_pair_id(panelist_id: int):
+    """Test /v2.0/panelists/scores/grouped-ordered-pair/id/{panelist_id} route"""
+
+    response = client.get(f"/v{API_VERSION}/panelists/scores/grouped-ordered-pair/id/{panelist_id}")
+    scores = response.json()
+
+    assert response.status_code == 200
+    assert "scores" in scores
+
+
+@pytest.mark.parametrize("panelist_slug", ["faith-salie"])
+def test_panelists_scores_grouped_ordered_pair_slug(panelist_slug: str):
+    """Test /v2.0/panelists/scores/grouped-ordered-pair/slug/{panelist_slug} route"""
+
+    response = client.get(f"/v{API_VERSION}/panelists/scores/grouped-ordered-pair/slug/{panelist_slug}")
     scores = response.json()
 
     assert response.status_code == 200
