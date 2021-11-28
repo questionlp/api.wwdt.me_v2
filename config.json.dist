@@ -8,6 +8,7 @@
         "raise_on_warnings": true,
         "compress": false,
         "charset": "",
-        "collation": ""
+        "collation": "",
+        "time_zone": "America/Los_Angeles"
     }
 }
