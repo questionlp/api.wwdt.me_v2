@@ -35,6 +35,7 @@ def test_locations_id(location_id: int):
 
     assert response.status_code == 200
     assert "id" in location
+    assert location["id"] == location_id
     assert "slug" in location
     assert "venue" in location
     assert "city" in location
@@ -51,6 +52,7 @@ def test_locations_slug(location_slug: str):
     assert response.status_code == 200
     assert "id" in location
     assert "slug" in location
+    assert location["slug"] == location_slug
     assert "venue" in location
     assert "city" in location
     assert "state" in location
@@ -81,6 +83,7 @@ def test_locations_recordings_id(location_id: int):
 
     assert response.status_code == 200
     assert "id" in location
+    assert location["id"] == location_id
     assert "slug" in location
     assert "venue" in location
     assert "city" in location
@@ -98,6 +101,7 @@ def test_locations_recordings_slug(location_slug: str):
     assert response.status_code == 200
     assert "id" in location
     assert "slug" in location
+    assert location["slug"] == location_slug
     assert "venue" in location
     assert "city" in location
     assert "state" in location

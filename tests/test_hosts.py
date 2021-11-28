@@ -34,6 +34,7 @@ def test_hosts_id(host_id: int):
 
     assert response.status_code == 200
     assert "id" in host
+    assert host["id"] == host_id
     assert "name" in host
     assert "slug" in host
 
@@ -49,6 +50,7 @@ def test_hosts_slug(host_slug: str):
     assert "id" in host
     assert "name" in host
     assert "slug" in host
+    assert host["slug"] == host_slug
 
 
 def test_hosts_details():
@@ -74,6 +76,7 @@ def test_hosts_details_id(host_id: int):
 
     assert response.status_code == 200
     assert "id" in host
+    assert host["id"] == host_id
     assert "name" in host
     assert "slug" in host
     assert "appearances" in host
@@ -90,4 +93,5 @@ def test_hosts_details_slug(host_slug: str):
     assert "id" in host
     assert "name" in host
     assert "slug" in host
+    assert host["slug"] == host_slug
     assert "appearances" in host

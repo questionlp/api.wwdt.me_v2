@@ -34,6 +34,7 @@ def test_guests_id(guest_id: int):
 
     assert response.status_code == 200
     assert "id" in guest
+    assert guest["id"] == guest_id
     assert "name" in guest
     assert "slug" in guest
 
@@ -49,6 +50,7 @@ def test_guests_slug(guest_slug: str):
     assert "id" in guest
     assert "name" in guest
     assert "slug" in guest
+    assert guest["slug"] == guest_slug
 
 
 def test_guests_details():
@@ -74,6 +76,7 @@ def test_guests_details_id(guest_id: int):
 
     assert response.status_code == 200
     assert "id" in guest
+    assert guest["id"] == guest_id
     assert "name" in guest
     assert "slug" in guest
     assert "appearances" in guest
@@ -90,4 +93,5 @@ def test_guests_details_slug(guest_slug: str):
     assert "id" in guest
     assert "name" in guest
     assert "slug" in guest
+    assert guest["slug"] == guest_slug
     assert "appearances" in guest

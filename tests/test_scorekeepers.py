@@ -34,6 +34,7 @@ def test_scorekeepers_id(scorekeeper_id: int):
 
     assert response.status_code == 200
     assert "id" in scorekeeper
+    assert scorekeeper["id"] == scorekeeper_id
     assert "name" in scorekeeper
     assert "slug" in scorekeeper
 
@@ -49,6 +50,7 @@ def test_scorekeepers_slug(scorekeeper_slug: str):
     assert "id" in scorekeeper
     assert "name" in scorekeeper
     assert "slug" in scorekeeper
+    assert scorekeeper["slug"] == scorekeeper_slug
 
 
 def test_scorekeepers_details():
@@ -74,6 +76,7 @@ def test_scorekeepers_details_id(scorekeeper_id: int):
 
     assert response.status_code == 200
     assert "id" in scorekeeper
+    assert scorekeeper["id"] == scorekeeper_id
     assert "name" in scorekeeper
     assert "slug" in scorekeeper
     assert "appearances" in scorekeeper
@@ -90,4 +93,5 @@ def test_scorekeepers_details_slug(scorekeeper_slug: str):
     assert "id" in scorekeeper
     assert "name" in scorekeeper
     assert "slug" in scorekeeper
+    assert scorekeeper["slug"] == scorekeeper_slug
     assert "appearances" in scorekeeper

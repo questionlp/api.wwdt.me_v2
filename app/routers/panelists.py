@@ -264,7 +264,8 @@ async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=Tru
 
 
 @router.get("/scores/grouped-ordered-pair/id/{panelist_id}",
-            summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist ID",
+            summary="Retrieve Panelist Scores as Ordered Pairs for Scores and Number "
+                    "of Times It Has Been Earned by Panelist ID",
             response_model=ModelsPanelistScoresGroupedOrderedPair,
             tags=["Panelists"])
 @router.head("/scores/grouped-ordered-pair/id/{panelist_id}",
@@ -297,7 +298,8 @@ async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2*
 
 
 @router.get("/scores/grouped-ordered-pair/slug/{panelist_slug}",
-            summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist Slug String",
+            summary="Retrieve Panelist Scores as Ordered Pairs for Scores and Number "
+                    "of Times It Has Been Earned by Panelist Slug String",
             response_model=ModelsPanelistScoresGroupedOrderedPair,
             tags=["Panelists"])
 @router.head("/scores/grouped-ordered-pair/slug/{panelist_slug}",
