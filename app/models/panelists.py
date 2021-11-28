@@ -154,6 +154,7 @@ class PanelistScoresList(BaseModel):
 
 
 class ScoresOrderedPair(BaseModel):
+    """Tuple containing a show date and the corresponding score"""
     __root__: Tuple = Field(title="Ordered Pair containing Show Date and Score")
 
 
@@ -163,5 +164,22 @@ class PanelistScoresOrderedPair(BaseModel):
     scores: Optional[List[ScoresOrderedPair]] = Field(default=None,
                                                       title="List of Ordered Pairs containing "
                                                             "Show Date and Score")
+
+
+class ScoresGroupedOrderedPair(BaseModel):
+    """Tuple containing a score and their corresponding number of times
+    that score had been earned"""
+    __root__: Tuple = Field(title="Ordered Pair containing score and number of "
+                                  "times that score had been earned")
+
+
+class PanelistScoresGroupedOrderedPair(BaseModel):
+    """Tuple containing scores and the corresponding number of times a
+    that score had been earned"""
+    scores: Optional[List[ScoresGroupedOrderedPair]] = Field(default=None,
+                                                             title="List of Ordered Pairs"
+                                                                   "containing scores and "
+                                                                   "number of times that score "
+                                                                   "has been earned")
 
 # endregion

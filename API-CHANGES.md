@@ -79,7 +79,11 @@ v2.0. Also, v2.0 adds two new Location enpoints and one new Shows endpoint.
 | /v1.0/panelists/`id`               | /v2.0/panelists/id/`id`            |
 | /v1.0/panelists/`id`/details       | /v2.0/panelists/details/id/`id`    |
 | /v1.0/panelists/`id`/scores        | /v2.0/panelists/scores/id/`id`     |
+| *N/A*                              | /v2.0/panelists/scores/slug/`slug` |
 | /v1.0/panelists/`id`/scores/ordered-pair | /v2.0/panelists/scores/ordered-pair/id/`id` |
+| *N/A*                              | /v2.0/panelists/scores/ordered-pair/slug/`slug` |
+| /v1.0/panelists/`id`/scores/grouped-ordered-pair | /v2.0/panelists/scores/grouped-ordered-pair/id/`id` |
+| *N/A*                              | /v2.0/panelists/scores/grouped-ordered-pair/slug/`slug` |
 | /v1.0/panelists/details            | /v2.0/panelists/details            |
 | /v1.0/panelists/slug/`slug`        | /v2.0/panelists/slug/`slug`        |
 | /v1.0/panelists/slug/`slug`/details | /v2.0/panelists/details/slug/`slug` |

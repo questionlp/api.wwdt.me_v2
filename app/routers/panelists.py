@@ -14,7 +14,8 @@ from app.models.panelists import (Panelist as ModelsPanelist,
                                   PanelistDetails as ModelsPanelistDetails,
                                   PanelistsDetails as ModelsPanelistsDetails,
                                   PanelistScoresList as ModelsPanelistScoresList,
-                                  PanelistScoresOrderedPair as ModelsPanelistScoresOrderedPair)
+                                  PanelistScoresOrderedPair as ModelsPanelistScoresOrderedPair,
+                                  PanelistScoresGroupedOrderedPair as ModelsPanelistScoresGroupedOrderedPair)
 
 router = APIRouter(
     prefix=f"/v{API_VERSION}/panelists"
@@ -262,13 +263,79 @@ async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=Tru
                                    "retrieve panelist scores")
 
 
+@router.get("/scores/grouped-ordered-pair/id/{panelist_id}",
+            summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist ID",
+            response_model=ModelsPanelistScoresGroupedOrderedPair,
+            tags=["Panelists"])
+@router.head("/scores/grouped-ordered-pair/id/{panelist_id}",
+             include_in_schema=False)
+async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2**31)):
+    """Retrieve Panelist scores, based on Panelist ID, as grouped
+    ordered pairs, each pair containing a score and the corresponding
+    number of times a panelist has earned that score.
+
+    **Note**: OpenAPI 3.0 does not support representation of tuples in
+    models. The output is in the form of `(str, int)`."""
+    try:
+        panelist_scores = PanelistScores(database_connection=_database_connection)
+        scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(panelist_id)
+        if not scores:
+            raise HTTPException(status_code=404,
+                                detail=f"Scoring data for Panelist ID {panelist_id} not found")
+        else:
+            return {"scores": scores}
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Panelist ID {panelist_id} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve panelist scores")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve panelist scores")
+
+
+@router.get("/scores/grouped-ordered-pair/slug/{panelist_slug}",
+            summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist Slug String",
+            response_model=ModelsPanelistScoresGroupedOrderedPair,
+            tags=["Panelists"])
+@router.head("/scores/grouped-ordered-pair/slug/{panelist_slug}",
+             include_in_schema=False)
+async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_whitespace=True)):
+    """Retrieve Panelist scores, based on Panelist slug string, as
+    grouped ordered pairs, each pair containing a score and the
+    corresponding number of times a panelist has earned that score.
+
+    **Note**: OpenAPI 3.0 does not support representation of tuples in
+    models. The output is in the form of `(str, int)`."""
+    try:
+        panelist_scores = PanelistScores(database_connection=_database_connection)
+        scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(panelist_slug)
+        if not scores:
+            raise HTTPException(status_code=404,
+                                detail=f"Scoring data for Panelist slug string {panelist_slug} not found")
+        else:
+            return {"scores": scores}
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Panelist slug string {panelist_slug} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve panelist scores")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while trying to "
+                                   "retrieve panelist scores")
+
+
 @router.get("/scores/ordered-pair/id/{panelist_id}",
             summary="Retrieve Panelist Scores as Ordered Pairs for Each Appearance by Panelist ID",
             response_model=ModelsPanelistScoresOrderedPair,
             tags=["Panelists"])
 @router.head("/scores/ordered-pair/id/{panelist_id}",
              include_in_schema=False)
-async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2**31)):
+async def get_panelist_scores_grouped_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2**31)):
     """Retrieve Panelist scores, based on Panelist ID, as ordered
     pairs, each pair containing the show date and the corresponding
     score.
@@ -301,7 +368,7 @@ async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2*
             tags=["Panelists"])
 @router.head("/scores/ordered-pair/slug/{panelist_slug}",
              include_in_schema=False)
-async def get_panelist_scores_ordered_pair_by_slug(panelist_slug: constr(strip_whitespace=True)):
+async def get_panelist_scores_grouped_ordered_pair_by_slug(panelist_slug: constr(strip_whitespace=True)):
     """Retrieve Panelist scores, based on Panelist slug string, as
     ordered pairs, each pair containing the show date and the
     corresponding score.
