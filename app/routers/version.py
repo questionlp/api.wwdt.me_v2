@@ -5,7 +5,7 @@
 
 from app.config import API_VERSION, APP_VERSION
 from fastapi import APIRouter
-from wwdtm import VERSION as wwdtm_version
+from wwdtm import VERSION as WWDTM_VERSION
 from app.models.version import Version
 
 router = APIRouter(
@@ -26,7 +26,7 @@ async def get_version():
     return {
         "api": API_VERSION,
         "app": APP_VERSION,
-        "wwdtm": wwdtm_version,
+        "wwdtm": WWDTM_VERSION,
     }
 
 # endregion

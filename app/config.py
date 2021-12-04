@@ -7,10 +7,10 @@ import json
 from typing import Any, Dict
 
 API_VERSION = "2.0"
-APP_VERSION = "2.0.0-alpha.2"
+APP_VERSION = "2.0.0-alpha.3"
 
 
-def load_database_config(config_file: str = "config.json") -> Dict[str, Any]:
+def load_database_config(config_file_path: str = "config.json") -> Dict[str, Any]:
     """Reads in database configuration values from a configuration
     JSON file and returns a dictionary with the values.
 
@@ -19,7 +19,7 @@ def load_database_config(config_file: str = "config.json") -> Dict[str, Any]:
     :return: Dictionary containing database configuration settings
     :rtype: Dict[str, Any]
     """
-    with open("config.json", "r") as config_file:
+    with open(config_file_path, "r") as config_file:
         config_dict = json.load(config_file)
 
     if "database" in config_dict:
