@@ -7,8 +7,8 @@
         "port": 3306,
         "raise_on_warnings": true,
         "compress": false,
-        "charset": "",
-        "collation": "",
+        "charset": "utf8mb4",
+        "collation": "utf8mb4_unicode_ci",
         "time_zone": "America/Los_Angeles"
     }
 }
