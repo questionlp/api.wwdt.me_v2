@@ -276,7 +276,7 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(panelist_id: conint(ge=
     number of times a panelist has earned that score.
 
     **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(str, int)`."""
+    models. The output is in the form of `(int, int)`."""
     try:
         panelist_scores = PanelistScores(database_connection=_database_connection)
         scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(panelist_id)
@@ -310,7 +310,7 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(panelist_slug: constr
     corresponding number of times a panelist has earned that score.
 
     **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(str, int)`."""
+    models. The output is in the form of `(int, int)`."""
     try:
         panelist_scores = PanelistScores(database_connection=_database_connection)
         scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(panelist_slug)
