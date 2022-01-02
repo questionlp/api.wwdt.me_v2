@@ -15,7 +15,8 @@ class Location(BaseModel):
                                 title="City")
     state: Optional[str] = Field(default=None,
                                  title="State")
-    venue: str = Field(title="Venue Name")
+    venue: Optional[str] = Field(default=None,
+                                 title="Venue Name")
     slug: Optional[str] = Field(default=None,
                                 title="Location Slug String")
 
