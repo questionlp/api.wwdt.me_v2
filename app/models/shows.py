@@ -49,9 +49,9 @@ class ShowScorekeeper(BaseModel):
     name: str = Field(title="Scorekeeper Name")
     slug: Optional[str] = Field(default=None,
                                 title="Scorekeeper Slug String")
+    guest: bool = Field(title="Guest Scorekeeper")
     description: Optional[str] = Field(default=None,
                                        title="Scorekeeper Description")
-    guest: bool = Field(title="Guest Scorekeeper")
 
 
 class ShowPanelist(BaseModel):
