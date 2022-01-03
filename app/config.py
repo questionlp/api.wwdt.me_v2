@@ -7,7 +7,7 @@ import json
 from typing import Any, Dict
 
 API_VERSION = "2.0"
-APP_VERSION = "2.0.0-beta.2"
+APP_VERSION = "2.0.0-beta.3"
 
 
 def load_database_config(config_file_path: str = "config.json") -> Dict[str, Any]:
