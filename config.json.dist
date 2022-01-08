@@ -5,6 +5,7 @@
         "password": "",
         "database": "",
         "port": 3306,
+        "pool_size": 10,
         "raise_on_warnings": true,
         "compress": false,
         "charset": "utf8mb4",
