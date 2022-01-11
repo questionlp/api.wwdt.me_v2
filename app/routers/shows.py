@@ -21,8 +21,7 @@ router = APIRouter(
     prefix=f"/v{API_VERSION}/shows"
 )
 _database_config = load_database_config()
-_database_connection = mysql.connector.connect(pool_name="wwdtm_api",
-                                               **_database_config)
+_database_connection = mysql.connector.connect(**_database_config)
 
 
 # region Routes
