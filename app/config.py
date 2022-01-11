@@ -46,7 +46,7 @@ def load_database_config(config_file_path: str = "config.json",
                 del database_config["pool_name"]
 
             if "pool_size" in database_config:
-                del database_config["pool_name"]
+                del database_config["pool_size"]
 
             if "use_pool" in config_dict["database"]:
                 del database_config["use_pool"]
