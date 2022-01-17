@@ -174,6 +174,36 @@ async def get_shows_by_year_month(year: conint(ge=1998, le=9999),
                                    "show information from the database")
 
 
+@router.get("/date/month-day/{month}/{day}",
+            summary="Retrieve Information for a Show by Month and Day",
+            response_model=ModelsShows,
+            tags=["Shows"])
+@router.head("/date/month-day/{month}/{day}",
+             include_in_schema=False)
+async def get_show_by_month_day(month: conint(ge=1, le=12),
+                                day: conint(ge=1, le=31)):
+    """Retrieve a Show object, based on month and day, containing: Show
+    ID, date and basic information."""
+    try:
+        show = Show(database_connection=_database_connection)
+        shows = show.retrieve_by_month_day(month, day)
+        if not shows:
+            raise HTTPException(status_code=404,
+                                detail=f"Shows for month {month:02d} and {day:02d} not found")
+        else:
+            return {"shows": shows}
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Shows for month {month:02d} and {day:02d} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve show information from the database")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while retrieving "
+                                   "show information from the database")
+
+
 @router.get("/date/{year}/{month}/{day}",
             summary="Retrieve Information for a Show by Year, Month, and Day",
             response_model=ModelsShow,
@@ -346,6 +376,36 @@ async def get_shows_details_by_year_month(year: conint(ge=1998, le=9999),
     except ValueError:
         raise HTTPException(status_code=404,
                             detail=f"Shows for {year:04d}-{month:02d} not found")
+    except ProgrammingError:
+        raise HTTPException(status_code=500,
+                            detail="Unable to retrieve show information from the database")
+    except DatabaseError:
+        raise HTTPException(status_code=500,
+                            detail="Database error occurred while retrieving "
+                                   "show information from the database")
+
+
+@router.get("/details/date/month-day/{month}/{day}",
+            summary="Retrieve Detailed Information for a Show by Month and Day",
+            response_model=ModelsShowsDetails,
+            tags=["Shows"])
+@router.head("/details/date/month-day/{month}/{day}",
+             include_in_schema=False)
+async def get_show_details_by_month_day(month: conint(ge=1, le=12),
+                                        day: conint(ge=1, le=31)):
+    """Retrieve a Show object, based on month and day, containing: Show
+    ID, date, Host, Scorekeeper, Panelists, Guests and other information."""
+    try:
+        show = Show(database_connection=_database_connection)
+        shows = show.retrieve_details_by_month_day(month, day)
+        if not shows:
+            raise HTTPException(status_code=404,
+                                detail=f"Shows for month {month:02d} and day {day:02d} not found")
+        else:
+            return {"shows": shows}
+    except ValueError:
+        raise HTTPException(status_code=404,
+                            detail=f"Shows for month {month:02d} and day {day:02d} not found")
     except ProgrammingError:
         raise HTTPException(status_code=500,
                             detail="Unable to retrieve show information from the database")

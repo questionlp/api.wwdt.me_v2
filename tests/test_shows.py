@@ -91,6 +91,23 @@ def test_shows_date_year_month(year: int, month: int):
     assert "repeat_show" in shows["shows"][0]
 
 
+@pytest.mark.parametrize("month, day", [(10, 27)])
+def test_shows_date_month_day(month: int, day: int):
+    """Test /v2.0/shows/date/month-day/{month}/{day} route"""
+
+    response = client.get(f"/v{API_VERSION}/shows/date/month-day/{month}/{day}")
+    shows = response.json()
+    formatted_month_day = f"{month:02}-{day:02}"
+
+    assert response.status_code == 200
+    assert "shows" in shows
+    assert "id" in shows["shows"][0]
+    assert "date" in shows["shows"][0]
+    assert shows["shows"][0]["date"].find(formatted_month_day)
+    assert "best_of" in shows["shows"][0]
+    assert "repeat_show" in shows["shows"][0]
+
+
 @pytest.mark.parametrize("year, month, day", [(2018, 10, 27)])
 def test_shows_date_year_month_day(year: int, month: int, day: int):
     """Test /v2.0/shows/date/{year}/{month}/{day} route"""
@@ -195,6 +212,29 @@ def test_shows_details_date_year_month(year: int, month: int):
     assert "id" in shows["shows"][0]
     assert "date" in shows["shows"][0]
     assert shows["shows"][0]["date"].startswith(formatted_year_month)
+    assert "best_of" in shows["shows"][0]
+    assert "repeat_show" in shows["shows"][0]
+    assert "location" in shows["shows"][0]
+    assert "description" in shows["shows"][0]
+    assert "host" in shows["shows"][0]
+    assert "scorekeeper" in shows["shows"][0]
+    assert "panelists" in shows["shows"][0]
+    assert "guests" in shows["shows"][0]
+
+
+@pytest.mark.parametrize("month, day", [(10, 27)])
+def test_shows_details_date_month_day(month: int, day: int):
+    """Test /v2.0/shows/details/date/month-day/{month}/{day} route"""
+
+    response = client.get(f"/v{API_VERSION}/shows/details/date/month-day/{month}/{day}")
+    shows = response.json()
+    formatted_month_day = f"{month:02}-{day:02}"
+
+    assert response.status_code == 200
+    assert "shows" in shows
+    assert "id" in shows["shows"][0]
+    assert "date" in shows["shows"][0]
+    assert shows["shows"][0]["date"].find(formatted_month_day)
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "location" in shows["shows"][0]
