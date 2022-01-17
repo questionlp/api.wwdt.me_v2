@@ -7,15 +7,19 @@ import json
 from typing import Any, Dict
 
 API_VERSION = "2.0"
-APP_VERSION = "2.0.0-beta.3"
+APP_VERSION = "2.0.0-beta.5"
 
 
-def load_database_config(config_file_path: str = "config.json") -> Dict[str, Any]:
+def load_database_config(config_file_path: str = "config.json",
+                         connection_pool_size: int = 10) -> Dict[str, Any]:
     """Reads in database configuration values from a configuration
     JSON file and returns a dictionary with the values.
 
     :param config_file: Path to the configuration JSON file
     :type config_file: str, optional
+    :param connection_pool_size: Number of connections to use in
+        creating a connection pool
+    :type connection_pool_size: int, optional
     :return: Dictionary containing database configuration settings
     :rtype: Dict[str, Any]
     """
@@ -23,6 +27,30 @@ def load_database_config(config_file_path: str = "config.json") -> Dict[str, Any
         config_dict = json.load(config_file)
 
     if "database" in config_dict:
-        return config_dict["database"]
+        database_config = config_dict["database"]
+
+        # Set database connection pooling settings if and only if there
+        # is a ``use_pool`` key and it is set to True. Remove the key
+        # after parsing through the configuration to prevent issues
+        # with mysql.connector.connect()
+        if "use_pool" in database_config and database_config["use_pool"]:
+            if "pool_name" not in database_config or not database_config["pool_name"]:
+                database_config["pool_name"] = "wwdtm_api"
+
+            if "pool_size" not in database_config or not database_config["pool_size"]:
+                database_config["pool_size"] = connection_pool_size
+
+            del database_config["use_pool"]
+        else:
+            if "pool_name" in database_config:
+                del database_config["pool_name"]
+
+            if "pool_size" in database_config:
+                del database_config["pool_size"]
+
+            if "use_pool" in config_dict["database"]:
+                del database_config["use_pool"]
+
+        return database_config
     else:
         return {}

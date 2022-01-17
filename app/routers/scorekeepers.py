@@ -19,7 +19,6 @@ router = APIRouter(
 )
 _database_config = load_database_config()
 _database_connection = mysql.connector.connect(**_database_config)
-_database_connection.autocommit = True
 
 
 # region Routes
