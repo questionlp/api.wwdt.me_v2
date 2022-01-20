@@ -34,6 +34,11 @@ app = FastAPI(
     openapi_url=f"/v{API_VERSION}/openapi.json",
     redoc_url=f"/v{API_VERSION}/docs",
     docs_url=f"/v{API_VERSION}/openapi",
+    swagger_ui_parameters={
+        "deepLinking": False,
+        "defaultModelsExpandDepth": 0,
+        "syntaxHighlight.theme": "arta",
+    },
 )
 
 app.mount("/static",
