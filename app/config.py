@@ -40,6 +40,9 @@ def load_database_config(config_file_path: str = "config.json",
             if "pool_size" not in database_config or not database_config["pool_size"]:
                 database_config["pool_size"] = connection_pool_size
 
+            if "pool_size" in database_config and database_config["pool_size"] < 8:
+                database_config["pool_size"] = 8
+
             del database_config["use_pool"]
         else:
             if "pool_name" in database_config:
