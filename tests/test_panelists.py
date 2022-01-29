@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018-2021 Linh Pham
+# vim: set noai syntax=python ts=4 sw=4:
+#
+# Copyright (c) 2018-2022 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """Testing /v2.0/panelists routes
 """
@@ -106,7 +108,6 @@ def test_panelists_scores_id(panelist_id: int):
 
     assert response.status_code == 200
     assert "scores" in scores
-
 
 
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018-2021 Linh Pham
+# vim: set noai syntax=python ts=4 sw=4:
+#
+# Copyright (c) 2018-2022 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """FastAPI main application for api.wwdt.me"""
 
@@ -51,6 +53,9 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/",
          include_in_schema=False,
          response_class=HTMLResponse)
+@app.head("/",
+          include_in_schema=False,
+          response_class=HTMLResponse)
 async def default_page(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
@@ -58,6 +63,9 @@ async def default_page(request: Request):
 @app.get("/favicon.ico",
          include_in_schema=False,
          response_class=RedirectResponse)
+@app.head("/favicon.ico",
+          include_in_schema=False,
+          response_class=RedirectResponse)
 async def favicon():
     return RedirectResponse("/static/favicon.ico", status_code=301)
 
@@ -65,6 +73,9 @@ async def favicon():
 @app.get("/robots.txt",
          include_in_schema=False,
          response_class=FileResponse)
+@app.head("/robots.txt",
+          include_in_schema=False,
+          response_class=FileResponse)
 async def robots_txt():
     """ Attempts to serve up static/robots.txt or
     static/robots.txt.dist to the requester. Raise a 404 error if
@@ -81,6 +92,9 @@ async def robots_txt():
 @app.get("/docs",
          include_in_schema=False,
          response_class=RedirectResponse)
+@app.head("/docs",
+          include_in_schema=False,
+          response_class=RedirectResponse)
 async def redoc_redirect_docs():
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
@@ -88,6 +102,9 @@ async def redoc_redirect_docs():
 @app.get("/redoc",
          include_in_schema=False,
          response_class=RedirectResponse)
+@app.head("/redoc",
+          include_in_schema=False,
+          response_class=RedirectResponse)
 async def redoc_redirect_redoc():
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
@@ -95,6 +112,9 @@ async def redoc_redirect_redoc():
 @app.get(f"/v{API_VERSION}/redoc",
          include_in_schema=False,
          response_class=RedirectResponse)
+@app.head(f"/v{API_VERSION}/redoc",
+          include_in_schema=False,
+          response_class=RedirectResponse)
 async def redoc_redirect_sub():
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
