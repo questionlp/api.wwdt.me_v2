@@ -88,7 +88,9 @@ def test_scorekeepers_details_id(scorekeeper_id: int):
 def test_scorekeepers_details_slug(scorekeeper_slug: str):
     """Test /v2.0/scorekeepers/details/slug/{scorekeeper_slug} route"""
 
-    response = client.get(f"/v{API_VERSION}/scorekeepers/details/slug/{scorekeeper_slug}")
+    response = client.get(
+        f"/v{API_VERSION}/scorekeepers/details/slug/{scorekeeper_slug}"
+    )
     scorekeeper = response.json()
 
     assert response.status_code == 200

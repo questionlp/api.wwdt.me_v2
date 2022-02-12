@@ -9,11 +9,12 @@ import json
 from typing import Any, Dict
 
 API_VERSION = "2.0"
-APP_VERSION = "2.0.0-rc.1"
+APP_VERSION = "2.0.0-rc.3"
 
 
-def load_database_config(config_file_path: str = "config.json",
-                         connection_pool_size: int = 10) -> Dict[str, Any]:
+def load_database_config(
+    config_file_path: str = "config.json", connection_pool_size: int = 10
+) -> Dict[str, Any]:
     """Reads in database configuration values from a configuration
     JSON file and returns a dictionary with the values.
 

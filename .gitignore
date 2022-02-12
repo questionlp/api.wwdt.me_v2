@@ -15,9 +15,11 @@ uwsgi.service
 _log/access.log
 _log/error.log
 
-
 # Ignore robots.txt
 static/robots.txt
+
+# Ignore New Relic Agent config file
+newrelic.ini
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python

@@ -10,18 +10,17 @@ from fastapi import APIRouter
 from wwdtm import VERSION as WWDTM_VERSION
 from app.models.version import Version
 
-router = APIRouter(
-    prefix=f"/v{API_VERSION}/version"
-)
+router = APIRouter(prefix=f"/v{API_VERSION}/version")
 
 
 # region Routes
-@router.get("",
-            summary="Retrieve Wait Wait Stats API and Application Version Information",
-            response_model=Version,
-            tags=["Version"])
-@router.head("",
-             include_in_schema=False)
+@router.get(
+    "",
+    summary="Retrieve Wait Wait Stats API and Application Version Information",
+    response_model=Version,
+    tags=["Version"],
+)
+@router.head("", include_in_schema=False)
 async def get_version():
     """Retrieve Wait Wait Stats API version, application version, and
     wwdtm library version"""
@@ -30,5 +29,6 @@ async def get_version():
         "app": APP_VERSION,
         "wwdtm": WWDTM_VERSION,
     }
+
 
 # endregion
