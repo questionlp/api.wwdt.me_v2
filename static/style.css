@@ -25,7 +25,10 @@
         margin: 1em 1em;
     }
 
-    .links, .links:link, .links:active, .links:visited {
+    .links,
+    .links:link,
+    .links:active,
+    .links:visited {
         text-decoration: none;
         border-bottom: dotted;
     }
@@ -37,16 +40,56 @@
 }
 
 @media (prefers-color-scheme: light) {
-    *, html { background-color: rgb(240, 240, 240); color: rgb(8, 8, 8); }
-    a:link, a:active, a:hover, a:visited { border-bottom: 1px solid rgb(8, 8, 8); color: rgb(32, 32, 80); text-decoration: none; }
+
+    *,
+    html {
+        background-color: rgb(240, 240, 240);
+        color: rgb(8, 8, 8);
+    }
+
+    a:link,
+    a:active,
+    a:hover,
+    a:visited {
+        border-bottom: 1px solid rgb(8, 8, 8);
+        color: rgb(32, 32, 80);
+        text-decoration: none;
+    }
 }
 
 @media (prefers-color-scheme: dark) {
-    *, html { background-color: rgb(24, 24, 24); color:rgb(224, 224, 224); }
-    a:link, a:active, a:hover, a:visited { border-bottom: 1px solid rgb(192, 192, 192); color: rgb(192, 192, 192); text-decoration: none; }
+
+    *,
+    html {
+        background-color: rgb(24, 24, 24);
+        color: rgb(224, 224, 224);
+    }
+
+    a:link,
+    a:active,
+    a:hover,
+    a:visited {
+        border-bottom: 1px solid rgb(192, 192, 192);
+        color: rgb(192, 192, 192);
+        text-decoration: none;
+    }
 }
 
 @media print {
-    html, body { background-color: white; color: black; font-size: 1rem; }
-    a:link, a:active, a:hover, a:visited { border: none; color: default; text-decoration: underline; }
+
+    html,
+    body {
+        background-color: white;
+        color: black;
+        font-size: 1rem;
+    }
+
+    a:link,
+    a:active,
+    a:hover,
+    a:visited {
+        border: none;
+        color: default;
+        text-decoration: underline;
+    }
 }

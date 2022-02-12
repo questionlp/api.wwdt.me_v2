@@ -105,7 +105,9 @@ class ShowDetails(Show):
 
     location: Optional[ShowLocation] = Field(title="Show Location")
     description: Optional[str] = Field(default=None, title="Show Description")
-    notes: Optional[str] = Field(default=None, title="Show Notes")
+    notes: Optional[str] = Field(
+        default=None, title="Show Notes (Plain Text or Markdown)"
+    )
     host: Optional[ShowHost] = Field(default=None, title="Show Host")
     scorekeeper: Optional[ShowScorekeeper] = Field(
         default=None, title="Show Scorekeeper"
