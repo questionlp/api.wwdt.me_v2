@@ -13,7 +13,7 @@ Job Guests, Show Hosts, Recording Locations, Panelists, Scorekeepers, and
 Shows.
 
 Source code for this application is available on
-[GitHub](https://github.com/questionlp/api.wwdt.me_fastapi).
+[GitHub](https://github.com/questionlp/api.wwdt.me_v2).
     """,
     "contact_info": {
         "name": "Linh Pham",
