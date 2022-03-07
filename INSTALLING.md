@@ -14,7 +14,7 @@ applications, but those options will not be covered here.
 Clone a copy of this repository to a location of your choosing by running:
 
 ```bash
-git clone https://github.com/questionlp/api.wwdt.me_fastapi.git
+git clone https://github.com/questionlp/api.wwdt.me_v2.git
 ```
 
 Within the new local copy of the repository, create a new virtual environment
