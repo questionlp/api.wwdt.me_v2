@@ -101,7 +101,7 @@ options avaiable, check out the [Gunicorn documentation site](https://docs.gunic
 
 ## Setting up a Gunicorn systemd Service
 
-A template `systemd` service file is included in the repository named 
+A template `systemd` service file is included in the repository named
 `gunicorn-wwdtmapi.service.dist`. That service file provides the commands and
 arguments used to start a Gunicorn instance to serve up the application. A copy
 of that template file can be modified and installed under `/etc/systemd/system`.
