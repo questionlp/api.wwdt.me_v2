@@ -5,7 +5,7 @@
 ### Component Changes
 
 - Upgrade fastapi from 0.78.0 to 0.79.0
-- Upgrade unicorn from 0.17.6 to 0.18.2
+- Upgrade uvicorn from 0.17.6 to 0.18.2
 
 ### Development Changes
 
