@@ -1,5 +1,19 @@
 # Changes
 
+## 2.0.4
+
+### Component Changes
+
+- Upgrade wwdtm from 2.0.5 to 2.0.7, which also includes the following changes:
+  - Upgrade MySQL Connector/Python from 8.0.28 to 8.0.30
+  - Upgrade NumPy from 1.22.3 to 1.23.2
+  - Upgrade pytz from 2022.1 to 2022.2.1
+- Upgrade requests from 2.27.1 to 2.28.1
+
+### Development Changes
+
+- Correct required version of Black from 22.3.0 to 22.6.0 in `requirements-dev.txt`
+
 ## 2.0.3
 
 ### Component Changes

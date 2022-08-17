@@ -9,7 +9,7 @@ If you're looking for the version 1.0 of the API, check out the [api.wwdt.me](ht
 ## Requirements
 
 - Python 3.8 or newer
-- MySQL or MariaDB Server hosting a version of the aforementioned Wait Wait Don't Tell Me! Stats database
+- MySQL Server 8.0 or newer, or another MySQL Server distribution based on MySQL Server 8.0 or newer, hosting a version of the aforementioned Wait Wait Don't Tell Me! Stats database
 
 ## Changes from v1.0
 
