@@ -1,5 +1,11 @@
 # Changes
 
+## 2.0.5
+
+### Application Changes
+
+- Officially deprecate Stats API v1.0 and add a notice on the main index page. No other application changes were made.
+
 ## 2.0.4
 
 ### Component Changes
