@@ -9,7 +9,7 @@ import json
 from typing import Any, Dict
 
 API_VERSION = "2.0"
-APP_VERSION = "2.0.4"
+APP_VERSION = "2.0.5"
 
 
 def load_database_config(
