@@ -1,5 +1,17 @@
 # Changes
 
+## 2.0.6
+
+### Component Changes
+
+- Upgrade fastapi from 0.79.0 to 0.85.0
+- Upgrade uvicorn from 0.18.2 to 0.18.3
+- Upgrade aiofiles from 0.8.0 to 22.1.0
+
+### Development Changes
+
+- Upgrade pytest from 7.1.2 to 7.1.3
+
 ## 2.0.5
 
 ### Application Changes
