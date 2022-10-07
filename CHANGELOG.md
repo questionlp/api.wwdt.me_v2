@@ -2,6 +2,10 @@
 
 ## 2.0.6
 
+### Application Changes
+
+- Explicitly return `text/plain` as the media type for `/robots.txt`
+
 ### Component Changes
 
 - Upgrade fastapi from 0.79.0 to 0.85.0
