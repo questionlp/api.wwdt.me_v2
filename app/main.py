@@ -59,17 +59,17 @@ async def favicon():
     return RedirectResponse("/static/favicon.ico", status_code=301)
 
 
-@app.get("/robots.txt", include_in_schema=False, response_class=FileResponse)
-@app.head("/robots.txt", include_in_schema=False, response_class=FileResponse)
+@app.get("/robots.txt", include_in_schema=False)
+@app.head("/robots.txt", include_in_schema=False)
 async def robots_txt():
     """Attempts to serve up static/robots.txt or
     static/robots.txt.dist to the requester. Raise a 404 error if
     neither file are found.
     """
     if exists("static/robots.txt"):
-        return "static/robots.txt"
+        return FileResponse(path="static/robots.txt", media_type="text/plain")
     elif exists("static/robots.txt.dist"):
-        return "static/robots.txt.dist"
+        return FileResponse(path="static/robots.txt.dist", media_type="text/plain")
     else:
         raise HTTPException(status_code=404)
 
