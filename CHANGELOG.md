@@ -5,6 +5,7 @@
 ### Application Changes
 
 - Better handling of how `app.metadata.app_metadata` is populated in case the corresponding values are not set in `config.json`
+- Add validation of `contact_email`, `contact_name` and `contact_url` values when populating `app.metadata.app_metadata`
 
 ## 2.1.0
 

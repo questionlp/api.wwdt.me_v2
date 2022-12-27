@@ -6,17 +6,36 @@
 """FastAPI Metadata for api.wwdt.me"""
 
 from app.config import load_config
+from email_validator import validate_email, EmailNotValidError
 
 
 _config = load_config()
 _contact_info = {}
 if "settings" in _config and _config["settings"]:
     _settings = _config["settings"]
-    _contact_info = {
-        "email": _settings.get("contact_email", ""),
-        "name": _settings.get("contact_name", ""),
-        "url": _settings.get("contact_url", ""),
-    }
+    if "contact_name" in _settings and "contact_email" in _settings:
+        try:
+            _name = _settings.get("contact_name")
+            if not _name and not _name.strip():
+                _name: str = "API Developer"
+
+            _email = str(_settings.get("contact_email"))
+            valid_email = validate_email(_email)
+
+            _url = _settings.get("contact_url", None)
+            if not _url or not str(_url).strip():
+                _url = None
+
+            _contact_info = {
+                "name": _name,
+                "email": str(_settings.get("contact_email")),
+                "url": _url,
+            }
+        except EmailNotValidError:
+            _contact_info = {
+                "name": "API Developer",
+                "email": "api@example.org",
+            }
 
 app_metadata = {
     "title": "Wait Wait Don't Tell Me Stats API",
