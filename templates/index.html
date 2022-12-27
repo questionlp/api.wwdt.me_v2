@@ -38,7 +38,11 @@
             <a class="links" href="/v2.0/openapi">Try out API v2.0 →</a>
         </div>
         <div class="page-link">
+            {% if stats_url %}
+            <a class="links" href="{{ stats_url }}">Stats Page →</a>
+            {% else %}
             <a class="links" href="https://stats.wwdt.me/">Stats Page →</a>
+            {% endif %}
         </div>
     </main>
 </body>

@@ -1,5 +1,32 @@
 # Changes
 
+## 2.1.0
+
+### Application Changes
+
+- Added `settings` section to the application `config.json` and `config.json.dist` template file with the following keys:
+  - `stats_url` to set the URL for the Wait Wait Stats Page
+  - `contact_email` to set a contact e-mail address for the OpenAPI metadata
+  - `contact_name` to set a contact name for the OpenAPI metadata
+  - `contact_url` to set a contact URL for the OpenAPI metadata
+- Renamed `load_database_config` in `app.config` to `load_config` that returns a dictionary with `database` and `settings` as keys containing the corresponding values as a dictionary from `config.json`
+- Update all references to `app.config.load_database_config` to `app.config.load_config`
+- Update `app/metadata.py` to make use of the new contact e-mail, name and URL configuration keys
+- Update the `index.html` template to make use of the `stats_url` configuration key
+
+### Component Changes
+
+- Upgrade wwdtm from 2.0.7 to 2.0.8, which also includes the following changes:
+  - Upgrade MySQL Connector/Python from 8.0.30 to 8.0.31
+  - Upgrade NumPy from 1.23.2 to 1.23.4
+  - Upgrade python-slugify from 5.0.2 to 6.1.2
+  - Upgrade pytz from 2022.2.1 to 2022.6
+- Upgrade fastapi from 0.85.0 to 0.88.0
+  - Add httpx 0.23.1 as a requirement for fastapi 0.88.0
+- Upgrade uvicorn from 0.18.3 to 0.20.0
+- Upgrade aiofiles from 0.8.0 to 22.1.0
+- Upgrade email-validator from 1.2.1 to 1.3.0
+
 ## 2.0.6
 
 ### Application Changes

@@ -14,5 +14,11 @@
         "charset": "utf8mb4",
         "collation": "utf8mb4_unicode_ci",
         "time_zone": "America/Los_Angeles"
+    },
+    "settings": {
+        "stats_url": "https://stats.wwdt.me/",
+        "contact_email": "",
+        "contact_name": "",
+        "contact_url": ""
     }
 }

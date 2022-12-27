@@ -9,11 +9,13 @@ import json
 from typing import Any, Dict
 
 API_VERSION = "2.0"
-APP_VERSION = "2.0.6"
+APP_VERSION = "2.1.0"
 
 
-def load_database_config(
-    config_file_path: str = "config.json", connection_pool_size: int = 10
+def load_config(
+    config_file_path: str = "config.json",
+    connection_pool_size: int = 10,
+    connection_pool_name: str = "wwdtm_api",
 ) -> Dict[str, Any]:
     """Reads in database configuration values from a configuration
     JSON file and returns a dictionary with the values.
@@ -29,6 +31,8 @@ def load_database_config(
     with open(config_file_path, "r") as config_file:
         config_dict = json.load(config_file)
 
+    settings_config = config_dict.get("settings", None)
+
     if "database" in config_dict:
         database_config = config_dict["database"]
 
@@ -36,16 +40,16 @@ def load_database_config(
         # is a ``use_pool`` key and it is set to True. Remove the key
         # after parsing through the configuration to prevent issues
         # with mysql.connector.connect()
-        if "use_pool" in database_config and database_config["use_pool"]:
-            if "pool_name" not in database_config or not database_config["pool_name"]:
-                database_config["pool_name"] = "wwdtm_api"
+        use_pool = database_config.get("use_pool", False)
 
-            if "pool_size" not in database_config or not database_config["pool_size"]:
-                database_config["pool_size"] = connection_pool_size
+        if use_pool:
+            pool_name = database_config.get("pool_name", connection_pool_name)
+            pool_size = database_config.get("pool_size", connection_pool_size)
+            if pool_size < connection_pool_size:
+                pool_size = connection_pool_size
 
-            if "pool_size" in database_config and database_config["pool_size"] < 8:
-                database_config["pool_size"] = 8
-
+            database_config["pool_name"] = pool_name
+            database_config["pool_size"] = pool_size
             del database_config["use_pool"]
         else:
             if "pool_name" in database_config:
@@ -54,9 +58,12 @@ def load_database_config(
             if "pool_size" in database_config:
                 del database_config["pool_size"]
 
-            if "use_pool" in config_dict["database"]:
+            if "use_pool" in database_config:
                 del database_config["use_pool"]
 
-        return database_config
+        return {
+            "database": database_config,
+            "settings": settings_config
+        }
     else:
         return {}
