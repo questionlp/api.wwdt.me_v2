@@ -56,7 +56,9 @@ async def default_page(request: Request):
         stats_url = settings.get("stats_url", None)
     else:
         stats_url = None
-    return templates.TemplateResponse("index.html", {"request": request, "stats_url": stats_url})
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "stats_url": stats_url}
+    )
 
 
 @app.get("/favicon.ico", include_in_schema=False, response_class=RedirectResponse)

@@ -27,6 +27,13 @@
 - Upgrade aiofiles from 0.8.0 to 22.1.0
 - Upgrade email-validator from 1.2.1 to 1.3.0
 
+### Development Changes
+
+- Upgrade flake8 from 4.0.1 to 5.0.4
+- Upgrade pycodestyle from 2.8.0 to 2.9.1
+- Upgrade pytest from 7.1.2 to 7.2.0
+- Upgrade black from 22.6.0 to 22.10.0
+
 ## 2.0.6
 
 ### Application Changes

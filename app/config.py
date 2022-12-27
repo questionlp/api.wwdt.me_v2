@@ -61,9 +61,6 @@ def load_config(
             if "use_pool" in database_config:
                 del database_config["use_pool"]
 
-        return {
-            "database": database_config,
-            "settings": settings_config
-        }
+        return {"database": database_config, "settings": settings_config}
     else:
         return {}
