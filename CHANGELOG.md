@@ -1,5 +1,11 @@
 # Changes
 
+## 2.1.1
+
+### Application Changes
+
+- Better handling of how `app.metadata.app_metadata` is populated in case the corresponding values are not set in `config.json`
+
 ## 2.1.0
 
 ### Application Changes

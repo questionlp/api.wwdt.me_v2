@@ -3,17 +3,20 @@
 #
 # Copyright (c) 2018-2022 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""FastAPI Metdata for api.wwdt.me"""
+"""FastAPI Metadata for api.wwdt.me"""
 
 from app.config import load_config
 
 
 _config = load_config()
+_contact_info = {}
 if "settings" in _config and _config["settings"]:
     _settings = _config["settings"]
-    contact_email = _settings.get("contact_email", "")
-    contact_name = _settings.get("contact_name", "")
-    contact_url = _settings.get("contact_url", "")
+    _contact_info = {
+        "email": _settings.get("contact_email", ""),
+        "name": _settings.get("contact_name", ""),
+        "url": _settings.get("contact_url", ""),
+    }
 
 app_metadata = {
     "title": "Wait Wait Don't Tell Me Stats API",
@@ -25,11 +28,7 @@ Shows.
 Source code for this application is available on
 [GitHub](https://github.com/questionlp/api.wwdt.me_v2).
     """,
-    "contact_info": {
-        "email": contact_email,
-        "name": contact_name,
-        "url": contact_url,
-    },
+    "contact_info": _contact_info,
     "license_info": {
         "name": "Apache 2.0",
         "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
