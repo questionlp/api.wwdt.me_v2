@@ -7,7 +7,7 @@
 
 from datetime import date
 
-from app.config import API_VERSION, load_database_config
+from app.config import API_VERSION, load_config
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
@@ -22,7 +22,8 @@ from app.models.shows import (
 )
 
 router = APIRouter(prefix=f"/v{API_VERSION}/shows")
-_database_config = load_database_config()
+_config = load_config()
+_database_config = _config["database"]
 _database_connection = mysql.connector.connect(**_database_config)
 
 

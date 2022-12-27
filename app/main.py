@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
-from app.config import API_VERSION, APP_VERSION
+from app.config import API_VERSION, APP_VERSION, load_config
 from app.metadata import app_metadata, tags_metadata
 from app.routers import (
     guests,
@@ -44,13 +44,21 @@ app = FastAPI(
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+config = load_config()
 
 
 # region Generic Routes
 @app.get("/", include_in_schema=False, response_class=HTMLResponse)
 @app.head("/", include_in_schema=False, response_class=HTMLResponse)
 async def default_page(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    if "settings" in config and config["settings"]:
+        settings = config["settings"]
+        stats_url = settings.get("stats_url", None)
+    else:
+        stats_url = None
+    return templates.TemplateResponse(
+        "index.html", {"request": request, "stats_url": stats_url}
+    )
 
 
 @app.get("/favicon.ico", include_in_schema=False, response_class=RedirectResponse)
