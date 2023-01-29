@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: set noai syntax=python ts=4 sw=4:
 #
-# Copyright (c) 2018-2022 Linh Pham
+# Copyright (c) 2018-2023 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """FastAPI main application for api.wwdt.me"""
 
@@ -47,7 +47,6 @@ templates = Jinja2Templates(directory="templates")
 config = load_config()
 
 
-# region Generic Routes
 @app.get("/", include_in_schema=False, response_class=HTMLResponse)
 @app.head("/", include_in_schema=False, response_class=HTMLResponse)
 async def default_page(request: Request):
@@ -104,7 +103,17 @@ async def redoc_redirect_sub():
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
 
-# endregion
+@app.get("/v1.0", include_in_schema=False, response_class=RedirectResponse)
+@app.head("/v1.0", include_in_schema=False, response_class=RedirectResponse)
+async def api_v1_redirect():
+    return RedirectResponse("/", status_code=301)
+
+
+@app.get("/v1.0/docs", include_in_schema=False, response_class=RedirectResponse)
+@app.head("/v1.0/docs", include_in_schema=False, response_class=RedirectResponse)
+async def api_v1_docs_redirect():
+    return RedirectResponse("/", status_code=301)
+
 
 # Add the router modules for Guests, Hosts, Locations, Panelists,
 # Scorekeepers, Shows and Version
