@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: set noai syntax=python ts=4 sw=4:
 #
-# Copyright (c) 2018-2022 Linh Pham
+# Copyright (c) 2018-2023 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """Guests Models"""
 
@@ -9,7 +9,6 @@ from typing import List, Optional, Union
 from pydantic import BaseModel, conint, Field
 
 
-# region Models
 class Guest(BaseModel):
     """Not My Job Guest Information"""
 
@@ -69,6 +68,3 @@ class GuestsDetails(BaseModel):
     """List of Not My Job Guest Details"""
 
     guests: List[GuestDetails] = Field(title="List of Guest Details")
-
-
-# endregion

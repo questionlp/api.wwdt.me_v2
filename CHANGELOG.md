@@ -1,5 +1,12 @@
 # Changes
 
+## 2.1.2
+
+### Application Changes
+
+- Add `/v1.0` and `/v1.0/docs` routes that redirect back to `/` as part of deprecating Stats API v1.0
+- Remove links to Stats API v1.0 docs and update v1.0 deprecation message
+
 ## 2.1.1
 
 ### Application Changes

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: set noai syntax=python ts=4 sw=4:
 #
-# Copyright (c) 2018-2022 Linh Pham
+# Copyright (c) 2018-2023 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """Application Configuration"""
 
@@ -9,7 +9,7 @@ import json
 from typing import Any, Dict
 
 API_VERSION = "2.0"
-APP_VERSION = "2.1.1"
+APP_VERSION = "2.1.2"
 
 
 def load_config(

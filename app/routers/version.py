@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: set noai syntax=python ts=4 sw=4:
 #
-# Copyright (c) 2018-2022 Linh Pham
+# Copyright (c) 2018-2023 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """API routes for Application Version endpoints"""
 
@@ -13,7 +13,6 @@ from app.models.version import Version
 router = APIRouter(prefix=f"/v{API_VERSION}/version")
 
 
-# region Routes
 @router.get(
     "",
     summary="Retrieve Wait Wait Stats API and Application Version Information",
@@ -29,6 +28,3 @@ async def get_version():
         "app": APP_VERSION,
         "wwdtm": WWDTM_VERSION,
     }
-
-
-# endregion
