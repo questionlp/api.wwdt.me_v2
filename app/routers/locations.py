@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: set noai syntax=python ts=4 sw=4:
 #
-# Copyright (c) 2018-2022 Linh Pham
+# Copyright (c) 2018-2023 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """API routes for Locations endpoints"""
 
@@ -24,7 +24,6 @@ _database_config = _config["database"]
 _database_connection = mysql.connector.connect(**_database_config)
 
 
-# region Routes
 @router.get(
     "",
     summary="Retrieve Information for All Locations",
@@ -234,6 +233,3 @@ async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace
             detail="Database error occurred while trying to "
             "retrieve location information",
         )
-
-
-# endregion

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: set noai syntax=python ts=4 sw=4:
 #
-# Copyright (c) 2018-2022 Linh Pham
+# Copyright (c) 2018-2023 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """Shows Models"""
 
@@ -9,7 +9,6 @@ from typing import List, Optional, Union
 from pydantic import BaseModel, conint, Field
 
 
-# region Shows Models
 class Show(BaseModel):
     """Show Information"""
 
@@ -133,6 +132,3 @@ class ShowDates(BaseModel):
     """List of Show Dates in ISO format (YYYY-MM-DD)"""
 
     shows: List[str] = Field(title="List of Show Dates")
-
-
-# endregion

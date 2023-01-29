@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # vim: set noai syntax=python ts=4 sw=4:
 #
-# Copyright (c) 2018-2022 Linh Pham
+# Copyright (c) 2018-2023 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """Hosts Models"""
 
@@ -9,7 +9,6 @@ from typing import List, Optional, Union
 from pydantic import BaseModel, conint, Field
 
 
-# region Host Models
 class Host(BaseModel):
     """Host Information"""
 
@@ -67,6 +66,3 @@ class HostsDetails(BaseModel):
     """List of Host Details"""
 
     hosts: List[HostDetails] = Field(title="List of Host Details")
-
-
-# endregion
