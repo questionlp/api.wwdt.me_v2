@@ -1,5 +1,29 @@
 # Changes
 
+## 2.1.3
+
+### Component Changes
+
+- Upgrade wwdtm from 2.0.8 to 2.0.9, which also includes the following changes:
+  - Upgrade MySQL Connector/Python from 8.0.31 to 8.0.33
+  - Upgrade NumPy from 1.23.4 to 1.24.2
+  - Upgrade python-slugify from 6.1.2 to 8.0.1
+  - Upgrade pytz from 2022.6 to 2023.3
+- Upgrade fastapi from 0.88.0 to 0.95.1
+- Upgrade httpx from 0.23.1 to 0.24.0
+- Upgrade uvicorn from 0.20.0 to 0.21.1
+- Upgrade aiofiles from 22.1.0 to 23.1.0
+- Upgrade email-validator from 1.3.0 to 1.3.1
+- Upgrade requests from 2.28.1 to 2.28.2
+
+### Development Changes
+
+- Move pytest configuration from `pytest.ini` into `pyproject.toml`
+- Upgrade flake8 from 5.0.4 to 6.0.0
+- Upgrade pycodestyle from 2.9.1 to 2.10.0
+- Upgrade pytest from 7.2.0 to 7.3.1
+- Upgrade black from 22.10.0 to 23.3.0
+
 ## 2.1.2
 
 ### Application Changes
