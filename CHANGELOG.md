@@ -1,5 +1,15 @@
 # Changes
 
+## 2.1.4
+
+### Component Changes
+
+- Upgrade wwdtm from 2.0.9 to 2.1.0
+- Upgrade fastapi from 0.95.1 to 0.98.0
+- Upgrade uvicorn from 0.21.0 to 0.22.0
+- Upgrade httpx from 0.24.0 to 0.24.1
+- Upgrade requests from 2.28.2 to 2.31.0
+
 ## 2.1.3
 
 ### Component Changes
