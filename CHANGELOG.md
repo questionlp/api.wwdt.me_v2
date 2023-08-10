@@ -1,5 +1,22 @@
 # Changes
 
+## 2.2.0
+
+### Component Changes
+
+- Upgrade fastpi from 0.98.0 to 0.101.0
+- Upgrade uvicorn from 0.22.0 to 0.23.2
+- Upgrade gunicorn from 20.1.0 to 21.2.0
+- Upgrade aiofiles from 23.1.0 to 23.2.1
+- Upgrade email-validator from 1.3.1 to 2.0.0.post2
+
+### Development Changes
+
+- Upgrade flake8 from 6.0.0 to 6.1.0
+- Upgrade pycodestyle from 2.10.0 to 2.11.0
+- Upgrade pytest from 7.3.1 to 7.4.0
+- Upgrade black from 23.3.0 to 23.7.0
+
 ## 2.1.4
 
 ### Component Changes
