@@ -19,6 +19,7 @@
         "stats_url": "https://stats.wwdt.me/",
         "contact_email": "",
         "contact_name": "",
-        "contact_url": ""
+        "contact_url": "",
+        "use_decimal_scores": false
     }
 }
