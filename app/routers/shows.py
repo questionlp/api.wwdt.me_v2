@@ -322,7 +322,9 @@ async def get_shows_details():
     Results are sorted by show date."""
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_all_details()
+        shows = show.retrieve_all_details(
+            include_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not shows:
             raise HTTPException(status_code=404, detail="No shows found")
         else:
@@ -352,7 +354,10 @@ async def get_show_details_by_date_string(show_date: date):
     Panelists, Guests and other information."""
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_details_by_date_string(show_date.isoformat())
+        show_details = show.retrieve_details_by_date_string(
+            show_date.isoformat(),
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
         if not show_details:
             raise HTTPException(
                 status_code=404, detail=f"Show date {show_date} not found"
@@ -389,7 +394,9 @@ async def get_shows_details_by_year(year: conint(ge=1998, le=9999)):
     Results are sorted by show date."""
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_details_by_year(year)
+        shows = show.retrieve_details_by_year(
+            year, include_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not shows:
             raise HTTPException(
                 status_code=404, detail=f"Shows for {year:04d} not found"
@@ -428,7 +435,11 @@ async def get_shows_details_by_year_month(
     Results are sorted by show date."""
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_details_by_year_month(year, month)
+        shows = show.retrieve_details_by_year_month(
+            year,
+            month,
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
         if not shows:
             raise HTTPException(
                 status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
@@ -466,7 +477,9 @@ async def get_show_details_by_month_day(
     ID, date, Host, Scorekeeper, Panelists, Guests and other information."""
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_details_by_month_day(month, day)
+        shows = show.retrieve_details_by_month_day(
+            month, day, include_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not shows:
             raise HTTPException(
                 status_code=404,
@@ -507,7 +520,12 @@ async def get_show_details_by_date(
     information."""
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_details_by_date(year, month, day)
+        show_details = show.retrieve_details_by_date(
+            year,
+            month,
+            day,
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
         if not show_details:
             raise HTTPException(
                 status_code=404,
@@ -545,7 +563,9 @@ async def get_show_details_by_id(show_id: conint(ge=0, lt=2**31)):
     date, Host, Scorekeeper, Panelists, Guests and other information."""
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_details_by_id(show_id)
+        show_details = show.retrieve_details_by_id(
+            show_id, include_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not show_details:
             raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
         else:
@@ -580,7 +600,9 @@ async def get_shows_recent_details():
     Results are sorted by show date."""
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_recent_details()
+        shows = show.retrieve_recent_details(
+            include_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not shows:
             raise HTTPException(status_code=404, detail="No recent shows found")
         else:

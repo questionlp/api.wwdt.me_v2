@@ -5,6 +5,7 @@
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """Panelists Models"""
 
+from decimal import Decimal
 from typing import List, Optional, Tuple
 from pydantic import BaseModel, conint, Field
 
@@ -33,6 +34,17 @@ class ScoringStatistics(BaseModel):
     median: float = Field(title="Median Score")
     standard_deviation: float = Field(title="Standard Deviation")
     total: int = Field("Score Total")
+
+
+class DecimalScoringStatistics(BaseModel):
+    """Scoring Statistics"""
+
+    minimum: Decimal = Field(title="Minimum Score")
+    maximum: Decimal = Field(title="Maximum Score")
+    mean: Decimal = Field(title="Mean Score")
+    median: Decimal = Field(title="Median Score")
+    standard_deviation: Decimal = Field(title="Standard Deviation")
+    total: Decimal = Field("Score Total")
 
 
 class RankingCounts(BaseModel):
@@ -69,6 +81,9 @@ class PanelistStatistics(BaseModel):
 
     scoring: Optional[ScoringStatistics] = Field(
         default=None, title="Scoring Statistics"
+    )
+    scoring_decimal: Optional[DecimalScoringStatistics] = Field(
+        default=None, title="Decimal Scoring Statistics"
     )
     ranking: Optional[PanelistRankings] = Field(
         default=None, title="Ranking Percentages"
@@ -131,6 +146,7 @@ class ShowAppearance(BaseModel):
         default=None, title="Lightning Round Correct Answers"
     )
     score: Optional[int] = Field(default=None, title="Total Score")
+    score_decimal: Optional[Decimal] = Field(default=None, title="Total Decimal Score")
     rank: Optional[str] = Field(default=None, title="Ranking Position")
 
 

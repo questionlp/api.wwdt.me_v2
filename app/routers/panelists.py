@@ -145,7 +145,9 @@ async def get_panelists_details():
     sorted by show date."""
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelists = panelist.retrieve_all_details()
+        panelists = panelist.retrieve_all_details(
+            use_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not panelists:
             raise HTTPException(status_code=404, detail="No panelists found")
         else:
@@ -177,7 +179,9 @@ async def get_panelist_details_by_id(panelist_id: conint(ge=0, lt=2**31)):
     Panelist appearances are sorted by show date."""
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelist_details = panelist.retrieve_details_by_id(panelist_id)
+        panelist_details = panelist.retrieve_details_by_id(
+            panelist_id, use_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not panelist_details:
             raise HTTPException(
                 status_code=404, detail=f"Panelist ID {panelist_id} not found"
@@ -215,7 +219,9 @@ async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace=Tr
     Panelist appearances are sorted by show date."""
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelist_details = panelist.retrieve_details_by_slug(panelist_slug)
+        panelist_details = panelist.retrieve_details_by_slug(
+            panelist_slug, use_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not panelist_details:
             raise HTTPException(
                 status_code=404,
