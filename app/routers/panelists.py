@@ -346,9 +346,7 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
     """Retrieve Panelist scores, based on Panelist ID, as grouped
     ordered pairs, each pair containing a score and the corresponding
     number of times a panelist has earned that score.
-
-    **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(int, int)`."""
+    """
     try:
         if _config["settings"]["use_decimal_scores"]:
             panelist_scores = PanelistDecimalScores(
@@ -401,9 +399,7 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
     """Retrieve Panelist scores, based on Panelist slug string, as
     grouped ordered pairs, each pair containing a score and the
     corresponding number of times a panelist has earned that score.
-
-    **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(int, int)`."""
+    """
     try:
         if _config["settings"]["use_decimal_scores"]:
             panelist_scores = PanelistDecimalScores(
@@ -451,9 +447,7 @@ async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2*
     """Retrieve Panelist scores, based on Panelist ID, as ordered
     pairs, each pair containing the show date and the corresponding
     score.
-
-    **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(str, int)`."""
+    """
     try:
         if _config["settings"]["use_decimal_scores"]:
             panelist_scores = PanelistDecimalScores(
@@ -499,9 +493,7 @@ async def get_panelist_scores_ordered_pair_by_slug(
     """Retrieve Panelist scores, based on Panelist slug string, as
     ordered pairs, each pair containing the show date and the
     corresponding score.
-
-    **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(str, int)`."""
+    """
     try:
         if _config["settings"]["use_decimal_scores"]:
             panelist_scores = PanelistDecimalScores(
