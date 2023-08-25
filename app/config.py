@@ -32,7 +32,9 @@ def load_config(
         config_dict = json.load(config_file)
 
     settings_config = config_dict.get("settings", None)
-    settings_config["use_decimal_scores"] = bool(settings_config.get("use_decimal_scores", False))
+    settings_config["use_decimal_scores"] = bool(
+        settings_config.get("use_decimal_scores", False)
+    )
 
     if "database" in config_dict:
         database_config = config_dict["database"]
