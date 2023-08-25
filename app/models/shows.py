@@ -67,7 +67,9 @@ class ShowPanelist(BaseModel):
         default=None, title="Lightning Fill-in-the-Blank Corect Answers"
     )
     score: Union[int, None] = Field(default=None, title="Panelist Score")
-    score_decimal: Optional[Decimal] = Field(default=None, title="Panelist Decimal Score")
+    score_decimal: Optional[Decimal] = Field(
+        default=None, title="Panelist Decimal Score"
+    )
     rank: Union[str, None] = Field(default=None, title="Panelist Rank")
 
 
