@@ -10,6 +10,9 @@
 ### Component Changes
 
 - Upgrade wwdtm from 2.1.0 to 2.2.0
+- Upgrade fastapi from 0.101.0 to 0.103.0
+- Pin pydantic to 1.10.12
+  - FastAPI breaks with Pydantic version >=2.0.0
 
 ## 2.2.0
 
