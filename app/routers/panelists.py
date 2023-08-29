@@ -10,7 +10,7 @@ from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from pydantic import conint, constr
-from wwdtm.panelist import Panelist, PanelistScores
+from wwdtm.panelist import Panelist, PanelistDecimalScores, PanelistScores
 from app.models.panelists import (
     Panelist as ModelsPanelist,
     Panelists as ModelsPanelists,
@@ -145,7 +145,9 @@ async def get_panelists_details():
     sorted by show date."""
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelists = panelist.retrieve_all_details()
+        panelists = panelist.retrieve_all_details(
+            use_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not panelists:
             raise HTTPException(status_code=404, detail="No panelists found")
         else:
@@ -177,7 +179,9 @@ async def get_panelist_details_by_id(panelist_id: conint(ge=0, lt=2**31)):
     Panelist appearances are sorted by show date."""
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelist_details = panelist.retrieve_details_by_id(panelist_id)
+        panelist_details = panelist.retrieve_details_by_id(
+            panelist_id, use_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not panelist_details:
             raise HTTPException(
                 status_code=404, detail=f"Panelist ID {panelist_id} not found"
@@ -215,7 +219,9 @@ async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace=Tr
     Panelist appearances are sorted by show date."""
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelist_details = panelist.retrieve_details_by_slug(panelist_slug)
+        panelist_details = panelist.retrieve_details_by_slug(
+            panelist_slug, use_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
         if not panelist_details:
             raise HTTPException(
                 status_code=404,
@@ -250,8 +256,16 @@ async def get_panelist_scores_by_id(panelist_id: conint(ge=0, lt=2**31)):
     """Retrieve Panelist scores, based on Panelist ID, as a pair of
     lists, one list of show dates and one list of corresponding scores."""
     try:
-        panelist_scores = PanelistScores(database_connection=_database_connection)
-        scores = panelist_scores.retrieve_scores_list_by_id(panelist_id)
+        if _config["settings"]["use_decimal_scores"]:
+            panelist_scores = PanelistDecimalScores(
+                database_connection=_database_connection
+            )
+            scores = panelist_scores.retrieve_scores_list_by_id(
+                panelist_id,
+            )
+        else:
+            panelist_scores = PanelistScores(database_connection=_database_connection)
+            scores = panelist_scores.retrieve_scores_list_by_id(panelist_id)
         if not scores:
             raise HTTPException(
                 status_code=404,
@@ -287,8 +301,14 @@ async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=Tru
     pair of lists, one list of show dates and one list of corresponding
     scores."""
     try:
-        panelist_scores = PanelistScores(database_connection=_database_connection)
-        scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug)
+        if _config["settings"]["use_decimal_scores"]:
+            panelist_scores = PanelistDecimalScores(
+                database_connection=_database_connection
+            )
+            scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug)
+        else:
+            panelist_scores = PanelistScores(database_connection=_database_connection)
+            scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug)
         if not scores:
             raise HTTPException(
                 status_code=404,
@@ -326,12 +346,20 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
     """Retrieve Panelist scores, based on Panelist ID, as grouped
     ordered pairs, each pair containing a score and the corresponding
     number of times a panelist has earned that score.
-
-    **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(int, int)`."""
+    """
     try:
-        panelist_scores = PanelistScores(database_connection=_database_connection)
-        scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(panelist_id)
+        if _config["settings"]["use_decimal_scores"]:
+            panelist_scores = PanelistDecimalScores(
+                database_connection=_database_connection
+            )
+            scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(
+                panelist_id
+            )
+        else:
+            panelist_scores = PanelistScores(database_connection=_database_connection)
+            scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(
+                panelist_id
+            )
         if not scores:
             raise HTTPException(
                 status_code=404,
@@ -371,14 +399,20 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
     """Retrieve Panelist scores, based on Panelist slug string, as
     grouped ordered pairs, each pair containing a score and the
     corresponding number of times a panelist has earned that score.
-
-    **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(int, int)`."""
+    """
     try:
-        panelist_scores = PanelistScores(database_connection=_database_connection)
-        scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
-            panelist_slug
-        )
+        if _config["settings"]["use_decimal_scores"]:
+            panelist_scores = PanelistDecimalScores(
+                database_connection=_database_connection
+            )
+            scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
+                panelist_slug
+            )
+        else:
+            panelist_scores = PanelistScores(database_connection=_database_connection)
+            scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
+                panelist_slug
+            )
         if not scores:
             raise HTTPException(
                 status_code=404,
@@ -413,12 +447,16 @@ async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2*
     """Retrieve Panelist scores, based on Panelist ID, as ordered
     pairs, each pair containing the show date and the corresponding
     score.
-
-    **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(str, int)`."""
+    """
     try:
-        panelist_scores = PanelistScores(database_connection=_database_connection)
-        scores = panelist_scores.retrieve_scores_ordered_pair_by_id(panelist_id)
+        if _config["settings"]["use_decimal_scores"]:
+            panelist_scores = PanelistDecimalScores(
+                database_connection=_database_connection
+            )
+            scores = panelist_scores.retrieve_scores_ordered_pair_by_id(panelist_id)
+        else:
+            panelist_scores = PanelistScores(database_connection=_database_connection)
+            scores = panelist_scores.retrieve_scores_ordered_pair_by_id(panelist_id)
         if not scores:
             raise HTTPException(
                 status_code=404,
@@ -455,12 +493,16 @@ async def get_panelist_scores_ordered_pair_by_slug(
     """Retrieve Panelist scores, based on Panelist slug string, as
     ordered pairs, each pair containing the show date and the
     corresponding score.
-
-    **Note**: OpenAPI 3.0 does not support representation of tuples in
-    models. The output is in the form of `(str, int)`."""
+    """
     try:
-        panelist_scores = PanelistScores(database_connection=_database_connection)
-        scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(panelist_slug)
+        if _config["settings"]["use_decimal_scores"]:
+            panelist_scores = PanelistDecimalScores(
+                database_connection=_database_connection
+            )
+            scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(panelist_slug)
+        else:
+            panelist_scores = PanelistScores(database_connection=_database_connection)
+            scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(panelist_slug)
         if not scores:
             raise HTTPException(
                 status_code=404,

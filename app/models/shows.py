@@ -5,6 +5,7 @@
 # api.wwdt.me is released under the terms of the Apache License 2.0
 """Shows Models"""
 
+from decimal import Decimal
 from typing import List, Optional, Union
 from pydantic import BaseModel, conint, Field
 
@@ -66,6 +67,9 @@ class ShowPanelist(BaseModel):
         default=None, title="Lightning Fill-in-the-Blank Corect Answers"
     )
     score: Union[int, None] = Field(default=None, title="Panelist Score")
+    score_decimal: Optional[Decimal] = Field(
+        default=None, title="Panelist Decimal Score"
+    )
     rank: Union[str, None] = Field(default=None, title="Panelist Rank")
 
 

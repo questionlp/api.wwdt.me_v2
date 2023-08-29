@@ -1,5 +1,19 @@
 # Changes
 
+## 2.3.0
+
+### Application Changes
+
+- Add support for new column in the Wait Wait Stats Database that stores panelist scores as a decimal
+- Add a new settings configuration key, `use_decimal_scores`, to enable or disable the new feature
+
+### Component Changes
+
+- Upgrade wwdtm from 2.1.0 to 2.2.0
+- Upgrade fastapi from 0.101.0 to 0.103.0
+- Pin pydantic to 1.10.12
+  - FastAPI breaks with Pydantic version >=2.0.0
+
 ## 2.2.0
 
 ### Component Changes

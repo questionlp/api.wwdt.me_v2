@@ -9,7 +9,7 @@ import json
 from typing import Any, Dict
 
 API_VERSION = "2.0"
-APP_VERSION = "2.2.0"
+APP_VERSION = "2.3.0"
 
 
 def load_config(
@@ -32,6 +32,9 @@ def load_config(
         config_dict = json.load(config_file)
 
     settings_config = config_dict.get("settings", None)
+    settings_config["use_decimal_scores"] = bool(
+        settings_config.get("use_decimal_scores", False)
+    )
 
     if "database" in config_dict:
         database_config = config_dict["database"]
