@@ -1,5 +1,11 @@
 # Changes
 
+## 2.3.1
+
+### Component Changes
+
+- Change pydantic version pin from "==1.10.12" to "<2" to include potential future updates to 1.x while blocking 2.x or higher
+
 ## 2.3.0
 
 ### Application Changes
