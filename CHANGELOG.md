@@ -1,5 +1,11 @@
 # Changes
 
+## 2.3.2
+
+### Application Changes
+
+- Fix issue where `panelists/scores/id` and `panelists/scores/slug` return scores as `int` instead of `Decimal` due to `Union[int, Decimal]` would return an `int`. Switched to `Union[Decimal, int]` to allow `Decimal` to take precedence
+
 ## 2.3.1
 
 ### Component Changes
