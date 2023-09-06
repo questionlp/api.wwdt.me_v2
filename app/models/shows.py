@@ -63,8 +63,14 @@ class ShowPanelist(BaseModel):
     lightning_round_start: Union[int, None] = Field(
         default=None, title="Lightning Fill-in-the-Blank Starting Score"
     )
+    lightning_round_start_decimal: Union[Decimal, None] = Field(
+        default=None, title="Lightning Fill-in-the-Blank Starting Decimal Score"
+    )
     lightning_round_correct: Union[int, None] = Field(
-        default=None, title="Lightning Fill-in-the-Blank Corect Answers"
+        default=None, title="Lightning Fill-in-the-Blank Correct Answers"
+    )
+    lightning_round_correct_decimal: Union[Decimal, None] = Field(
+        default=None, title="Lightning Fill-in-the-Blank Correct Answers (Decimal)"
     )
     score: Union[int, None] = Field(default=None, title="Panelist Score")
     score_decimal: Optional[Decimal] = Field(
