@@ -142,8 +142,14 @@ class ShowAppearance(BaseModel):
     lightning_round_start: Optional[int] = Field(
         default=None, title="Lightning Round Starting Score"
     )
+    lightning_round_start_decimal: Optional[Decimal] = Field(
+        default=None, title="Lightning Round Starting Decimal Score"
+    )
     lightning_round_correct: Optional[int] = Field(
         default=None, title="Lightning Round Correct Answers"
+    )
+    lightning_round_correct_decimal: Optional[Decimal] = Field(
+        default=None, title="Lightning Round Correct Answers (Decimal)"
     )
     score: Optional[int] = Field(default=None, title="Total Score")
     score_decimal: Optional[Decimal] = Field(default=None, title="Total Decimal Score")

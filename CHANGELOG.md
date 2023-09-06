@@ -1,5 +1,16 @@
 # Changes
 
+## 2.4.0
+
+### Application Changes
+
+- Add support for Panelist Lightning Start and Correct decimal fields for the appropriate models
+- Panelist Lightning Start and Correct decimal values will be added as additional fields rather than replacing the current fields
+
+### Component Changes
+
+- Upgrade wwdtm from 2.2.0 to 2.3.0
+
 ## 2.3.2
 
 ### Application Changes
