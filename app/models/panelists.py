@@ -199,7 +199,9 @@ class PanelistScoresList(BaseModel):
     shows: Optional[List[str]] = Field(
         default=None, title="List of Panelist Appearances as Show Dates"
     )
-    scores: Optional[List[Union[Decimal, int]]] = Field(default=None, title="List of Panelist Scores")
+    scores: Optional[List[Union[Decimal, int]]] = Field(
+        default=None, title="List of Panelist Scores"
+    )
 
 
 class ScoresOrderedPair(BaseModel):

@@ -1,5 +1,15 @@
 # Changes
 
+## 2.4.1
+
+### Application Changes
+
+- Correct typo in the docstring for `LocationRecordings` model
+
+### Component Changes
+
+- Upgrade wwdtm from 2.3.0 to 2.4.0
+
 ## 2.4.0
 
 ### Application Changes
