@@ -44,7 +44,7 @@ class LocationRecordingShow(BaseModel):
 
 
 class LocationRecordings(BaseModel):
-    """Loation Information and Recordings"""
+    """Location Information and Recordings"""
 
     count: Optional[LocationRecordingCounts] = Field(
         default=None, title="Count of Show Recordings"
