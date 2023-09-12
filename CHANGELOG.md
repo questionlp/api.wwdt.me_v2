@@ -1,5 +1,22 @@
 # Changes
 
+## 2.5.0
+
+### Application Changes
+
+- Migrate to Pydantic 2, which requires re-working of models, which includes:
+  - Using [bump-pydantic](https://github.com/pydantic/bump-pydantic) to migrate to Pydantic 2
+  - Replacing `conint` and `constr` with `Annotated[int, Path()]` and `Annotated[str, Path()]` respectively in routes
+  - Replacing `strip_whitespace=True` to `string.strip()` when passing in values to a method
+- Adding titles via `Path(title=)` to path elements in routes where applicable
+- Correct spelling errors
+
+### Component Changes
+
+- Upgrade wwdtm from 2.4.0 to 2.4.1, which includes:
+  - Upgrading numpy from 1.24.3 to 1.24.4
+  - Upgrading pytz from 2023.3 to 2023.3.post1
+
 ## 2.4.1
 
 ### Application Changes
