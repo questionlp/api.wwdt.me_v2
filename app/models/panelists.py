@@ -7,13 +7,14 @@
 
 from decimal import Decimal
 from typing import List, Optional, Tuple, Union
-from pydantic import BaseModel, conint, Field
+from pydantic import BaseModel, Field, RootModel
+from typing_extensions import Annotated
 
 
 class Panelist(BaseModel):
     """Panelist Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Panelist ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Panelist ID")
     name: str = Field(title="Panelist Name")
     slug: Optional[str] = Field(default=None, title="Panelist Slug String")
     gender: Optional[str] = Field(default=None, title="Panelist Gender")
@@ -104,21 +105,23 @@ class PanelistBluffs(BaseModel):
 class MilestonesFirst(BaseModel):
     """Panelist First Appearance Milestone"""
 
-    show_id: conint(ge=0, lt=2**31) = Field(title="First Show ID")
+    show_id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="First Show ID")
     show_date: str = Field(title="First Show Date")
 
 
 class MilestonesMostRecent(BaseModel):
     """Panelist Most Recent Appearance Milestone"""
 
-    show_id: conint(ge=0, lt=2**31) = Field(title="Most Recent Show ID")
+    show_id: Annotated[int, Field(ge=0, lt=2**31)] = Field(
+        title="Most Recent Show ID"
+    )
     show_date: str = Field(title="Most Recent Show Date")
 
 
 class AppearanceMilestones(BaseModel):
     """Panelist Appearance Milestones"""
 
-    first: Optional[MilestonesFirst] = Field(default=None, title="First Appearanace")
+    first: Optional[MilestonesFirst] = Field(default=None, title="First Appearance")
     most_recent: Optional[MilestonesMostRecent] = Field(
         default=None, title="Most Recent Appearance"
     )
@@ -135,7 +138,7 @@ class AppearanceCounts(BaseModel):
 class ShowAppearance(BaseModel):
     """Panelist Show Appearance Information"""
 
-    show_id: conint(ge=0, lt=2**31) = Field(title="Show ID")
+    show_id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Show ID")
     date: str = Field(title="Show Date")
     best_of: bool = Field(title="Best Of Show")
     repeat_show: bool = Field(title="Repeat Show")
@@ -204,10 +207,10 @@ class PanelistScoresList(BaseModel):
     )
 
 
-class ScoresOrderedPair(BaseModel):
+class ScoresOrderedPair(RootModel[Tuple]):
     """Tuple containing a show date and the corresponding score"""
 
-    __root__: Tuple = Field(title="Ordered Pair containing Show Date and Score")
+    pass
 
 
 class PanelistScoresOrderedPair(BaseModel):
@@ -219,14 +222,11 @@ class PanelistScoresOrderedPair(BaseModel):
     )
 
 
-class ScoresGroupedOrderedPair(BaseModel):
+class ScoresGroupedOrderedPair(RootModel[Tuple]):
     """Tuple containing a score and their corresponding number of times
     that score had been earned"""
 
-    __root__: Tuple = Field(
-        title="Ordered Pair containing score and number of "
-        "times that score had been earned"
-    )
+    pass
 
 
 class PanelistScoresGroupedOrderedPair(BaseModel):

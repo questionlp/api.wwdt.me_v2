@@ -1,0 +1,673 @@
+[10:59:14] Start bump-pydantic.                                                                       main.py:60
+           Found 19 files to process                                                                  main.py:75
+
+
+--- app/models/guests.py
++++ app/models/guests.py
+@@ -6,13 +6,14 @@
+ """Guests Models"""
+ 
+ from typing import List, Optional, Union
+-from pydantic import BaseModel, conint, Field
++from pydantic import BaseModel, Field
++from typing_extensions import Annotated
+ 
+ 
+ class Guest(BaseModel):
+     """Not My Job Guest Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Guest ID")
++    id: Annotated = Field(title="Guest ID")
+     name: str = Field(title="Guest Name")
+     slug: Optional = Field(default=None, title="Guest Slug String")
+ 
+@@ -37,7 +38,7 @@
+ class GuestAppearance(BaseModel):
+     """Appearance Information"""
+ 
+-    show_id: conint(ge=0, lt=2**31) = Field(title="Show ID")
++    show_id: Annotated = Field(title="Show ID")
+     date: str = Field(title="Show Date")
+     best_of: bool = Field(title="Best Of Show")
+     repeat_show: bool = Field(title="Repeat Show")
+--- app/models/hosts.py
++++ app/models/hosts.py
+@@ -6,13 +6,14 @@
+ """Hosts Models"""
+ 
+ from typing import List, Optional, Union
+-from pydantic import BaseModel, conint, Field
++from pydantic import BaseModel, Field
++from typing_extensions import Annotated
+ 
+ 
+ class Host(BaseModel):
+     """Host Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Host ID")
++    id: Annotated = Field(title="Host ID")
+     name: str = Field(title="Host Name")
+     slug: Optional = Field(default=None, title="Host Slug String")
+     gender: Optional = Field(default=None, title="Host Gender")
+@@ -38,7 +39,7 @@
+ class HostAppearance(BaseModel):
+     """Appearance Information"""
+ 
+-    show_id: conint(ge=0, lt=2**31) = Field(title="Show ID")
++    show_id: Annotated = Field(title="Show ID")
+     date: str = Field(title="Show Date")
+     best_of: bool = Field(title="Best Of Show")
+     repeat_show: bool = Field(title="Repeat Show")
+--- app/models/scorekeepers.py
++++ app/models/scorekeepers.py
+@@ -6,13 +6,14 @@
+ """Scorekeepers Models"""
+ 
+ from typing import List, Optional, Union
+-from pydantic import BaseModel, conint, Field
++from pydantic import BaseModel, Field
++from typing_extensions import Annotated
+ 
+ 
+ class Scorekeeper(BaseModel):
+     """Scorekeeper Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Scorekeeper ID")
++    id: Annotated = Field(title="Scorekeeper ID")
+     name: str = Field(title="Scorekeeper Name")
+     slug: Optional = Field(default=None, title="Scorekeeper Slug String")
+     gender: Optional = Field(default=None, title="Scorekeeper Gender")
+@@ -38,7 +39,7 @@
+ class ScorekeeperAppearance(BaseModel):
+     """Appearance Information"""
+ 
+-    show_id: conint(ge=0, lt=2**31) = Field(title="Show ID")
++    show_id: Annotated = Field(title="Show ID")
+     date: str = Field(title="Show Date")
+     best_of: bool = Field(title="Best Of Show")
+     repeat_show: bool = Field(title="Repeat Show")
+--- app/routers/hosts.py
++++ app/routers/hosts.py
+@@ -9,7 +9,7 @@
+ from fastapi import APIRouter, HTTPException
+ import mysql.connector
+ from mysql.connector.errors import DatabaseError, ProgrammingError
+-from pydantic import conint, constr
++from pydantic import Field, StringConstraints
+ from wwdtm.host import Host
+ from app.models.hosts import (
+     Host as ModelsHost,
+@@ -17,6 +17,7 @@
+     HostDetails as ModelsHostDetails,
+     HostsDetails as ModelsHostsDetails,
+ )
++from typing_extensions import Annotated
+ 
+ router = APIRouter(prefix=f"/v{API_VERSION}/hosts")
+ _config = load_config()
+@@ -62,7 +63,7 @@
+     tags=["Hosts"],
+ )
+ @router.head("/id/{host_id}", include_in_schema=False)
+-async def get_host_by_id(host_id: conint(ge=0, lt=2**31)):
++async def get_host_by_id(host_id: Annotated):
+     """Retrieve a Host object, based on Host ID, containing: Host ID,
+     name, slug string, and gender."""
+     try:
+@@ -93,7 +94,7 @@
+     tags=["Hosts"],
+ )
+ @router.head("/slug/{host_slug}", include_in_schema=False)
+-async def get_host_by_slug(host_slug: constr(strip_whitespace=True)):
++async def get_host_by_slug(host_slug: Annotated):
+     """Retrieve a Host object, based on Host slug string, containing:
+     Host ID, name, slug string, and gender."""
+     try:
+@@ -160,7 +161,7 @@
+     tags=["Hosts"],
+ )
+ @router.head("/details/id/{host_id}", include_in_schema=False)
+-async def get_host_details_by_id(host_id: conint(ge=0, lt=2**31)):
++async def get_host_details_by_id(host_id: Annotated):
+     """Retrieve a Host object, based on Host ID, containing: Host ID,
+     name, slug string, gender, and their appearance details.
+ 
+@@ -193,7 +194,7 @@
+     tags=["Hosts"],
+ )
+ @router.head("/details/slug/{host_slug}", include_in_schema=False)
+-async def get_host_details_by_slug(host_slug: constr(strip_whitespace=True)):
++async def get_host_details_by_slug(host_slug: Annotated):
+     """Retrieve a Host object, based on Host slug string, containing:
+     Host ID, name, slug string, gender, and their appearance details.
+ 
+--- app/routers/guests.py
++++ app/routers/guests.py
+@@ -9,7 +9,7 @@
+ from fastapi import APIRouter, HTTPException
+ import mysql.connector
+ from mysql.connector.errors import DatabaseError, ProgrammingError
+-from pydantic import conint, constr
++from pydantic import Field, StringConstraints
+ from wwdtm.guest import Guest
+ from app.models.guests import (
+     Guest as ModelsGuest,
+@@ -17,6 +17,7 @@
+     GuestDetails as ModelsGuestDetails,
+     GuestsDetails as ModelsGuestsDetails,
+ )
++from typing_extensions import Annotated
+ 
+ router = APIRouter(prefix=f"/v{API_VERSION}/guests")
+ _config = load_config()
+@@ -62,7 +63,7 @@
+     tags=["Guests"],
+ )
+ @router.head("/id/{guest_id}", include_in_schema=False)
+-async def get_guest_by_id(guest_id: conint(ge=0, lt=2**31)):
++async def get_guest_by_id(guest_id: Annotated):
+     """Retrieve a Not My Job Guest object, based on Guest ID,
+     containing: Guest ID, name and slug string."""
+     try:
+@@ -95,7 +96,7 @@
+     tags=["Guests"],
+ )
+ @router.head("/slug/{guest_slug}", include_in_schema=False)
+-async def get_guest_by_slug(guest_slug: constr(strip_whitespace=True)):
++async def get_guest_by_slug(guest_slug: Annotated):
+     """Retrieve a Not My Job Guest object, based on Guest slug string,
+     containing: Guest ID, name and slug string."""
+     try:
+@@ -162,7 +163,7 @@
+     tags=["Guests"],
+ )
+ @router.head("/details/id/{guest_id}", include_in_schema=False)
+-async def get_guest_details_by_id(guest_id: conint(ge=0, lt=2**31)):
++async def get_guest_details_by_id(guest_id: Annotated):
+     """Retrieve a Not My Job Guest object, based on Guest ID,
+     containing: Guest ID, name, slug string, and their appearance details.
+ 
+@@ -197,7 +198,7 @@
+     tags=["Guests"],
+ )
+ @router.head("/details/slug/{guest_slug}", include_in_schema=False)
+-async def get_guest_details_by_slug(guest_slug: constr(strip_whitespace=True)):
++async def get_guest_details_by_slug(guest_slug: Annotated):
+     """Retrieve a Not My Job Guest object, based on Guest slug string,
+     containing: Guest ID, name, slug string, and their appearance details.
+ 
+--- app/routers/scorekeepers.py
++++ app/routers/scorekeepers.py
+@@ -9,7 +9,7 @@
+ from fastapi import APIRouter, HTTPException
+ import mysql.connector
+ from mysql.connector.errors import DatabaseError, ProgrammingError
+-from pydantic import conint, constr
++from pydantic import Field, StringConstraints
+ from wwdtm.scorekeeper import Scorekeeper
+ from app.models.scorekeepers import (
+     Scorekeeper as ModelsScorekeeper,
+@@ -17,6 +17,7 @@
+     ScorekeeperDetails as ModelsScorekeeperDetails,
+     ScorekeepersDetails as ModelsScorekeepersDetails,
+ )
++from typing_extensions import Annotated
+ 
+ router = APIRouter(prefix=f"/v{API_VERSION}/scorekeepers")
+ _config = load_config()
+@@ -62,7 +63,7 @@
+     tags=["Scorekeepers"],
+ )
+ @router.head("/id/{scorekeeper_id}", include_in_schema=False)
+-async def get_scorekeeper_by_id(scorekeeper_id: conint(ge=0, lt=2**31)):
++async def get_scorekeeper_by_id(scorekeeper_id: Annotated):
+     """Retrieve a Scorekeeper object, based on Scorekeeper ID,
+     containing: Scorekeeper ID, name, slug string, and gender."""
+     try:
+@@ -97,7 +98,7 @@
+     tags=["Scorekeepers"],
+ )
+ @router.head("/slug/{scorekeeper_slug}", include_in_schema=False)
+-async def get_scorekeeper_by_slug(scorekeeper_slug: constr(strip_whitespace=True)):
++async def get_scorekeeper_by_slug(scorekeeper_slug: Annotated):
+     """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
+     containing: Scorekeeper ID, name, slug string, and gender."""
+     try:
+@@ -167,7 +168,7 @@
+     tags=["Scorekeepers"],
+ )
+ @router.head("/details/id/{scorekeeper_id}", include_in_schema=False)
+-async def get_scorekeeper_details_by_id(scorekeeper_id: conint(ge=0, lt=2**31)):
++async def get_scorekeeper_details_by_id(scorekeeper_id: Annotated):
+     """Retrieve a Scorekeeper object, based on Scorekeeper ID,
+     containing: Scorekeeper ID, name, slug string, gender, and their
+     appearance details.
+@@ -206,7 +207,7 @@
+ )
+ @router.head("/details/slug/{scorekeeper_slug}", include_in_schema=False)
+ async def get_scorekeeper_details_by_slug(
+-    scorekeeper_slug: constr(strip_whitespace=True),
++    scorekeeper_slug: Annotated,
+ ):
+     """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
+     containing: Scorekeeper ID, name, slug string, gender, and their
+--- app/models/locations.py
++++ app/models/locations.py
+@@ -6,13 +6,14 @@
+ """Locations Models"""
+ 
+ from typing import List, Optional
+-from pydantic import BaseModel, conint, Field
++from pydantic import BaseModel, Field
++from typing_extensions import Annotated
+ 
+ 
+ class Location(BaseModel):
+     """Location Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Location ID")
++    id: Annotated = Field(title="Location ID")
+     city: Optional = Field(default=None, title="City")
+     state: Optional = Field(default=None, title="State")
+     venue: Optional = Field(default=None, title="Venue Name")
+@@ -37,7 +38,7 @@
+ class LocationRecordingShow(BaseModel):
+     """Location Recording Information"""
+ 
+-    show_id: conint(ge=0, lt=2**31) = Field(title="Show ID")
++    show_id: Annotated = Field(title="Show ID")
+     date: str = Field(title="Show Date")
+     best_of: bool = Field(title="Best Of Show")
+     repeat_show: bool = Field(title="Repeat Show")
+--- app/models/shows.py
++++ app/models/shows.py
+@@ -7,13 +7,14 @@
+ 
+ from decimal import Decimal
+ from typing import List, Optional, Union
+-from pydantic import BaseModel, conint, Field
++from pydantic import BaseModel, Field
++from typing_extensions import Annotated
+ 
+ 
+ class Show(BaseModel):
+     """Show Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Show ID")
++    id: Annotated = Field(title="Show ID")
+     date: str = Field(title="Show Date")
+     best_of: bool = Field(title="Best Of Show")
+     repeat_show: bool = Field(title="Best Of Show")
+@@ -28,7 +29,7 @@
+ class ShowLocation(BaseModel):
+     """Show Location Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Location ID")
++    id: Annotated = Field(title="Location ID")
+     slug: Optional = Field(default=None, title="Location Slug String")
+     city: Optional = Field(default=None, title="City")
+     state: Optional = Field(default=None, title="State")
+@@ -38,7 +39,7 @@
+ class ShowHost(BaseModel):
+     """Show Host Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Host ID")
++    id: Annotated = Field(title="Host ID")
+     name: str = Field(title="Host Name")
+     slug: Optional = Field(default=None, title="Host Slug String")
+     guest: bool = Field(title="Guest Host")
+@@ -47,7 +48,7 @@
+ class ShowScorekeeper(BaseModel):
+     """Show Scorekeeper Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Scorekeeper ID")
++    id: Annotated = Field(title="Scorekeeper ID")
+     name: str = Field(title="Scorekeeper Name")
+     slug: Optional = Field(default=None, title="Scorekeeper Slug String")
+     guest: bool = Field(title="Guest Scorekeeper")
+@@ -57,7 +58,7 @@
+ class ShowPanelist(BaseModel):
+     """Show Panelist Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Panelist ID")
++    id: Annotated = Field(title="Panelist ID")
+     name: str = Field(title="Panelist Name")
+     slug: Optional = Field(default=None, title="Panelist Slug String")
+     lightning_round_start: Union = Field(
+@@ -82,7 +83,7 @@
+ class ShowBluffPanelist(BaseModel):
+     """Show Bluff the Listener Panelist Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Panelist ID")
++    id: Annotated = Field(title="Panelist ID")
+     name: str = Field(title="Panelist Name")
+     slug: Optional = Field(default=None, title="Panelist Slug String")
+ 
+@@ -101,7 +102,7 @@
+ class ShowGuest(BaseModel):
+     """Show Guest Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Guest ID")
++    id: Annotated = Field(title="Guest ID")
+     name: str = Field(title="Guest Name")
+     slug: Optional = Field(default=None, title="Guest Slug String")
+     score: Union = Field(default=None, title="Guest Score")
+--- app/routers/locations.py
++++ app/routers/locations.py
+@@ -9,7 +9,7 @@
+ from fastapi import APIRouter, HTTPException
+ import mysql.connector
+ from mysql.connector.errors import DatabaseError, ProgrammingError
+-from pydantic import conint, constr
++from pydantic import Field, StringConstraints
+ from wwdtm.location import Location
+ from app.models.locations import (
+     Location as ModelsLocation,
+@@ -17,6 +17,7 @@
+     LocationDetails as ModelsLocationDetails,
+     LocationsDetails as ModelsLocationsDetails,
+ )
++from typing_extensions import Annotated
+ 
+ router = APIRouter(prefix=f"/v{API_VERSION}/locations")
+ _config = load_config()
+@@ -62,7 +63,7 @@
+     tags=["Locations"],
+ )
+ @router.head("/id/{location_id}", include_in_schema=False)
+-async def get_location_by_id(location_id: conint(ge=0, lt=2**31)):
++async def get_location_by_id(location_id: Annotated):
+     """Retrieve a Location object, based on Location ID, containing:
+     Location ID, city, state, venue, and slug string."""
+     try:
+@@ -97,7 +98,7 @@
+     tags=["Locations"],
+ )
+ @router.head("/slug/{location_slug}", include_in_schema=False)
+-async def get_location_by_slug(location_slug: constr(strip_whitespace=True)):
++async def get_location_by_slug(location_slug: Annotated):
+     """Retrieve a location object, based on Location slug string,
+     containing: Location ID, city, state, venue, and slug string."""
+     try:
+@@ -165,7 +166,7 @@
+     tags=["Locations"],
+ )
+ @router.head("/recordings/id/{location_id}", include_in_schema=False)
+-async def get_location_recordings_by_id(location_id: conint(ge=0, lt=2**31)):
++async def get_location_recordings_by_id(location_id: Annotated):
+     """Retrieve a Location object, based on Location ID, containing:
+     Location ID, city, state, venue, slug string, and an array of
+     recordings.
+@@ -203,7 +204,7 @@
+     tags=["Locations"],
+ )
+ @router.head("/recordings/slug/{location_slug}", include_in_schema=False)
+-async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace=True)):
++async def get_location_recordings_by_slug(location_slug: Annotated):
+     """Retrieve a Location object, based on Location slug string,
+     containing: Location ID, city, state, venue, slug string, and an
+     array of recordings.
+--- app/models/panelists.py
++++ app/models/panelists.py
+@@ -7,13 +7,14 @@
+ 
+ from decimal import Decimal
+ from typing import List, Optional, Tuple, Union
+-from pydantic import BaseModel, conint, Field
++from pydantic import BaseModel, Field
++from typing_extensions import Annotated
+ 
+ 
+ class Panelist(BaseModel):
+     """Panelist Information"""
+ 
+-    id: conint(ge=0, lt=2**31) = Field(title="Panelist ID")
++    id: Annotated = Field(title="Panelist ID")
+     name: str = Field(title="Panelist Name")
+     slug: Optional = Field(default=None, title="Panelist Slug String")
+     gender: Optional = Field(default=None, title="Panelist Gender")
+@@ -104,14 +105,14 @@
+ class MilestonesFirst(BaseModel):
+     """Panelist First Appearance Milestone"""
+ 
+-    show_id: conint(ge=0, lt=2**31) = Field(title="First Show ID")
++    show_id: Annotated = Field(title="First Show ID")
+     show_date: str = Field(title="First Show Date")
+ 
+ 
+ class MilestonesMostRecent(BaseModel):
+     """Panelist Most Recent Appearance Milestone"""
+ 
+-    show_id: conint(ge=0, lt=2**31) = Field(title="Most Recent Show ID")
++    show_id: Annotated = Field(title="Most Recent Show ID")
+     show_date: str = Field(title="Most Recent Show Date")
+ 
+ 
+@@ -135,7 +136,7 @@
+ class ShowAppearance(BaseModel):
+     """Panelist Show Appearance Information"""
+ 
+-    show_id: conint(ge=0, lt=2**31) = Field(title="Show ID")
++    show_id: Annotated = Field(title="Show ID")
+     date: str = Field(title="Show Date")
+     best_of: bool = Field(title="Best Of Show")
+     repeat_show: bool = Field(title="Repeat Show")
+--- app/routers/panelists.py
++++ app/routers/panelists.py
+@@ -9,7 +9,7 @@
+ from fastapi import APIRouter, HTTPException
+ import mysql.connector
+ from mysql.connector.errors import DatabaseError, ProgrammingError
+-from pydantic import conint, constr
++from pydantic import Field, StringConstraints
+ from wwdtm.panelist import Panelist, PanelistDecimalScores, PanelistScores
+ from app.models.panelists import (
+     Panelist as ModelsPanelist,
+@@ -20,6 +20,7 @@
+     PanelistScoresOrderedPair as ModelsPanelistScoresOrderedPair,
+     PanelistScoresGroupedOrderedPair as ModelsPanelistScoresGroupedOrderedPair,
+ )
++from typing_extensions import Annotated
+ 
+ router = APIRouter(prefix=f"/v{API_VERSION}/panelists")
+ _config = load_config()
+@@ -65,7 +66,7 @@
+     tags=["Panelists"],
+ )
+ @router.head("/id/{panelist_id}", include_in_schema=False)
+-async def get_panelist_by_id(panelist_id: conint(ge=0, lt=2**31)):
++async def get_panelist_by_id(panelist_id: Annotated):
+     """Retrieve a Panelist object, based on Panelist ID, containing:
+     Panelist ID, name, slug string, and gender."""
+     try:
+@@ -100,7 +101,7 @@
+     tags=["Panelists"],
+ )
+ @router.head("/slug/{panelist_slug}", include_in_schema=False)
+-async def get_panelist_by_slug(panelist_slug: constr(strip_whitespace=True)):
++async def get_panelist_by_slug(panelist_slug: Annotated):
+     """Retrieve a Panelist object, based on Panelist slug string,
+     containing: Panelist ID, name, slug string, and gender."""
+     try:
+@@ -171,7 +172,7 @@
+     tags=["Panelists"],
+ )
+ @router.head("/details/id/{panelist_id}", include_in_schema=False)
+-async def get_panelist_details_by_id(panelist_id: conint(ge=0, lt=2**31)):
++async def get_panelist_details_by_id(panelist_id: Annotated):
+     """Retrieve a Panelist object, based on Panelist ID, containing:
+     Panelist ID, name, slug string, gender, and their statistics and
+     appearance details.
+@@ -211,7 +212,7 @@
+     tags=["Panelists"],
+ )
+ @router.head("/details/slug/{panelist_slug}", include_in_schema=False)
+-async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace=True)):
++async def get_panelist_details_by_slug(panelist_slug: Annotated):
+     """Retrieve a Panelist object, based on Panelist slug string,
+     containing: Panelist ID, name, slug string, gender, and their
+     statistics and appearance details.
+@@ -252,7 +253,7 @@
+     tags=["Panelists"],
+ )
+ @router.head("/scores/id/{panelist_id}", include_in_schema=False)
+-async def get_panelist_scores_by_id(panelist_id: conint(ge=0, lt=2**31)):
++async def get_panelist_scores_by_id(panelist_id: Annotated):
+     """Retrieve Panelist scores, based on Panelist ID, as a pair of
+     lists, one list of show dates and one list of corresponding scores."""
+     try:
+@@ -296,7 +297,7 @@
+     tags=["Panelists"],
+ )
+ @router.head("/scores/slug/{panelist_slug}", include_in_schema=False)
+-async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=True)):
++async def get_panelist_scores_by_slug(panelist_slug: Annotated):
+     """Retrieve Panelist scores, based on Panelist slug string, as a
+     pair of lists, one list of show dates and one list of corresponding
+     scores."""
+@@ -341,7 +342,7 @@
+ )
+ @router.head("/scores/grouped-ordered-pair/id/{panelist_id}", include_in_schema=False)
+ async def get_panelist_scores_grouped_ordered_pair_by_id(
+-    panelist_id: conint(ge=0, lt=2**31)
++    panelist_id: Annotated
+ ):
+     """Retrieve Panelist scores, based on Panelist ID, as grouped
+     ordered pairs, each pair containing a score and the corresponding
+@@ -394,7 +395,7 @@
+     "/scores/grouped-ordered-pair/slug/{panelist_slug}", include_in_schema=False
+ )
+ async def get_panelist_scores_grouped_ordered_pair_by_slug(
+-    panelist_slug: constr(strip_whitespace=True),
++    panelist_slug: Annotated,
+ ):
+     """Retrieve Panelist scores, based on Panelist slug string, as
+     grouped ordered pairs, each pair containing a score and the
+@@ -443,7 +444,7 @@
+     tags=["Panelists"],
+ )
+ @router.head("/scores/ordered-pair/id/{panelist_id}", include_in_schema=False)
+-async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2**31)):
++async def get_panelist_scores_ordered_pair_by_id(panelist_id: Annotated):
+     """Retrieve Panelist scores, based on Panelist ID, as ordered
+     pairs, each pair containing the show date and the corresponding
+     score.
+@@ -488,7 +489,7 @@
+ )
+ @router.head("/scores/ordered-pair/slug/{panelist_slug}", include_in_schema=False)
+ async def get_panelist_scores_ordered_pair_by_slug(
+-    panelist_slug: constr(strip_whitespace=True),
++    panelist_slug: Annotated,
+ ):
+     """Retrieve Panelist scores, based on Panelist slug string, as
+     ordered pairs, each pair containing the show date and the
+--- app/routers/shows.py
++++ app/routers/shows.py
+@@ -11,7 +11,7 @@
+ from fastapi import APIRouter, HTTPException
+ import mysql.connector
+ from mysql.connector.errors import DatabaseError, ProgrammingError
+-from pydantic import conint
++from pydantic import Field
+ from wwdtm.show import Show
+ from app.models.shows import (
+     Show as ModelsShow,
+@@ -20,6 +20,7 @@
+     ShowDetails as ModelsShowDetails,
+     ShowsDetails as ModelsShowsDetails,
+ )
++from typing_extensions import Annotated
+ 
+ router = APIRouter(prefix=f"/v{API_VERSION}/shows")
+ _config = load_config()
+@@ -65,7 +66,7 @@
+     tags=["Shows"],
+ )
+ @router.head("/id/{show_id}", include_in_schema=False)
+-async def get_show_by_id(show_id: conint(ge=0, lt=2**31)):
++async def get_show_by_id(show_id: Annotated):
+     """Retrieve a Show object, based on Show ID, containing: Show ID,
+     date and basic information."""
+     try:
+@@ -131,7 +132,7 @@
+     tags=["Shows"],
+ )
+ @router.head("/date/{year}", include_in_schema=False)
+-async def get_shows_by_year(year: conint(ge=1998, le=9999)):
++async def get_shows_by_year(year: Annotated):
+     """Retrieve an array of Show objects, based on year, containing:
+     Show ID, date and basic information.
+ 
+@@ -168,7 +169,7 @@
+ )
+ @router.head("/date/{year}/{month}", include_in_schema=False)
+ async def get_shows_by_year_month(
+-    year: conint(ge=1998, le=9999), month: conint(ge=1, le=12)
++    year: Annotated, month: Annotated
+ ):
+     """Retrieve an array of Show objects, based on year and month,
+     containing: Show ID, date and basic information.
+@@ -207,7 +208,7 @@
+     tags=["Shows"],
+ )
+ @router.head("/date/month-day/{month}/{day}", include_in_schema=False)
+-async def get_show_by_month_day(month: conint(ge=1, le=12), day: conint(ge=1, le=31)):
++async def get_show_by_month_day(month: Annotated, day: Annotated):
+     """Retrieve a Show object, based on month and day, containing: Show
+     ID, date and basic information."""
+     try:
+@@ -246,7 +247,7 @@
+ )
+ @router.head("/date/{year}/{month}/{day}", include_in_schema=False)
+ async def get_show_by_date(
+-    year: conint(ge=1998, le=9999), month: conint(ge=1, le=12), day: conint(ge=1, le=31)
++    year: Annotated, month: Annotated, day: Annotated
+ ):
+     """Retrieve a Show object, based on year, month and day, containing:
+     Show ID, date and basic information."""
+@@ -386,7 +387,7 @@
+     tags=["Shows"],
+ )
+ @router.head("/details/date/{year}", include_in_schema=False)
+-async def get_shows_details_by_year(year: conint(ge=1998, le=9999)):
++async def get_shows_details_by_year(year: Annotated):
+     """Retrieve an array of Show objects, based on year, containing:
+     Show ID, date, Host, Scorekeeper, Panelists, Guests and other
+     information.
+@@ -426,7 +427,7 @@
+ )
+ @router.head("/details/date/{year}/{month}", include_in_schema=False)
+ async def get_shows_details_by_year_month(
+-    year: conint(ge=1998, le=9999), month: conint(ge=1, le=12)
++    year: Annotated, month: Annotated
+ ):
+     """Retrieve an array of Show objects, based on year and month,
+     containing: Show ID, date, Host, Scorekeeper, Panelists, Guests and
+@@ -471,7 +472,7 @@
+ )
+ @router.head("/details/date/month-day/{month}/{day}", include_in_schema=False)
+ async def get_show_details_by_month_day(
+-    month: conint(ge=1, le=12), day: conint(ge=1, le=31)
++    month: Annotated, day: Annotated
+ ):
+     """Retrieve a Show object, based on month and day, containing: Show
+     ID, date, Host, Scorekeeper, Panelists, Guests and other information."""
+@@ -513,7 +514,7 @@
+ )
+ @router.head("/details/date/{year}/{month}/{day}", include_in_schema=False)
+ async def get_show_details_by_date(
+-    year: conint(ge=1998, le=9999), month: conint(ge=1, le=12), day: conint(ge=1, le=31)
++    year: Annotated, month: Annotated, day: Annotated
+ ):
+     """Retrieve a Show object, based on year, month and day, containing:
+     Show ID, date, Host, Scorekeeper, Panelists, Guests and other
+@@ -558,7 +559,7 @@
+     tags=["Shows"],
+ )
+ @router.head("/details/id/{show_id}", include_in_schema=False)
+-async def get_show_details_by_id(show_id: conint(ge=0, lt=2**31)):
++async def get_show_details_by_id(show_id: Annotated):
+     """Retrieve a Show object, based on Show ID, containing: Show ID,
+     date, Host, Scorekeeper, Panelists, Guests and other information."""
+     try:
+[10:59:24] Run successfully!                                                                         main.py:152
