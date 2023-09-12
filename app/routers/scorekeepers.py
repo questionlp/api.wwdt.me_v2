@@ -6,10 +6,9 @@
 """API routes for Scorekeeper endpoints"""
 
 from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Path
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import conint, constr
 from wwdtm.scorekeeper import Scorekeeper
 from app.models.scorekeepers import (
     Scorekeeper as ModelsScorekeeper,
@@ -63,7 +62,11 @@ async def get_scorekeepers():
     tags=["Scorekeepers"],
 )
 @router.head("/id/{scorekeeper_id}", include_in_schema=False)
-async def get_scorekeeper_by_id(scorekeeper_id: conint(ge=0, lt=2**31)):
+async def get_scorekeeper_by_id(
+    scorekeeper_id: Annotated[
+        int, Path(title="The ID of the scorekeeper to get", ge=0, lt=2**31)
+    ]
+):
     """Retrieve a Scorekeeper object, based on Scorekeeper ID,
     containing: Scorekeeper ID, name, slug string, and gender."""
     try:
@@ -98,12 +101,16 @@ async def get_scorekeeper_by_id(scorekeeper_id: conint(ge=0, lt=2**31)):
     tags=["Scorekeepers"],
 )
 @router.head("/slug/{scorekeeper_slug}", include_in_schema=False)
-async def get_scorekeeper_by_slug(scorekeeper_slug: constr(strip_whitespace=True)):
+async def get_scorekeeper_by_slug(
+    scorekeeper_slug: Annotated[
+        str, Path(title="The slug string of the scorekeeper to get")
+    ]
+):
     """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
     containing: Scorekeeper ID, name, slug string, and gender."""
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
-        scorekeeper_info = scorekeeper.retrieve_by_slug(scorekeeper_slug)
+        scorekeeper_info = scorekeeper.retrieve_by_slug(scorekeeper_slug.strip())
         if not scorekeeper_info:
             raise HTTPException(
                 status_code=404,
@@ -168,7 +175,11 @@ async def get_scorekeepers_details():
     tags=["Scorekeepers"],
 )
 @router.head("/details/id/{scorekeeper_id}", include_in_schema=False)
-async def get_scorekeeper_details_by_id(scorekeeper_id: conint(ge=0, lt=2**31)):
+async def get_scorekeeper_details_by_id(
+    scorekeeper_id: Annotated[
+        int, Path(title="The ID of the scorekeeper to get", ge=0, lt=2**31)
+    ]
+):
     """Retrieve a Scorekeeper object, based on Scorekeeper ID,
     containing: Scorekeeper ID, name, slug string, gender, and their
     appearance details.
@@ -207,7 +218,9 @@ async def get_scorekeeper_details_by_id(scorekeeper_id: conint(ge=0, lt=2**31)):
 )
 @router.head("/details/slug/{scorekeeper_slug}", include_in_schema=False)
 async def get_scorekeeper_details_by_slug(
-    scorekeeper_slug: constr(strip_whitespace=True),
+    scorekeeper_slug: Annotated[
+        str, Path(title="The slug string of the scorekeeper to get")
+    ]
 ):
     """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
     containing: Scorekeeper ID, name, slug string, gender, and their
@@ -216,7 +229,9 @@ async def get_scorekeeper_details_by_slug(
     Scorekeeper appearances are sorted by show date."""
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
-        scorekeeper_details = scorekeeper.retrieve_details_by_slug(scorekeeper_slug)
+        scorekeeper_details = scorekeeper.retrieve_details_by_slug(
+            scorekeeper_slug.strip()
+        )
         if not scorekeeper_details:
             raise HTTPException(
                 status_code=404,

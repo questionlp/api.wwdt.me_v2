@@ -6,10 +6,9 @@
 """API routes for Not My Job Guests endpoints"""
 
 from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Path
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import conint, constr
 from wwdtm.guest import Guest
 from app.models.guests import (
     Guest as ModelsGuest,
@@ -63,7 +62,9 @@ async def get_guests():
     tags=["Guests"],
 )
 @router.head("/id/{guest_id}", include_in_schema=False)
-async def get_guest_by_id(guest_id: conint(ge=0, lt=2**31)):
+async def get_guest_by_id(
+    guest_id: Annotated[int, Path(title="The ID of the guest to get", ge=0, lt=2**31)]
+):
     """Retrieve a Not My Job Guest object, based on Guest ID,
     containing: Guest ID, name and slug string."""
     try:
@@ -96,12 +97,14 @@ async def get_guest_by_id(guest_id: conint(ge=0, lt=2**31)):
     tags=["Guests"],
 )
 @router.head("/slug/{guest_slug}", include_in_schema=False)
-async def get_guest_by_slug(guest_slug: constr(strip_whitespace=True)):
+async def get_guest_by_slug(
+    guest_slug: Annotated[str, Path(title="The slug string of the guest to get")]
+):
     """Retrieve a Not My Job Guest object, based on Guest slug string,
     containing: Guest ID, name and slug string."""
     try:
         guest = Guest(database_connection=_database_connection)
-        guest_info = guest.retrieve_by_slug(guest_slug)
+        guest_info = guest.retrieve_by_slug(guest_slug.strip())
         if not guest_info:
             raise HTTPException(
                 status_code=404, detail=f"Guest slug string {guest_slug} not found"
@@ -163,7 +166,9 @@ async def get_guests_details():
     tags=["Guests"],
 )
 @router.head("/details/id/{guest_id}", include_in_schema=False)
-async def get_guest_details_by_id(guest_id: conint(ge=0, lt=2**31)):
+async def get_guest_details_by_id(
+    guest_id: Annotated[int, Path(title="The ID of the guest to get", ge=0, lt=2**31)]
+):
     """Retrieve a Not My Job Guest object, based on Guest ID,
     containing: Guest ID, name, slug string, and their appearance details.
 
@@ -198,14 +203,16 @@ async def get_guest_details_by_id(guest_id: conint(ge=0, lt=2**31)):
     tags=["Guests"],
 )
 @router.head("/details/slug/{guest_slug}", include_in_schema=False)
-async def get_guest_details_by_slug(guest_slug: constr(strip_whitespace=True)):
+async def get_guest_details_by_slug(
+    guest_slug: Annotated[str, Path(title="The slug string of the guest to get")]
+):
     """Retrieve a Not My Job Guest object, based on Guest slug string,
     containing: Guest ID, name, slug string, and their appearance details.
 
     Guest appearances are sorted by show date."""
     try:
         guest = Guest(database_connection=_database_connection)
-        guest_details = guest.retrieve_details_by_slug(guest_slug)
+        guest_details = guest.retrieve_details_by_slug(guest_slug.strip())
         if not guest_details:
             raise HTTPException(
                 status_code=404, detail=f"Guest slug string {guest_slug} not found"

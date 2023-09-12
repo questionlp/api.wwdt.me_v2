@@ -6,10 +6,9 @@
 """API routes for Panelists endpoints"""
 
 from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Path
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import conint, constr
 from wwdtm.panelist import Panelist, PanelistDecimalScores, PanelistScores
 from app.models.panelists import (
     Panelist as ModelsPanelist,
@@ -66,7 +65,11 @@ async def get_panelists():
     tags=["Panelists"],
 )
 @router.head("/id/{panelist_id}", include_in_schema=False)
-async def get_panelist_by_id(panelist_id: conint(ge=0, lt=2**31)):
+async def get_panelist_by_id(
+    panelist_id: Annotated[
+        int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
+    ]
+):
     """Retrieve a Panelist object, based on Panelist ID, containing:
     Panelist ID, name, slug string, and gender."""
     try:
@@ -101,12 +104,14 @@ async def get_panelist_by_id(panelist_id: conint(ge=0, lt=2**31)):
     tags=["Panelists"],
 )
 @router.head("/slug/{panelist_slug}", include_in_schema=False)
-async def get_panelist_by_slug(panelist_slug: constr(strip_whitespace=True)):
+async def get_panelist_by_slug(
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
+):
     """Retrieve a Panelist object, based on Panelist slug string,
     containing: Panelist ID, name, slug string, and gender."""
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelist_info = panelist.retrieve_by_slug(panelist_slug)
+        panelist_info = panelist.retrieve_by_slug(panelist_slug.strip())
         if not panelist_info:
             raise HTTPException(
                 status_code=404,
@@ -172,7 +177,11 @@ async def get_panelists_details():
     tags=["Panelists"],
 )
 @router.head("/details/id/{panelist_id}", include_in_schema=False)
-async def get_panelist_details_by_id(panelist_id: conint(ge=0, lt=2**31)):
+async def get_panelist_details_by_id(
+    panelist_id: Annotated[
+        int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
+    ]
+):
     """Retrieve a Panelist object, based on Panelist ID, containing:
     Panelist ID, name, slug string, gender, and their statistics and
     appearance details.
@@ -212,7 +221,9 @@ async def get_panelist_details_by_id(panelist_id: conint(ge=0, lt=2**31)):
     tags=["Panelists"],
 )
 @router.head("/details/slug/{panelist_slug}", include_in_schema=False)
-async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace=True)):
+async def get_panelist_details_by_slug(
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
+):
     """Retrieve a Panelist object, based on Panelist slug string,
     containing: Panelist ID, name, slug string, gender, and their
     statistics and appearance details.
@@ -221,7 +232,8 @@ async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace=Tr
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_details = panelist.retrieve_details_by_slug(
-            panelist_slug, use_decimal_scores=_config["settings"]["use_decimal_scores"]
+            panelist_slug.strip(),
+            use_decimal_scores=_config["settings"]["use_decimal_scores"],
         )
         if not panelist_details:
             raise HTTPException(
@@ -253,7 +265,11 @@ async def get_panelist_details_by_slug(panelist_slug: constr(strip_whitespace=Tr
     tags=["Panelists"],
 )
 @router.head("/scores/id/{panelist_id}", include_in_schema=False)
-async def get_panelist_scores_by_id(panelist_id: conint(ge=0, lt=2**31)):
+async def get_panelist_scores_by_id(
+    panelist_id: Annotated[
+        int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
+    ]
+):
     """Retrieve Panelist scores, based on Panelist ID, as a pair of
     lists, one list of show dates and one list of corresponding scores."""
     try:
@@ -297,7 +313,9 @@ async def get_panelist_scores_by_id(panelist_id: conint(ge=0, lt=2**31)):
     tags=["Panelists"],
 )
 @router.head("/scores/slug/{panelist_slug}", include_in_schema=False)
-async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=True)):
+async def get_panelist_scores_by_slug(
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
+):
     """Retrieve Panelist scores, based on Panelist slug string, as a
     pair of lists, one list of show dates and one list of corresponding
     scores."""
@@ -306,10 +324,10 @@ async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=Tru
             panelist_scores = PanelistDecimalScores(
                 database_connection=_database_connection
             )
-            scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug)
+            scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug.strip())
         else:
             panelist_scores = PanelistScores(database_connection=_database_connection)
-            scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug)
+            scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug.strip())
         if not scores:
             raise HTTPException(
                 status_code=404,
@@ -342,7 +360,9 @@ async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=Tru
 )
 @router.head("/scores/grouped-ordered-pair/id/{panelist_id}", include_in_schema=False)
 async def get_panelist_scores_grouped_ordered_pair_by_id(
-    panelist_id: Annotated[int, conint(ge=0, lt=2**31)]
+    panelist_id: Annotated[
+        int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
+    ]
 ):
     """Retrieve Panelist scores, based on Panelist ID, as grouped
     ordered pairs, each pair containing a score and the corresponding
@@ -395,7 +415,7 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
     "/scores/grouped-ordered-pair/slug/{panelist_slug}", include_in_schema=False
 )
 async def get_panelist_scores_grouped_ordered_pair_by_slug(
-    panelist_slug: constr(strip_whitespace=True),
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
 ):
     """Retrieve Panelist scores, based on Panelist slug string, as
     grouped ordered pairs, each pair containing a score and the
@@ -407,12 +427,12 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
                 database_connection=_database_connection
             )
             scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
-                panelist_slug
+                panelist_slug.strip()
             )
         else:
             panelist_scores = PanelistScores(database_connection=_database_connection)
             scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
-                panelist_slug
+                panelist_slug.strip()
             )
         if not scores:
             raise HTTPException(
@@ -444,7 +464,11 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
     tags=["Panelists"],
 )
 @router.head("/scores/ordered-pair/id/{panelist_id}", include_in_schema=False)
-async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2**31)):
+async def get_panelist_scores_ordered_pair_by_id(
+    panelist_id: Annotated[
+        int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
+    ]
+):
     """Retrieve Panelist scores, based on Panelist ID, as ordered
     pairs, each pair containing the show date and the corresponding
     score.
@@ -489,7 +513,7 @@ async def get_panelist_scores_ordered_pair_by_id(panelist_id: conint(ge=0, lt=2*
 )
 @router.head("/scores/ordered-pair/slug/{panelist_slug}", include_in_schema=False)
 async def get_panelist_scores_ordered_pair_by_slug(
-    panelist_slug: constr(strip_whitespace=True),
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
 ):
     """Retrieve Panelist scores, based on Panelist slug string, as
     ordered pairs, each pair containing the show date and the
@@ -500,10 +524,14 @@ async def get_panelist_scores_ordered_pair_by_slug(
             panelist_scores = PanelistDecimalScores(
                 database_connection=_database_connection
             )
-            scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(panelist_slug)
+            scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(
+                panelist_slug.strip()
+            )
         else:
             panelist_scores = PanelistScores(database_connection=_database_connection)
-            scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(panelist_slug)
+            scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(
+                panelist_slug.strip()
+            )
         if not scores:
             raise HTTPException(
                 status_code=404,

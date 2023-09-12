@@ -6,10 +6,9 @@
 """API routes for Locations endpoints"""
 
 from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Path
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import conint, constr
 from wwdtm.location import Location
 from app.models.locations import (
     Location as ModelsLocation,
@@ -63,7 +62,11 @@ async def get_locations():
     tags=["Locations"],
 )
 @router.head("/id/{location_id}", include_in_schema=False)
-async def get_location_by_id(location_id: conint(ge=0, lt=2**31)):
+async def get_location_by_id(
+    location_id: Annotated[
+        int, Path(title="The ID of the location to get", ge=0, lt=2**31)
+    ]
+):
     """Retrieve a Location object, based on Location ID, containing:
     Location ID, city, state, venue, and slug string."""
     try:
@@ -98,12 +101,14 @@ async def get_location_by_id(location_id: conint(ge=0, lt=2**31)):
     tags=["Locations"],
 )
 @router.head("/slug/{location_slug}", include_in_schema=False)
-async def get_location_by_slug(location_slug: constr(strip_whitespace=True)):
+async def get_location_by_slug(
+    location_slug: Annotated[str, Path(title="The slug string of the location to get")]
+):
     """Retrieve a location object, based on Location slug string,
     containing: Location ID, city, state, venue, and slug string."""
     try:
         location = Location(database_connection=_database_connection)
-        location_info = location.retrieve_by_slug(location_slug)
+        location_info = location.retrieve_by_slug(location_slug.strip())
         if not location_info:
             raise HTTPException(
                 status_code=404,
@@ -166,7 +171,11 @@ async def get_locations_details():
     tags=["Locations"],
 )
 @router.head("/recordings/id/{location_id}", include_in_schema=False)
-async def get_location_recordings_by_id(location_id: conint(ge=0, lt=2**31)):
+async def get_location_recordings_by_id(
+    location_id: Annotated[
+        int, Path(title="The ID of the location to get", ge=0, lt=2**31)
+    ]
+):
     """Retrieve a Location object, based on Location ID, containing:
     Location ID, city, state, venue, slug string, and an array of
     recordings.
@@ -204,7 +213,9 @@ async def get_location_recordings_by_id(location_id: conint(ge=0, lt=2**31)):
     tags=["Locations"],
 )
 @router.head("/recordings/slug/{location_slug}", include_in_schema=False)
-async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace=True)):
+async def get_location_recordings_by_slug(
+    location_slug: Annotated[str, Path(title="The slug string of the location to get")]
+):
     """Retrieve a Location object, based on Location slug string,
     containing: Location ID, city, state, venue, slug string, and an
     array of recordings.
@@ -212,7 +223,7 @@ async def get_location_recordings_by_slug(location_slug: constr(strip_whitespace
     Recordings are sorted by show date."""
     try:
         location = Location(database_connection=_database_connection)
-        location_details = location.retrieve_details_by_slug(location_slug)
+        location_details = location.retrieve_details_by_slug(location_slug.strip())
         if not location_details:
             raise HTTPException(
                 status_code=404,

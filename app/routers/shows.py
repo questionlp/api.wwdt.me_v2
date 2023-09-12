@@ -8,10 +8,9 @@
 from datetime import date
 
 from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Path
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import conint, constr
 from wwdtm.show import Show
 from app.models.shows import (
     Show as ModelsShow,
@@ -66,7 +65,9 @@ async def get_shows():
     tags=["Shows"],
 )
 @router.head("/id/{show_id}", include_in_schema=False)
-async def get_show_by_id(show_id: conint(ge=0, lt=2**31)):
+async def get_show_by_id(
+    show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)]
+):
     """Retrieve a Show object, based on Show ID, containing: Show ID,
     date and basic information."""
     try:
@@ -98,7 +99,9 @@ async def get_show_by_id(show_id: conint(ge=0, lt=2**31)):
     tags=["Shows"],
 )
 @router.head("/date/iso/{show_date}", include_in_schema=False)
-async def get_show_by_date_string(show_date: date):
+async def get_show_by_date_string(
+    show_date: Annotated[date, Path(title="ISO date for the show to get")]
+):
     """Retrieve a Show object, based on show date in ISO format
     (YYYY-MM-DD), containing: Show ID, date and basic information."""
     try:
@@ -132,7 +135,9 @@ async def get_show_by_date_string(show_date: date):
     tags=["Shows"],
 )
 @router.head("/date/{year}", include_in_schema=False)
-async def get_shows_by_year(year: conint(ge=1998, le=9999)):
+async def get_shows_by_year(
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)]
+):
     """Retrieve an array of Show objects, based on year, containing:
     Show ID, date and basic information.
 
@@ -169,7 +174,8 @@ async def get_shows_by_year(year: conint(ge=1998, le=9999)):
 )
 @router.head("/date/{year}/{month}", include_in_schema=False)
 async def get_shows_by_year_month(
-    year: conint(ge=1998, le=9999), month: conint(ge=1, le=12)
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
+    month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
 ):
     """Retrieve an array of Show objects, based on year and month,
     containing: Show ID, date and basic information.
@@ -203,12 +209,15 @@ async def get_shows_by_year_month(
 
 @router.get(
     "/date/month-day/{month}/{day}",
-    summary="Retrieve Information for a Show by Month and Day",
+    summary="Retrieve Information for Shows by Month and Day",
     response_model=ModelsShows,
     tags=["Shows"],
 )
 @router.head("/date/month-day/{month}/{day}", include_in_schema=False)
-async def get_show_by_month_day(month: conint(ge=1, le=12), day: conint(ge=1, le=31)):
+async def get_show_by_month_day(
+    month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
+    day: Annotated[int, Path(title="The day to get shows for", ge=1, le=31)],
+):
     """Retrieve a Show object, based on month and day, containing: Show
     ID, date and basic information."""
     try:
@@ -247,9 +256,9 @@ async def get_show_by_month_day(month: conint(ge=1, le=12), day: conint(ge=1, le
 )
 @router.head("/date/{year}/{month}/{day}", include_in_schema=False)
 async def get_show_by_date(
-    year: conint(ge=1998, le=9999),
-    month: conint(ge=1, le=12),
-    day: conint(ge=1, le=31),
+    year: Annotated[int, Path(title="The year to get a show for", ge=1998, le=9999)],
+    month: Annotated[int, Path(title="The month to get a show for", ge=1, le=12)],
+    day: Annotated[int, Path(title="The day to get a show for", ge=1, le=31)],
 ):
     """Retrieve a Show object, based on year, month and day, containing:
     Show ID, date and basic information."""
@@ -351,7 +360,9 @@ async def get_shows_details():
     tags=["Shows"],
 )
 @router.head("/details/date/iso/{show_date}", include_in_schema=False)
-async def get_show_details_by_date_string(show_date: date):
+async def get_show_details_by_date_string(
+    show_date: Annotated[date, Path(title="ISO date for the show to get")]
+):
     """Retrieve an array of Show objects, based on show date in ISO
     format (YYYY-MM-DD), containing: Show ID, date, Host, Scorekeeper,
     Panelists, Guests and other information."""
@@ -389,7 +400,9 @@ async def get_show_details_by_date_string(show_date: date):
     tags=["Shows"],
 )
 @router.head("/details/date/{year}", include_in_schema=False)
-async def get_shows_details_by_year(year: conint(ge=1998, le=9999)):
+async def get_shows_details_by_year(
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)]
+):
     """Retrieve an array of Show objects, based on year, containing:
     Show ID, date, Host, Scorekeeper, Panelists, Guests and other
     information.
@@ -429,8 +442,8 @@ async def get_shows_details_by_year(year: conint(ge=1998, le=9999)):
 )
 @router.head("/details/date/{year}/{month}", include_in_schema=False)
 async def get_shows_details_by_year_month(
-    year: conint(ge=1998, le=9999),
-    month: conint(ge=1, le=12),
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
+    month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
 ):
     """Retrieve an array of Show objects, based on year and month,
     containing: Show ID, date, Host, Scorekeeper, Panelists, Guests and
@@ -469,13 +482,14 @@ async def get_shows_details_by_year_month(
 
 @router.get(
     "/details/date/month-day/{month}/{day}",
-    summary="Retrieve Detailed Information for a Show by Month and Day",
+    summary="Retrieve Detailed Information for Shows by Month and Day",
     response_model=ModelsShowsDetails,
     tags=["Shows"],
 )
 @router.head("/details/date/month-day/{month}/{day}", include_in_schema=False)
 async def get_show_details_by_month_day(
-    month: conint(ge=1, le=12), day: conint(ge=1, le=31)
+    month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
+    day: Annotated[int, Path(title="The day to get shows for", ge=1, le=31)],
 ):
     """Retrieve a Show object, based on month and day, containing: Show
     ID, date, Host, Scorekeeper, Panelists, Guests and other information."""
@@ -517,9 +531,9 @@ async def get_show_details_by_month_day(
 )
 @router.head("/details/date/{year}/{month}/{day}", include_in_schema=False)
 async def get_show_details_by_date(
-    year: conint(ge=1998, le=9999),
-    month: conint(ge=1, le=12),
-    day: conint(ge=1, le=31),
+    year: Annotated[int, Path(title="The year to get a show for", ge=1998, le=9999)],
+    month: Annotated[int, Path(title="The month to get a show for", ge=1, le=12)],
+    day: Annotated[int, Path(title="The day to get a show for", ge=1, le=31)],
 ):
     """Retrieve a Show object, based on year, month and day, containing:
     Show ID, date, Host, Scorekeeper, Panelists, Guests and other
@@ -564,7 +578,9 @@ async def get_show_details_by_date(
     tags=["Shows"],
 )
 @router.head("/details/id/{show_id}", include_in_schema=False)
-async def get_show_details_by_id(show_id: conint(ge=0, lt=2**31)):
+async def get_show_details_by_id(
+    show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)]
+):
     """Retrieve a Show object, based on Show ID, containing: Show ID,
     date, Host, Scorekeeper, Panelists, Guests and other information."""
     try:

@@ -6,10 +6,9 @@
 """API routes for Hosts endpoints"""
 
 from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Path
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import conint, constr
 from wwdtm.host import Host
 from app.models.hosts import (
     Host as ModelsHost,
@@ -63,7 +62,9 @@ async def get_hosts():
     tags=["Hosts"],
 )
 @router.head("/id/{host_id}", include_in_schema=False)
-async def get_host_by_id(host_id: conint(ge=0, lt=2**31)):
+async def get_host_by_id(
+    host_id: Annotated[int, Path(title="The ID of the host to get", ge=0, lt=2**31)]
+):
     """Retrieve a Host object, based on Host ID, containing: Host ID,
     name, slug string, and gender."""
     try:
@@ -94,7 +95,9 @@ async def get_host_by_id(host_id: conint(ge=0, lt=2**31)):
     tags=["Hosts"],
 )
 @router.head("/slug/{host_slug}", include_in_schema=False)
-async def get_host_by_slug(host_slug: constr(strip_whitespace=True)):
+async def get_host_by_slug(
+    host_slug: Annotated[str, Path(title="The slug string of the host to get")]
+):
     """Retrieve a Host object, based on Host slug string, containing:
     Host ID, name, slug string, and gender."""
     try:
@@ -161,7 +164,9 @@ async def get_hosts_details():
     tags=["Hosts"],
 )
 @router.head("/details/id/{host_id}", include_in_schema=False)
-async def get_host_details_by_id(host_id: conint(ge=0, lt=2**31)):
+async def get_host_details_by_id(
+    host_id: Annotated[int, Path(title="The ID of the host to get", ge=0, lt=2**31)]
+):
     """Retrieve a Host object, based on Host ID, containing: Host ID,
     name, slug string, gender, and their appearance details.
 
@@ -194,7 +199,9 @@ async def get_host_details_by_id(host_id: conint(ge=0, lt=2**31)):
     tags=["Hosts"],
 )
 @router.head("/details/slug/{host_slug}", include_in_schema=False)
-async def get_host_details_by_slug(host_slug: constr(strip_whitespace=True)):
+async def get_host_details_by_slug(
+    host_slug: Annotated[str, Path(title="The slug string of the guest to get")]
+):
     """Retrieve a Host object, based on Host slug string, containing:
     Host ID, name, slug string, gender, and their appearance details.
 
