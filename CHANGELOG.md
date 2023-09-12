@@ -13,6 +13,7 @@
 
 ### Component Changes
 
+- Upgrade pydantic from `<2` to 2.3.0
 - Upgrade wwdtm from 2.4.0 to 2.4.1, which includes:
   - Upgrading numpy from 1.24.3 to 1.24.4
   - Upgrading pytz from 2023.3 to 2023.3.post1
