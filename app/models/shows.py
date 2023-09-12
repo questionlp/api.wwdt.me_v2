@@ -7,13 +7,14 @@
 
 from decimal import Decimal
 from typing import List, Optional, Union
-from pydantic import BaseModel, conint, Field
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 
 class Show(BaseModel):
     """Show Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Show ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Show ID")
     date: str = Field(title="Show Date")
     best_of: bool = Field(title="Best Of Show")
     repeat_show: bool = Field(title="Best Of Show")
@@ -28,7 +29,7 @@ class Shows(BaseModel):
 class ShowLocation(BaseModel):
     """Show Location Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Location ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Location ID")
     slug: Optional[str] = Field(default=None, title="Location Slug String")
     city: Optional[str] = Field(default=None, title="City")
     state: Optional[str] = Field(default=None, title="State")
@@ -38,7 +39,7 @@ class ShowLocation(BaseModel):
 class ShowHost(BaseModel):
     """Show Host Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Host ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Host ID")
     name: str = Field(title="Host Name")
     slug: Optional[str] = Field(default=None, title="Host Slug String")
     guest: bool = Field(title="Guest Host")
@@ -47,7 +48,7 @@ class ShowHost(BaseModel):
 class ShowScorekeeper(BaseModel):
     """Show Scorekeeper Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Scorekeeper ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Scorekeeper ID")
     name: str = Field(title="Scorekeeper Name")
     slug: Optional[str] = Field(default=None, title="Scorekeeper Slug String")
     guest: bool = Field(title="Guest Scorekeeper")
@@ -57,7 +58,7 @@ class ShowScorekeeper(BaseModel):
 class ShowPanelist(BaseModel):
     """Show Panelist Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Panelist ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Panelist ID")
     name: str = Field(title="Panelist Name")
     slug: Optional[str] = Field(default=None, title="Panelist Slug String")
     lightning_round_start: Union[int, None] = Field(
@@ -82,7 +83,7 @@ class ShowPanelist(BaseModel):
 class ShowBluffPanelist(BaseModel):
     """Show Bluff the Listener Panelist Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Panelist ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Panelist ID")
     name: str = Field(title="Panelist Name")
     slug: Optional[str] = Field(default=None, title="Panelist Slug String")
 
@@ -101,7 +102,7 @@ class ShowBluffDetails(BaseModel):
 class ShowGuest(BaseModel):
     """Show Guest Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Guest ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Guest ID")
     name: str = Field(title="Guest Name")
     slug: Optional[str] = Field(default=None, title="Guest Slug String")
     score: Union[int, None] = Field(default=None, title="Guest Score")

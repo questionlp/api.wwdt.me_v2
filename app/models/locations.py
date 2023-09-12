@@ -6,13 +6,14 @@
 """Locations Models"""
 
 from typing import List, Optional
-from pydantic import BaseModel, conint, Field
+from pydantic import BaseModel, Field
+from typing_extensions import Annotated
 
 
 class Location(BaseModel):
     """Location Information"""
 
-    id: conint(ge=0, lt=2**31) = Field(title="Location ID")
+    id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Location ID")
     city: Optional[str] = Field(default=None, title="City")
     state: Optional[str] = Field(default=None, title="State")
     venue: Optional[str] = Field(default=None, title="Venue Name")
@@ -37,7 +38,7 @@ class LocationRecordingCounts(BaseModel):
 class LocationRecordingShow(BaseModel):
     """Location Recording Information"""
 
-    show_id: conint(ge=0, lt=2**31) = Field(title="Show ID")
+    show_id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Show ID")
     date: str = Field(title="Show Date")
     best_of: bool = Field(title="Best Of Show")
     repeat_show: bool = Field(title="Repeat Show")
