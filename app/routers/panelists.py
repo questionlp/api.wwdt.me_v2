@@ -20,6 +20,7 @@ from app.models.panelists import (
     PanelistScoresOrderedPair as ModelsPanelistScoresOrderedPair,
     PanelistScoresGroupedOrderedPair as ModelsPanelistScoresGroupedOrderedPair,
 )
+from typing_extensions import Annotated
 
 router = APIRouter(prefix=f"/v{API_VERSION}/panelists")
 _config = load_config()
@@ -141,7 +142,7 @@ async def get_panelists_details():
     Panelists ID, name, slug string, gender, and their statistics
     and appearance details.
 
-    Results are sorted by panelist name, with panelist apperances
+    Results are sorted by panelist name, with panelist appearances
     sorted by show date."""
     try:
         panelist = Panelist(database_connection=_database_connection)
@@ -341,7 +342,7 @@ async def get_panelist_scores_by_slug(panelist_slug: constr(strip_whitespace=Tru
 )
 @router.head("/scores/grouped-ordered-pair/id/{panelist_id}", include_in_schema=False)
 async def get_panelist_scores_grouped_ordered_pair_by_id(
-    panelist_id: conint(ge=0, lt=2**31)
+    panelist_id: Annotated[int, conint(ge=0, lt=2**31)]
 ):
     """Retrieve Panelist scores, based on Panelist ID, as grouped
     ordered pairs, each pair containing a score and the corresponding

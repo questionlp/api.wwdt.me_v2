@@ -11,7 +11,7 @@ from app.config import API_VERSION, load_config
 from fastapi import APIRouter, HTTPException
 import mysql.connector
 from mysql.connector.errors import DatabaseError, ProgrammingError
-from pydantic import conint
+from pydantic import conint, constr
 from wwdtm.show import Show
 from app.models.shows import (
     Show as ModelsShow,
@@ -20,6 +20,7 @@ from app.models.shows import (
     ShowDetails as ModelsShowDetails,
     ShowsDetails as ModelsShowsDetails,
 )
+from typing_extensions import Annotated
 
 router = APIRouter(prefix=f"/v{API_VERSION}/shows")
 _config = load_config()
@@ -246,7 +247,9 @@ async def get_show_by_month_day(month: conint(ge=1, le=12), day: conint(ge=1, le
 )
 @router.head("/date/{year}/{month}/{day}", include_in_schema=False)
 async def get_show_by_date(
-    year: conint(ge=1998, le=9999), month: conint(ge=1, le=12), day: conint(ge=1, le=31)
+    year: conint(ge=1998, le=9999),
+    month: conint(ge=1, le=12),
+    day: conint(ge=1, le=31),
 ):
     """Retrieve a Show object, based on year, month and day, containing:
     Show ID, date and basic information."""
@@ -426,7 +429,8 @@ async def get_shows_details_by_year(year: conint(ge=1998, le=9999)):
 )
 @router.head("/details/date/{year}/{month}", include_in_schema=False)
 async def get_shows_details_by_year_month(
-    year: conint(ge=1998, le=9999), month: conint(ge=1, le=12)
+    year: conint(ge=1998, le=9999),
+    month: conint(ge=1, le=12),
 ):
     """Retrieve an array of Show objects, based on year and month,
     containing: Show ID, date, Host, Scorekeeper, Panelists, Guests and
@@ -513,7 +517,9 @@ async def get_show_details_by_month_day(
 )
 @router.head("/details/date/{year}/{month}/{day}", include_in_schema=False)
 async def get_show_details_by_date(
-    year: conint(ge=1998, le=9999), month: conint(ge=1, le=12), day: conint(ge=1, le=31)
+    year: conint(ge=1998, le=9999),
+    month: conint(ge=1, le=12),
+    day: conint(ge=1, le=31),
 ):
     """Retrieve a Show object, based on year, month and day, containing:
     Show ID, date, Host, Scorekeeper, Panelists, Guests and other

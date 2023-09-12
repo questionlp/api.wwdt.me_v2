@@ -17,6 +17,7 @@ from app.models.scorekeepers import (
     ScorekeeperDetails as ModelsScorekeeperDetails,
     ScorekeepersDetails as ModelsScorekeepersDetails,
 )
+from typing_extensions import Annotated
 
 router = APIRouter(prefix=f"/v{API_VERSION}/scorekeepers")
 _config = load_config()
@@ -139,7 +140,7 @@ async def get_scorekeepers_details():
     Scorekeepers ID, name, slug string, gender, and their appearance
     details.
 
-    Results are sorted by scorekeeper name, with scorekeeper apperances
+    Results are sorted by scorekeeper name, with scorekeeper appearances
     sorted by show date."""
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)

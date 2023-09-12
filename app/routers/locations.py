@@ -17,6 +17,7 @@ from app.models.locations import (
     LocationDetails as ModelsLocationDetails,
     LocationsDetails as ModelsLocationsDetails,
 )
+from typing_extensions import Annotated
 
 router = APIRouter(prefix=f"/v{API_VERSION}/locations")
 _config = load_config()

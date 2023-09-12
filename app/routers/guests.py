@@ -17,6 +17,7 @@ from app.models.guests import (
     GuestDetails as ModelsGuestDetails,
     GuestsDetails as ModelsGuestsDetails,
 )
+from typing_extensions import Annotated
 
 router = APIRouter(prefix=f"/v{API_VERSION}/guests")
 _config = load_config()
@@ -134,7 +135,7 @@ async def get_guests_details():
     """Retrieve an array of Not My Job Guest objects, each containing:
     Guest ID, name, slug string and their appearance details.
 
-    Results are sorted by guest name, with guest apperances sorted
+    Results are sorted by guest name, with guest appearances sorted
     by show date."""
     try:
         guest = Guest(database_connection=_database_connection)

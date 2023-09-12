@@ -17,6 +17,7 @@ from app.models.hosts import (
     HostDetails as ModelsHostDetails,
     HostsDetails as ModelsHostsDetails,
 )
+from typing_extensions import Annotated
 
 router = APIRouter(prefix=f"/v{API_VERSION}/hosts")
 _config = load_config()
@@ -132,7 +133,7 @@ async def get_hosts_details():
     """Retrieve an array of Host objects, each containing: Host ID,
     name, slug string, gender, and their appearance details.
 
-    Results are sorted by host name, with host apperances sorted by
+    Results are sorted by host name, with host appearances sorted by
     show date."""
     try:
         host = Host(database_connection=_database_connection)
