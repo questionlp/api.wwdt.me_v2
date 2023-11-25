@@ -8,7 +8,7 @@ Please note that version 1.0 of the Stats API has now been deprecated.
 
 ## Requirements
 
-- Python 3.8 or newer
+- Python 3.10 or newer
 - MySQL Server 8.0 or newer, or another MySQL Server distribution based on MySQL Server 8.0 or newer, hosting a version of the aforementioned Wait Wait Don't Tell Me! Stats database
 
 ## Changes from v1.0
