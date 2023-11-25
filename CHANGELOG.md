@@ -1,5 +1,27 @@
 # Changes
 
+## 2.6.0
+
+**Starting with version 2.6.0, support for all versions of Python prior to 3.10 have been deprecated.**
+
+### Component Changes
+
+- Upgrade wwdtm from 2.4.1 to 2.5.0, which drops supports for Python versions prior to 3.10 and includes:
+  - Upgrade MySQL Connector/Python from 8.0.33 to 8.2.0
+  - Upgrade numpy from 1.24.4 to 1.26.0
+- Upgrade pydantic from 2.3.0 to 2.5.2
+- Upgrade fastapi from 0.103.1 to 0.104.1
+- Upgrade uvicorn from 0.23.2 to 0.24.0.post1
+- Upgrade httpx from 0.24.1 to 0.25.2
+- Upgrade email-validator from 2.0.0.post2 to 2.1.0.post1
+
+### Development Changes
+
+- Upgrade pytest from 7.4.0 to 7.4.3
+- Upgrade black from 23.7.0 to 23.11.0
+- Remove `py38` and `py39` from `tool.black` in `pyproject.toml`
+- Bump minimum pytest version from 7.0 to 7.4 in `pyproject.toml`
+
 ## 2.5.0
 
 ### Application Changes

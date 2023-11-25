@@ -1,11 +1,11 @@
-pydantic==2.3.0
-fastapi==0.103.1
-uvicorn[standard]==0.23.2
+pydantic==2.5.2
+fastapi==0.104.1
+uvicorn[standard]==0.24.0.post1
 gunicorn==21.2.0
-httpx==0.24.1
+httpx==0.25.2
 aiofiles==23.2.1
 jinja2==3.1.2
-email-validator==2.0.0.post2
+email-validator==2.1.0.post1
 requests==2.31.0
 
-wwdtm==2.4.1
+wwdtm==2.5.0
