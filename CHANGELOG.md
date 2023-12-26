@@ -1,5 +1,16 @@
 # Changes
 
+## 2.7.0
+
+### Application Changes
+
+- Add support for shows that have multiple Bluff the Listener-like segments.
+- This changes includes renaming the `bluff` key returned in show details objects to `bluffs`. The new `bluffs` key now returns an array of objects that includes a `segment` key used to denote which segment it is referencing, along with the `chosen_panelist` and `correct_panelist` objects.
+
+### Component Changes
+
+- Upgrade wwdtm from 2.5.0 to 2.6.0, which requires Wait Wait Stats Database version 4.4 or higher
+
 ## 2.6.0
 
 **Starting with version 2.6.0, support for all versions of Python prior to 3.10 have been deprecated.**

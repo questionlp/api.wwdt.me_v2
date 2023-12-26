@@ -91,6 +91,7 @@ class ShowBluffPanelist(BaseModel):
 class ShowBluffDetails(BaseModel):
     """Show Bluff the Listener Chosen and Correct Panelists"""
 
+    segment: int = Field(title="Bluff Segment Number")
     chosen_panelist: Optional[ShowBluffPanelist] = Field(
         default=None, title="Chosen Panelist"
     )
@@ -125,7 +126,7 @@ class ShowDetails(Show):
     panelists: Optional[List[ShowPanelist]] = Field(
         default=None, title="Show Panelists"
     )
-    bluff: Optional[ShowBluffDetails] = Field(
+    bluffs: Optional[List[ShowBluffDetails]] = Field(
         default=None, title="Bluff the Listener Information"
     )
     guests: Optional[List[ShowGuest]] = Field(default=None, title="Show Guests")
