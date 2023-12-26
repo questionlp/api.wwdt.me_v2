@@ -13,4 +13,4 @@ jinja2==3.1.2
 email-validator==2.1.0.post1
 requests==2.31.0
 
-wwdtm==2.5.0
+wwdtm==2.6.0
