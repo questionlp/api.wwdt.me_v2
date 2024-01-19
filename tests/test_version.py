@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""Testing /v2.0/version route
-"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""Testing /v2.0/version route."""
+
 from fastapi.testclient import TestClient
 from wwdtm import VERSION as WWDTM_VERSION
 
-from app.main import app
 from app.config import API_VERSION, APP_VERSION
+from app.main import app
 
 client = TestClient(app)
 
 
 def test_version():
-    """Test /version route"""
-
+    """Test /version route."""
     response = client.get(f"/v{API_VERSION}/version")
     version = response.json()
 

@@ -20,6 +20,7 @@
         "contact_email": "",
         "contact_name": "",
         "contact_url": "",
+        "patreon_url": "",
         "use_decimal_scores": false
     }
 }

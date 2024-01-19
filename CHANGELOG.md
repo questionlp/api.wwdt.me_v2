@@ -1,5 +1,27 @@
 # Changes
 
+## 2.8.0
+
+### Application Changes
+
+- Starting with application version 2.8.0 of the Stats API, the minimum required version of the Wait Wait Stats Database is 4.5
+- Add support for returning show URL value from the Wait Wait Stats Database as `show_url` in returned show objects
+- Code cleanup and updating docstrings
+
+### Component Changes
+
+- Upgrade wwdtm from 2.6.1 to 2.8.0
+- Upgrade pydantic from 2.5.2 to 2.5.3
+- Upgrade fastapi from 0.104.1 to 0.109.0
+- Upgrade uvicorn from 0.24.0.post1 to 0.26.0
+- Upgrade httpx from 0.25.2 to 0.26.0
+
+### Development Changes
+
+- Switch to Ruff for code linting and formatting (with the help of Black)
+- Upgrade black from 23.11.0 to 23.12.1
+- Upgrade pytest from 7.4.3 from 7.4.4
+
 ## 2.7.2
 
 ### Component Changes

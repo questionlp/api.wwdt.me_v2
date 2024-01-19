@@ -1,22 +1,22 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""API routes for Hosts endpoints"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""API routes for Hosts endpoints."""
 
-from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException, Path
+from typing import Annotated
+
 import mysql.connector
+from fastapi import APIRouter, HTTPException, Path
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.host import Host
-from app.models.hosts import (
-    Host as ModelsHost,
-    Hosts as ModelsHosts,
-    HostDetails as ModelsHostDetails,
-    HostsDetails as ModelsHostsDetails,
-)
-from typing_extensions import Annotated
+
+from app.config import API_VERSION, load_config
+from app.models.hosts import Host as ModelsHost
+from app.models.hosts import HostDetails as ModelsHostDetails
+from app.models.hosts import Hosts as ModelsHosts
+from app.models.hosts import HostsDetails as ModelsHostsDetails
 
 router = APIRouter(prefix=f"/v{API_VERSION}/hosts")
 _config = load_config()
@@ -32,10 +32,12 @@ _database_connection = mysql.connector.connect(**_database_config)
 )
 @router.head("", include_in_schema=False)
 async def get_hosts():
-    """Retrieve an array of Host objects, each containing: Host ID,
-    name, slug string, and gender.
+    """Retrieve All Hosts.
 
-    Results are sorted by host name."""
+    Returned data: Host ID, name, slug string and gender.
+
+    Hosts are sorted by host name.
+    """
     try:
         host = Host(database_connection=_database_connection)
         hosts = host.retrieve_all()
@@ -46,13 +48,12 @@ async def get_hosts():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve hosts from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "hosts from the database",
-        )
+            detail="Database error occurred while retrieving hosts from the database",
+        ) from None
 
 
 @router.get(
@@ -65,8 +66,10 @@ async def get_hosts():
 async def get_host_by_id(
     host_id: Annotated[int, Path(title="The ID of the host to get", ge=0, lt=2**31)]
 ):
-    """Retrieve a Host object, based on Host ID, containing: Host ID,
-    name, slug string, and gender."""
+    """Retrieve a Host by Host ID.
+
+    Returned data: Host ID, name, slug string and gender.
+    """
     try:
         host = Host(database_connection=_database_connection)
         host_info = host.retrieve_by_id(host_id)
@@ -75,17 +78,18 @@ async def get_host_by_id(
         else:
             return host_info
     except ValueError:
-        raise HTTPException(status_code=404, detail=f"Host ID {host_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Host ID {host_id} not found"
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve host information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve host information",
-        )
+            detail="Database error occurred while trying to retrieve host information",
+        ) from None
 
 
 @router.get(
@@ -98,8 +102,10 @@ async def get_host_by_id(
 async def get_host_by_slug(
     host_slug: Annotated[str, Path(title="The slug string of the host to get")]
 ):
-    """Retrieve a Host object, based on Host slug string, containing:
-    Host ID, name, slug string, and gender."""
+    """Retrieve a Host by Host Slug String.
+
+    Returned data: Host ID, name, slug string and gender.
+    """
     try:
         host = Host(database_connection=_database_connection)
         host_info = host.retrieve_by_slug(host_slug)
@@ -112,17 +118,16 @@ async def get_host_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Host slug string {host_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve host information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve host information",
-        )
+            detail="Database error occurred while trying to retrieve host information",
+        ) from None
 
 
 @router.get(
@@ -133,11 +138,12 @@ async def get_host_by_slug(
 )
 @router.head("/details", include_in_schema=False)
 async def get_hosts_details():
-    """Retrieve an array of Host objects, each containing: Host ID,
-    name, slug string, gender, and their appearance details.
+    """Retrieve Details for All Hosts.
 
-    Results are sorted by host name, with host appearances sorted by
-    show date."""
+    Returned data: Host ID, name, slug string, gender, and appearances.
+
+    Hosts are sorted by host name. Appearances are sorted by date.
+    """
     try:
         host = Host(database_connection=_database_connection)
         hosts = host.retrieve_all_details()
@@ -148,13 +154,12 @@ async def get_hosts_details():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve hosts from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "hosts from the database",
-        )
+            detail="Database error occurred while retrieving hosts from the database",
+        ) from None
 
 
 @router.get(
@@ -167,10 +172,12 @@ async def get_hosts_details():
 async def get_host_details_by_id(
     host_id: Annotated[int, Path(title="The ID of the host to get", ge=0, lt=2**31)]
 ):
-    """Retrieve a Host object, based on Host ID, containing: Host ID,
-    name, slug string, gender, and their appearance details.
+    """Retrieve Details for a Host by Host ID.
 
-    Host appearances are sorted by show date."""
+    Returned data: Host ID, name, slug string, gender, and appearances.
+
+    Appearances are sorted by date.
+    """
     try:
         host = Host(database_connection=_database_connection)
         host_details = host.retrieve_details_by_id(host_id)
@@ -179,17 +186,18 @@ async def get_host_details_by_id(
         else:
             return host_details
     except ValueError:
-        raise HTTPException(status_code=404, detail=f"Host ID {host_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Host ID {host_id} not found"
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve host information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve host information",
-        )
+            detail="Database error occurred while trying to retrieve host information",
+        ) from None
 
 
 @router.get(
@@ -202,10 +210,12 @@ async def get_host_details_by_id(
 async def get_host_details_by_slug(
     host_slug: Annotated[str, Path(title="The slug string of the guest to get")]
 ):
-    """Retrieve a Host object, based on Host slug string, containing:
-    Host ID, name, slug string, gender, and their appearance details.
+    """Retrieve Details for a Host by Host Slug String.
 
-    Host appearances are sorted by show date."""
+    Returned data: Host ID, name, slug string, gender, and appearances.
+
+    Appearances are sorted by date.
+    """
     try:
         host = Host(database_connection=_database_connection)
         host_details = host.retrieve_details_by_slug(host_slug)
@@ -218,14 +228,13 @@ async def get_host_details_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Host slug string {host_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve host information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve host information",
-        )
+            detail="Database error occurred while trying to retrieve host information",
+        ) from None

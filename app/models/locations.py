@@ -1,42 +1,42 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""Locations Models"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""Locations Models."""
 
-from typing import List, Optional
+from typing import Annotated
+
 from pydantic import BaseModel, Field
-from typing_extensions import Annotated
 
 
 class Location(BaseModel):
-    """Location Information"""
+    """Location Information."""
 
     id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Location ID")
-    city: Optional[str] = Field(default=None, title="City")
-    state: Optional[str] = Field(default=None, title="State")
-    venue: Optional[str] = Field(default=None, title="Venue Name")
-    slug: Optional[str] = Field(default=None, title="Location Slug String")
+    city: str | None = Field(default=None, title="City")
+    state: str | None = Field(default=None, title="State")
+    venue: str | None = Field(default=None, title="Venue Name")
+    slug: str | None = Field(default=None, title="Location Slug String")
 
 
 class Locations(BaseModel):
-    """List of Locations"""
+    """List of Locations."""
 
-    locations: List[Location] = Field(title="List of Locations")
+    locations: list[Location] = Field(title="List of Locations")
 
 
 class LocationRecordingCounts(BaseModel):
-    """Count of Recordings for a Location"""
+    """Count of Recordings for a Location."""
 
-    regular_shows: Optional[int] = Field(
+    regular_shows: int | None = Field(
         default=None, title="Count of Regular Show Recordings"
     )
-    all_shows: Optional[int] = Field(default=None, title="Count of All Show Recordings")
+    all_shows: int | None = Field(default=None, title="Count of All Show Recordings")
 
 
 class LocationRecordingShow(BaseModel):
-    """Location Recording Information"""
+    """Location Recording Information."""
 
     show_id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Show ID")
     date: str = Field(title="Show Date")
@@ -45,25 +45,26 @@ class LocationRecordingShow(BaseModel):
 
 
 class LocationRecordings(BaseModel):
-    """Location Information and Recordings"""
+    """Location Information and Recordings."""
 
-    count: Optional[LocationRecordingCounts] = Field(
+    count: LocationRecordingCounts | None = Field(
         default=None, title="Count of Show Recordings"
     )
-    shows: Optional[List[LocationRecordingShow]] = Field(
+    shows: list[LocationRecordingShow] | None = Field(
         default=None, title="List of Show Recordings"
     )
 
 
 class LocationDetails(Location):
-    """Location Information with Recordings"""
+    """Location Information with Recordings."""
 
-    recordings: Optional[LocationRecordings] = Field(
+    recordings: LocationRecordings | None = Field(
         default=None, title="List of Show Recordings"
     )
 
 
 class LocationsDetails(BaseModel):
-    """List of Location Details"""
+    """List of Location Details."""
 
-    locations: List[LocationDetails] = Field(title="List of Location Details")
+    locations: list[LocationDetails] = Field(title="List of Location Details")
+    locations: list[LocationDetails] = Field(title="List of Location Details")
