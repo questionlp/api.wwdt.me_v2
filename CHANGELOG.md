@@ -1,5 +1,11 @@
 # Changes
 
+## 2.8.1
+
+### Application Changes
+
+- Update Show route docstrings to include mention of NPR.org show URL in the returned data
+
 ## 2.8.0
 
 ### Application Changes

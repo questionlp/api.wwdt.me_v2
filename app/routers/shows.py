@@ -36,7 +36,8 @@ _database_connection = mysql.connector.connect(**_database_config)
 async def get_shows():
     """Retrieve All Shows.
 
-    Returned data: Show ID, date, Best Of flag and Repeat flag
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
 
     Shows are sorted by date.
     """
@@ -71,7 +72,8 @@ async def get_show_by_id(
 ):
     """Retrieve a Show by Show ID.
 
-    Returned data: Show ID, date, Best Of flag and Repeat flag
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
     """
     try:
         show = Show(database_connection=_database_connection)
@@ -108,7 +110,8 @@ async def get_show_by_date_string(
 ):
     """Retrieve a Show by Show Date in YYYY-MM-DD format.
 
-    Returned data: Show ID, date, Best Of flag and Repeat flag
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
     """
     try:
         show = Show(database_connection=_database_connection)
@@ -147,7 +150,8 @@ async def get_shows_by_year(
 ):
     """Retrieve All Shows by Year.
 
-    Returned data: Show ID, date, Best Of flag and Repeat flag
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
 
     Shows are sorted by date.
     """
@@ -189,7 +193,8 @@ async def get_shows_by_year_month(
 ):
     """Retrieve All Shows by Year and Month.
 
-    Returned data: Show ID, date, Best Of flag and Repeat flag
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
 
     Shows are sorted by date.
     """
@@ -231,7 +236,8 @@ async def get_show_by_month_day(
 ):
     """Retrieve All Shows by Month and Day.
 
-    Returned data: Show ID, date, Best Of flag and Repeat flag
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
 
     Shows are sorted by date.
     """
@@ -276,7 +282,8 @@ async def get_show_by_date(
 ):
     """Retrieve a Show by Year, Month and Day.
 
-    Returned data: Show ID, date, Best Of flag and Repeat flag
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
     """
     try:
         show = Show(database_connection=_database_connection)
@@ -346,8 +353,8 @@ async def get_shows_details():
     """Retrieve Details For All Shows.
 
     Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    location, description, notes, host, scorekeeper, panelists, Bluff
-    information and Not My Job guests
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
 
     Shows are sorted by date.
     """
@@ -384,8 +391,8 @@ async def get_show_details_by_date_string(
     """Retrieve Details for a Show by Show Date in YYYY-MM-DD format.
 
     Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    location, description, notes, host, scorekeeper, panelists, Bluff
-    information and Not My Job guests
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
     """
     try:
         show = Show(database_connection=_database_connection)
@@ -428,8 +435,8 @@ async def get_shows_details_by_year(
     """Retrieve Details for Shows by Year.
 
     Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    location, description, notes, host, scorekeeper, panelists, Bluff
-    information and Not My Job guests
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
 
     Shows are sorted by date.
     """
@@ -474,8 +481,8 @@ async def get_shows_details_by_year_month(
     """Retrieve Details for Shows by Year and Month.
 
     Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    location, description, notes, host, scorekeeper, panelists, Bluff
-    information and Not My Job guests
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
 
     Shows are sorted by date.
     """
@@ -522,8 +529,8 @@ async def get_show_details_by_month_day(
     """Retrieve Details for Shows by Month and Day.
 
     Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    location, description, notes, host, scorekeeper, panelists, Bluff
-    information and Not My Job guests
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
 
     Shows are sorted by date.
     """
@@ -571,8 +578,8 @@ async def get_show_details_by_date(
     """Retrieve Details for a Shows by Year, Month and Day.
 
     Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    location, description, notes, host, scorekeeper, panelists, Bluff
-    information and Not My Job guests
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
     """
     try:
         show = Show(database_connection=_database_connection)
@@ -619,8 +626,8 @@ async def get_show_details_by_id(
     """Retrieve Details for a Shows by Show ID.
 
     Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    location, description, notes, host, scorekeeper, panelists, Bluff
-    information and Not My Job guests
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
     """
     try:
         show = Show(database_connection=_database_connection)
@@ -658,8 +665,8 @@ async def get_shows_recent_details():
     """Retrieve Details for Recent Shows.
 
     Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    location, description, notes, host, scorekeeper, panelists, Bluff
-    information and Not My Job guests
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
 
     Shows are sorted by date.
     """
@@ -693,7 +700,8 @@ async def get_shows_recent_details():
 async def get_shows_recent():
     """Retrieve Recent Shows.
 
-    Return data: Show ID, date, Best Of flag and Repeat flag
+    Return data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
 
     Shows are sorted by date.
     """
