@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""Testing /v2.0/guests routes
-"""
-from fastapi.testclient import TestClient
-import pytest
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""Testing /v2.0/guests routes."""
 
-from app.main import app
+import pytest
+from fastapi.testclient import TestClient
+
 from app.config import API_VERSION
+from app.main import app
 
 client = TestClient(app)
 
 
 def test_guests():
-    """Test /v2.0/guests route"""
-
+    """Test /v2.0/guests route."""
     response = client.get(f"/v{API_VERSION}/guests")
     guests = response.json()
 
@@ -29,8 +28,7 @@ def test_guests():
 
 @pytest.mark.parametrize("guest_id", [54])
 def test_guests_id(guest_id: int):
-    """Test /v2.0/guests/id/{guest_id} route"""
-
+    """Test /v2.0/guests/id/{guest_id} route."""
     response = client.get(f"/v{API_VERSION}/guests/id/{guest_id}")
     guest = response.json()
 
@@ -43,8 +41,7 @@ def test_guests_id(guest_id: int):
 
 @pytest.mark.parametrize("guest_slug", ["tom-hanks"])
 def test_guests_slug(guest_slug: str):
-    """Test /v2.0/guests/slug/{guest_slug} route"""
-
+    """Test /v2.0/guests/slug/{guest_slug} route."""
     response = client.get(f"/v{API_VERSION}/guests/slug/{guest_slug}")
     guest = response.json()
 
@@ -56,8 +53,7 @@ def test_guests_slug(guest_slug: str):
 
 
 def test_guests_details():
-    """Test /v2.0/guests/details route"""
-
+    """Test /v2.0/guests/details route."""
     response = client.get(f"/v{API_VERSION}/guests/details")
     guests = response.json()
 
@@ -71,8 +67,7 @@ def test_guests_details():
 
 @pytest.mark.parametrize("guest_id", [54])
 def test_guests_details_id(guest_id: int):
-    """Test /v2.0/guests/details/id/{guest_id} route"""
-
+    """Test /v2.0/guests/details/id/{guest_id} route."""
     response = client.get(f"/v{API_VERSION}/guests/details/id/{guest_id}")
     guest = response.json()
 
@@ -86,8 +81,7 @@ def test_guests_details_id(guest_id: int):
 
 @pytest.mark.parametrize("guest_slug", ["tom-hanks"])
 def test_guests_details_slug(guest_slug: str):
-    """Test /v2.0/guests/details/slug/{guest_slug} route"""
-
+    """Test /v2.0/guests/details/slug/{guest_slug} route."""
     response = client.get(f"/v{API_VERSION}/guests/details/slug/{guest_slug}")
     guest = response.json()
 

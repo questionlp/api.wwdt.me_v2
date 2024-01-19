@@ -1,22 +1,22 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""API routes for Locations endpoints"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""API routes for Locations endpoints."""
 
-from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException, Path
+from typing import Annotated
+
 import mysql.connector
+from fastapi import APIRouter, HTTPException, Path
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.location import Location
-from app.models.locations import (
-    Location as ModelsLocation,
-    Locations as ModelsLocations,
-    LocationDetails as ModelsLocationDetails,
-    LocationsDetails as ModelsLocationsDetails,
-)
-from typing_extensions import Annotated
+
+from app.config import API_VERSION, load_config
+from app.models.locations import Location as ModelsLocation
+from app.models.locations import LocationDetails as ModelsLocationDetails
+from app.models.locations import Locations as ModelsLocations
+from app.models.locations import LocationsDetails as ModelsLocationsDetails
 
 router = APIRouter(prefix=f"/v{API_VERSION}/locations")
 _config = load_config()
@@ -32,10 +32,12 @@ _database_connection = mysql.connector.connect(**_database_config)
 )
 @router.head("", include_in_schema=False)
 async def get_locations():
-    """Retrieve an array of Location objects, each containing:
-    Location ID, city, state, venue, and slug string.
+    """Retrieve All Show Locations.
 
-    Results are sorted by: city, state, venue name."""
+    Returned data: Location ID, city, state, venue and slug string.
+
+    Locations are sorted by: city, state, then venue name.
+    """
     try:
         location = Location(database_connection=_database_connection)
         locations = location.retrieve_all()
@@ -46,13 +48,12 @@ async def get_locations():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve locations from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "locations from the database",
-        )
+            detail="Database error occurred while retrieving locations from the database",
+        ) from None
 
 
 @router.get(
@@ -67,8 +68,10 @@ async def get_location_by_id(
         int, Path(title="The ID of the location to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve a Location object, based on Location ID, containing:
-    Location ID, city, state, venue, and slug string."""
+    """Retrieve a Show Location by Location ID.
+
+    Returned data: Location ID, city, state, venue and slug string.
+    """
     try:
         location = Location(database_connection=_database_connection)
         location_info = location.retrieve_by_id(location_id)
@@ -81,17 +84,16 @@ async def get_location_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Location ID {location_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve location information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve location information",
-        )
+            detail="Database error occurred while trying to retrieve location information",
+        ) from None
 
 
 @router.get(
@@ -104,8 +106,10 @@ async def get_location_by_id(
 async def get_location_by_slug(
     location_slug: Annotated[str, Path(title="The slug string of the location to get")]
 ):
-    """Retrieve a location object, based on Location slug string,
-    containing: Location ID, city, state, venue, and slug string."""
+    """Retrieve a Show Location by Location Slug String.
+
+    Returned data: Location ID, city, state, venue and slug string.
+    """
     try:
         location = Location(database_connection=_database_connection)
         location_info = location.retrieve_by_slug(location_slug.strip())
@@ -119,17 +123,16 @@ async def get_location_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Location slug string {location_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve location information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve location information",
-        )
+            detail="Database error occurred while trying to retrieve location information",
+        ) from None
 
 
 @router.get(
@@ -140,11 +143,14 @@ async def get_location_by_slug(
 )
 @router.head("/recordings", include_in_schema=False)
 async def get_locations_details():
-    """Retrieve an array of Location objects, each containing:
-    Location ID, city, state, venue, slug string, and an array of
+    """Retrieve Details for All Show Locations.
+
+    Returned data: Location ID, city, state, venue, slug string and
     recordings.
 
-    Results are sorted by: city, state, venue name."""
+    Locations are sorted by: city, state, then venue name. Recordings
+    are sorted by show date.
+    """
     try:
         location = Location(database_connection=_database_connection)
         locations = location.retrieve_all_details()
@@ -155,13 +161,12 @@ async def get_locations_details():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve locations from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "locations from the database",
-        )
+            detail="Database error occurred while retrieving locations from the database",
+        ) from None
 
 
 @router.get(
@@ -176,11 +181,13 @@ async def get_location_recordings_by_id(
         int, Path(title="The ID of the location to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve a Location object, based on Location ID, containing:
-    Location ID, city, state, venue, slug string, and an array of
+    """Retrieve Details for a Show Location by Location ID.
+
+    Returned data: Location ID, city, state, venue, slug string and
     recordings.
 
-    Recordings are sorted by show date."""
+    Recordings are sorted by show date.
+    """
     try:
         location = Location(database_connection=_database_connection)
         location_recordings = location.retrieve_details_by_id(location_id)
@@ -193,17 +200,17 @@ async def get_location_recordings_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Location ID {location_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve location information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
             detail="Database error occurred while trying to "
             "retrieve location information",
-        )
+        ) from None
 
 
 @router.get(
@@ -216,11 +223,13 @@ async def get_location_recordings_by_id(
 async def get_location_recordings_by_slug(
     location_slug: Annotated[str, Path(title="The slug string of the location to get")]
 ):
-    """Retrieve a Location object, based on Location slug string,
-    containing: Location ID, city, state, venue, slug string, and an
-    array of recordings.
+    """Retrieve Details for a Show Location by Location Slug String.
 
-    Recordings are sorted by show date."""
+    Returned data: Location ID, city, state, venue, slug string and
+    recordings.
+
+    Recordings are sorted by show date.
+    """
     try:
         location = Location(database_connection=_database_connection)
         location_details = location.retrieve_details_by_slug(location_slug.strip())
@@ -234,14 +243,14 @@ async def get_location_recordings_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Location slug string {location_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve location information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
             detail="Database error occurred while trying to "
             "retrieve location information",
-        )
+        ) from None

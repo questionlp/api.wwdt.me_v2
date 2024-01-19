@@ -1,22 +1,22 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""API routes for Scorekeeper endpoints"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""API routes for Scorekeeper endpoints."""
 
-from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException, Path
+from typing import Annotated
+
 import mysql.connector
+from fastapi import APIRouter, HTTPException, Path
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.scorekeeper import Scorekeeper
-from app.models.scorekeepers import (
-    Scorekeeper as ModelsScorekeeper,
-    Scorekeepers as ModelsScorekeepers,
-    ScorekeeperDetails as ModelsScorekeeperDetails,
-    ScorekeepersDetails as ModelsScorekeepersDetails,
-)
-from typing_extensions import Annotated
+
+from app.config import API_VERSION, load_config
+from app.models.scorekeepers import Scorekeeper as ModelsScorekeeper
+from app.models.scorekeepers import ScorekeeperDetails as ModelsScorekeeperDetails
+from app.models.scorekeepers import Scorekeepers as ModelsScorekeepers
+from app.models.scorekeepers import ScorekeepersDetails as ModelsScorekeepersDetails
 
 router = APIRouter(prefix=f"/v{API_VERSION}/scorekeepers")
 _config = load_config()
@@ -32,10 +32,12 @@ _database_connection = mysql.connector.connect(**_database_config)
 )
 @router.head("", include_in_schema=False)
 async def get_scorekeepers():
-    """Retrieve an array of Scorekeepers objects, each containing:
-    Scorekeepers ID, name, slug string, and gender.
+    """Retrieve All Scorekeepers.
 
-    Results are stored by scorekeeper name."""
+    Returned data: Scorekeeper ID, name, slug string and gender.
+
+    Scorekeepers are sorted by scorekeeper name.
+    """
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeepers = scorekeeper.retrieve_all()
@@ -46,13 +48,12 @@ async def get_scorekeepers():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve scorekeepers from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "scorekeepers from the database",
-        )
+            detail="Database error occurred while retrieving scorekeepers from the database",
+        ) from None
 
 
 @router.get(
@@ -67,8 +68,10 @@ async def get_scorekeeper_by_id(
         int, Path(title="The ID of the scorekeeper to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve a Scorekeeper object, based on Scorekeeper ID,
-    containing: Scorekeeper ID, name, slug string, and gender."""
+    """Retrieve a Scorekeeper by Scorekeeper ID.
+
+    Returned data: Scorekeeper ID, name, slug string and gender.
+    """
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_info = scorekeeper.retrieve_by_id(scorekeeper_id)
@@ -81,17 +84,16 @@ async def get_scorekeeper_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve scorekeeper information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve scorekeeper information",
-        )
+            detail="Database error occurred while trying to retrieve scorekeeper information",
+        ) from None
 
 
 @router.get(
@@ -106,8 +108,10 @@ async def get_scorekeeper_by_slug(
         str, Path(title="The slug string of the scorekeeper to get")
     ]
 ):
-    """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
-    containing: Scorekeeper ID, name, slug string, and gender."""
+    """Retrieve a Scorekeeper by Scorekeeper Slug String.
+
+    Returned data: Scorekeeper ID, name, slug string and gender.
+    """
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_info = scorekeeper.retrieve_by_slug(scorekeeper_slug.strip())
@@ -122,17 +126,16 @@ async def get_scorekeeper_by_slug(
         raise HTTPException(
             status_code=404,
             detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve scorekeeper information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve scorekeeper information",
-        )
+            detail="Database error occurred while trying to retrieve scorekeeper information",
+        ) from None
 
 
 @router.get(
@@ -143,12 +146,14 @@ async def get_scorekeeper_by_slug(
 )
 @router.head("/details", include_in_schema=False)
 async def get_scorekeepers_details():
-    """Retrieve an array of Scorekeepers objects, each containing:
-    Scorekeepers ID, name, slug string, gender, and their appearance
-    details.
+    """Retrieve Details for All Scorekeepers.
 
-    Results are sorted by scorekeeper name, with scorekeeper appearances
-    sorted by show date."""
+    Returned data: Scorekeepers ID, name, slug string, gender and
+    appearances.
+
+    Scorekeepers are sorted by scorekeeper name. Appearances are sorted
+    by show date.
+    """
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeepers = scorekeeper.retrieve_all_details()
@@ -159,13 +164,12 @@ async def get_scorekeepers_details():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve scorekeepers from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "scorekeepers from the database",
-        )
+            detail="Database error occurred while retrieving scorekeepers from the database",
+        ) from None
 
 
 @router.get(
@@ -180,11 +184,13 @@ async def get_scorekeeper_details_by_id(
         int, Path(title="The ID of the scorekeeper to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve a Scorekeeper object, based on Scorekeeper ID,
-    containing: Scorekeeper ID, name, slug string, gender, and their
-    appearance details.
+    """Retrieve Details for a Scorekeeper by Scorekeeper ID.
 
-    Scorekeeper appearances are sorted by show date."""
+    Returned data: Scorekeeper ID, name, slug string, gender and
+    appearances.
+
+    Appearances are sorted by show date.
+    """
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_details = scorekeeper.retrieve_details_by_id(scorekeeper_id)
@@ -197,17 +203,16 @@ async def get_scorekeeper_details_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve scorekeeper information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve scorekeeper information",
-        )
+            detail="Database error occurred while trying to retrieve scorekeeper information",
+        ) from None
 
 
 @router.get(
@@ -222,11 +227,13 @@ async def get_scorekeeper_details_by_slug(
         str, Path(title="The slug string of the scorekeeper to get")
     ]
 ):
-    """Retrieve a Scorekeeper object, based on Scorekeeper slug string,
-    containing: Scorekeeper ID, name, slug string, gender, and their
-    appearance details.
+    """Retrieve Details for a Scorekeeper by Scorekeeper ID.
 
-    Scorekeeper appearances are sorted by show date."""
+    Returned data: Scorekeeper ID, name, slug string, gender and
+    appearances.
+
+    Appearances are sorted by show date.
+    """
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_details = scorekeeper.retrieve_details_by_slug(
@@ -243,14 +250,13 @@ async def get_scorekeeper_details_by_slug(
         raise HTTPException(
             status_code=404,
             detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve scorekeeper information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve scorekeeper information",
-        )
+            detail="Database error occurred while trying to retrieve scorekeeper information",
+        ) from None

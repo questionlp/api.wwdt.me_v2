@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""Testing /v2.0/locations routes
-"""
-from fastapi.testclient import TestClient
-import pytest
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""Testing /v2.0/locations routes."""
 
-from app.main import app
+import pytest
+from fastapi.testclient import TestClient
+
 from app.config import API_VERSION
+from app.main import app
 
 client = TestClient(app)
 
 
 def test_locations():
-    """Test /v2.0/locations route"""
-
+    """Test /v2.0/locations route."""
     response = client.get(f"/v{API_VERSION}/locations")
     locations = response.json()
 
@@ -30,8 +29,7 @@ def test_locations():
 
 @pytest.mark.parametrize("location_id", [32])
 def test_locations_id(location_id: int):
-    """Test /v2.0/locations/id/{location_id} route"""
-
+    """Test /v2.0/locations/id/{location_id} route."""
     response = client.get(f"/v{API_VERSION}/locations/id/{location_id}")
     location = response.json()
 
@@ -46,8 +44,7 @@ def test_locations_id(location_id: int):
 
 @pytest.mark.parametrize("location_slug", ["arlene-schnitzer-concert-hall-portland-or"])
 def test_locations_slug(location_slug: str):
-    """Test /v2.0/locations/slug/{location_slug} route"""
-
+    """Test /v2.0/locations/slug/{location_slug} route."""
     response = client.get(f"/v{API_VERSION}/locations/slug/{location_slug}")
     location = response.json()
 
@@ -61,8 +58,7 @@ def test_locations_slug(location_slug: str):
 
 
 def test_locations_recordings():
-    """Test /v2.0/locations/recordings route"""
-
+    """Test /v2.0/locations/recordings route."""
     response = client.get(f"/v{API_VERSION}/locations/recordings")
     locations = response.json()
 
@@ -78,8 +74,7 @@ def test_locations_recordings():
 
 @pytest.mark.parametrize("location_id", [32])
 def test_locations_recordings_id(location_id: int):
-    """Test /v2.0/locations/recordings/id/{location_id} route"""
-
+    """Test /v2.0/locations/recordings/id/{location_id} route."""
     response = client.get(f"/v{API_VERSION}/locations/recordings/id/{location_id}")
     location = response.json()
 
@@ -95,8 +90,7 @@ def test_locations_recordings_id(location_id: int):
 
 @pytest.mark.parametrize("location_slug", ["arlene-schnitzer-concert-hall-portland-or"])
 def test_locations_recordings_slug(location_slug: str):
-    """Test /v2.0/locations/recordings/slug/{location_slug} route"""
-
+    """Test /v2.0/locations/recordings/slug/{location_slug} route."""
     response = client.get(f"/v{API_VERSION}/locations/recordings/slug/{location_slug}")
     location = response.json()
 

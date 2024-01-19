@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""FastAPI main application for api.wwdt.me"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""FastAPI main application for api.wwdt.me."""
 
-from os.path import exists
+from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
@@ -50,32 +50,39 @@ config = load_config()
 @app.get("/", include_in_schema=False, response_class=HTMLResponse)
 @app.head("/", include_in_schema=False, response_class=HTMLResponse)
 async def default_page(request: Request):
+    """Route: Landing Page."""
     if "settings" in config and config["settings"]:
         settings = config["settings"]
-        stats_url = settings.get("stats_url", None)
+        stats_url: str | None = settings.get("stats_url", None)
+        patreon_url: str | None = settings.get("patreon_url", None)
     else:
         stats_url = None
     return templates.TemplateResponse(
-        "index.html", {"request": request, "stats_url": stats_url}
+        "index.html",
+        {"request": request, "stats_url": stats_url, "patreon_url": patreon_url},
     )
 
 
 @app.get("/favicon.ico", include_in_schema=False, response_class=RedirectResponse)
 @app.head("/favicon.ico", include_in_schema=False, response_class=RedirectResponse)
 async def favicon():
+    """Route: favicon.ico."""
     return RedirectResponse("/static/favicon.ico", status_code=301)
 
 
 @app.get("/robots.txt", include_in_schema=False)
 @app.head("/robots.txt", include_in_schema=False)
 async def robots_txt():
-    """Attempts to serve up static/robots.txt or
-    static/robots.txt.dist to the requester. Raise a 404 error if
-    neither file are found.
+    """Route: robots.txt.
+
+    Attempts to serve up static/robots.txt or static/robots.txt.dist to
+    the requester. Raise a 404 error if neither file are found.
     """
-    if exists("static/robots.txt"):
+    robots_txt_path = Path.cwd() / "static" / "robots.txt"
+    robots_txt_dist_path = Path.cwd() / "static" / "robots.txt.dist"
+    if robots_txt_path.exists():
         return FileResponse(path="static/robots.txt", media_type="text/plain")
-    elif exists("static/robots.txt.dist"):
+    elif robots_txt_dist_path.exists():
         return FileResponse(path="static/robots.txt.dist", media_type="text/plain")
     else:
         raise HTTPException(status_code=404)
@@ -84,12 +91,14 @@ async def robots_txt():
 @app.get("/docs", include_in_schema=False, response_class=RedirectResponse)
 @app.head("/docs", include_in_schema=False, response_class=RedirectResponse)
 async def redoc_redirect_docs():
+    """Route: Redirect /docs to specific docs path."""
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
 
 @app.get("/redoc", include_in_schema=False, response_class=RedirectResponse)
 @app.head("/redoc", include_in_schema=False, response_class=RedirectResponse)
 async def redoc_redirect_redoc():
+    """Route: Redirect /redoc to specific docs path."""
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
 
@@ -100,18 +109,21 @@ async def redoc_redirect_redoc():
     f"/v{API_VERSION}/redoc", include_in_schema=False, response_class=RedirectResponse
 )
 async def redoc_redirect_sub():
+    """Route: Redirect for /docs."""
     return RedirectResponse(f"/v{API_VERSION}/docs", status_code=301)
 
 
 @app.get("/v1.0", include_in_schema=False, response_class=RedirectResponse)
 @app.head("/v1.0", include_in_schema=False, response_class=RedirectResponse)
 async def api_v1_redirect():
+    """Route: Redirect /v1.0 to Landing Page."""
     return RedirectResponse("/", status_code=301)
 
 
 @app.get("/v1.0/docs", include_in_schema=False, response_class=RedirectResponse)
 @app.head("/v1.0/docs", include_in_schema=False, response_class=RedirectResponse)
 async def api_v1_docs_redirect():
+    """Route: Redirect /v1.0/docs to Landing Page."""
     return RedirectResponse("/", status_code=301)
 
 

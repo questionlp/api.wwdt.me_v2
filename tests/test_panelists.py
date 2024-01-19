@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""Testing /v2.0/panelists routes
-"""
-from fastapi.testclient import TestClient
-import pytest
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""Testing /v2.0/panelists routes."""
 
-from app.main import app
+import pytest
+from fastapi.testclient import TestClient
+
 from app.config import API_VERSION
+from app.main import app
 
 client = TestClient(app)
 
 
 def test_panelists():
-    """Test /v2.0/panelists route"""
-
+    """Test /v2.0/panelists route."""
     response = client.get(f"/v{API_VERSION}/panelists")
     panelists = response.json()
 
@@ -29,8 +28,7 @@ def test_panelists():
 
 @pytest.mark.parametrize("panelist_id", [30])
 def test_panelists_id(panelist_id: int):
-    """Test /v2.0/panelists/id/{panelist_id} route"""
-
+    """Test /v2.0/panelists/id/{panelist_id} route."""
     response = client.get(f"/v{API_VERSION}/panelists/id/{panelist_id}")
     panelist = response.json()
 
@@ -43,8 +41,7 @@ def test_panelists_id(panelist_id: int):
 
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
 def test_panelists_slug(panelist_slug: str):
-    """Test /v2.0/panelists/slug/{panelist_slug} route"""
-
+    """Test /v2.0/panelists/slug/{panelist_slug} route."""
     response = client.get(f"/v{API_VERSION}/panelists/slug/{panelist_slug}")
     panelist = response.json()
 
@@ -56,8 +53,7 @@ def test_panelists_slug(panelist_slug: str):
 
 
 def test_panelists_details():
-    """Test /v2.0/panelists/details route"""
-
+    """Test /v2.0/panelists/details route."""
     response = client.get(f"/v{API_VERSION}/panelists/details")
     panelists = response.json()
 
@@ -71,8 +67,7 @@ def test_panelists_details():
 
 @pytest.mark.parametrize("panelist_id", [30])
 def test_panelists_details_id(panelist_id: int):
-    """Test /v2.0/panelists/details/id/{panelist_id} route"""
-
+    """Test /v2.0/panelists/details/id/{panelist_id} route."""
     response = client.get(f"/v{API_VERSION}/panelists/details/id/{panelist_id}")
     panelist = response.json()
 
@@ -86,8 +81,7 @@ def test_panelists_details_id(panelist_id: int):
 
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
 def test_panelists_details_slug(panelist_slug: str):
-    """Test /v2.0/panelists/details/slug/{panelist_slug} route"""
-
+    """Test /v2.0/panelists/details/slug/{panelist_slug} route."""
     response = client.get(f"/v{API_VERSION}/panelists/details/slug/{panelist_slug}")
     panelist = response.json()
 
@@ -101,8 +95,7 @@ def test_panelists_details_slug(panelist_slug: str):
 
 @pytest.mark.parametrize("panelist_id", [30])
 def test_panelists_scores_id(panelist_id: int):
-    """Test /v2.0/panelists/scores/id/{panelist_id} route"""
-
+    """Test /v2.0/panelists/scores/id/{panelist_id} route."""
     response = client.get(f"/v{API_VERSION}/panelists/scores/id/{panelist_id}")
     scores = response.json()
 
@@ -112,8 +105,7 @@ def test_panelists_scores_id(panelist_id: int):
 
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
 def test_panelists_scores_slug(panelist_slug: str):
-    """Test /v2.0/panelists/scores/slug/{panelist_slug} route"""
-
+    """Test /v2.0/panelists/scores/slug/{panelist_slug} route."""
     response = client.get(f"/v{API_VERSION}/panelists/scores/slug/{panelist_slug}")
     scores = response.json()
 
@@ -123,8 +115,7 @@ def test_panelists_scores_slug(panelist_slug: str):
 
 @pytest.mark.parametrize("panelist_id", [30])
 def test_panelists_scores_ordered_pair_id(panelist_id: int):
-    """Test /v2.0/panelists/scores/ordered-pair/id/{panelist_id} route"""
-
+    """Test /v2.0/panelists/scores/ordered-pair/id/{panelist_id} route."""
     response = client.get(
         f"/v{API_VERSION}/panelists/scores/ordered-pair/id/{panelist_id}"
     )
@@ -136,8 +127,7 @@ def test_panelists_scores_ordered_pair_id(panelist_id: int):
 
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
 def test_panelists_scores_ordered_pair_slug(panelist_slug: str):
-    """Test /v2.0/panelists/scores/ordered-pair/slug/{panelist_slug} route"""
-
+    """Test /v2.0/panelists/scores/ordered-pair/slug/{panelist_slug} route."""
     response = client.get(
         f"/v{API_VERSION}/panelists/scores/ordered-pair/slug/{panelist_slug}"
     )
@@ -149,8 +139,7 @@ def test_panelists_scores_ordered_pair_slug(panelist_slug: str):
 
 @pytest.mark.parametrize("panelist_id", [30])
 def test_panelists_scores_grouped_ordered_pair_id(panelist_id: int):
-    """Test /v2.0/panelists/scores/grouped-ordered-pair/id/{panelist_id} route"""
-
+    """Test /v2.0/panelists/scores/grouped-ordered-pair/id/{panelist_id} route."""
     response = client.get(
         f"/v{API_VERSION}/panelists/scores/grouped-ordered-pair/id/{panelist_id}"
     )
@@ -162,8 +151,7 @@ def test_panelists_scores_grouped_ordered_pair_id(panelist_id: int):
 
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
 def test_panelists_scores_grouped_ordered_pair_slug(panelist_slug: str):
-    """Test /v2.0/panelists/scores/grouped-ordered-pair/slug/{panelist_slug} route"""
-
+    """Test /v2.0/panelists/scores/grouped-ordered-pair/slug/{panelist_slug} route."""
     response = client.get(
         f"/v{API_VERSION}/panelists/scores/grouped-ordered-pair/slug/{panelist_slug}"
     )

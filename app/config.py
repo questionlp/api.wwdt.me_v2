@@ -1,24 +1,24 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""Application Configuration"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""Application Configuration."""
 
 import json
-from typing import Any, Dict
+from pathlib import Path
+from typing import Any
 
 API_VERSION = "2.0"
-APP_VERSION = "2.7.2"
+APP_VERSION = "2.8.0"
 
 
 def load_config(
     config_file_path: str = "config.json",
     connection_pool_size: int = 10,
     connection_pool_name: str = "wwdtm_api",
-) -> Dict[str, Any]:
-    """Reads in database configuration values from a configuration
-    JSON file and returns a dictionary with the values.
+) -> dict[str, Any]:
+    """Reads application and database settings from JSON file.
 
     :param config_file: Path to the configuration JSON file
     :type config_file: str, optional
@@ -28,7 +28,8 @@ def load_config(
     :return: Dictionary containing database configuration settings
     :rtype: Dict[str, Any]
     """
-    with open(config_file_path, "r") as config_file:
+    _config_file_path = Path(config_file_path)
+    with _config_file_path.open(mode="r", encoding="utf-8") as config_file:
         config_dict = json.load(config_file)
 
     settings_config = config_dict.get("settings", None)

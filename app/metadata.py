@@ -1,13 +1,13 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""FastAPI Metadata for api.wwdt.me"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""FastAPI Metadata for api.wwdt.me."""
+
+from email_validator import EmailNotValidError, validate_email
 
 from app.config import load_config
-from email_validator import validate_email, EmailNotValidError
-
 
 _config = load_config()
 _contact_info = {}

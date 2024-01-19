@@ -1,25 +1,24 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""API routes for Scorekeeper endpoints"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""API routes for Scorekeeper endpoints."""
 
 from datetime import date
+from typing import Annotated
 
-from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException, Path
 import mysql.connector
+from fastapi import APIRouter, HTTPException, Path
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.show import Show
-from app.models.shows import (
-    Show as ModelsShow,
-    ShowDates as ModelsShowDates,
-    Shows as ModelsShows,
-    ShowDetails as ModelsShowDetails,
-    ShowsDetails as ModelsShowsDetails,
-)
-from typing_extensions import Annotated
+
+from app.config import API_VERSION, load_config
+from app.models.shows import Show as ModelsShow
+from app.models.shows import ShowDates as ModelsShowDates
+from app.models.shows import ShowDetails as ModelsShowDetails
+from app.models.shows import Shows as ModelsShows
+from app.models.shows import ShowsDetails as ModelsShowsDetails
 
 router = APIRouter(prefix=f"/v{API_VERSION}/shows")
 _config = load_config()
@@ -35,10 +34,12 @@ _database_connection = mysql.connector.connect(**_database_config)
 )
 @router.head("", include_in_schema=False)
 async def get_shows():
-    """Retrieve an array of Show objects, each containing: Show ID,
-    date and basic information.
+    """Retrieve All Shows.
 
-    Results are sorted by show date."""
+    Returned data: Show ID, date, Best Of flag and Repeat flag
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_all()
@@ -49,13 +50,13 @@ async def get_shows():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
             detail="Database error occurred while retrieving "
             "shows from the database",
-        )
+        ) from None
 
 
 @router.get(
@@ -68,8 +69,10 @@ async def get_shows():
 async def get_show_by_id(
     show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)]
 ):
-    """Retrieve a Show object, based on Show ID, containing: Show ID,
-    date and basic information."""
+    """Retrieve a Show by Show ID.
+
+    Returned data: Show ID, date, Best Of flag and Repeat flag
+    """
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_id(show_id)
@@ -78,18 +81,19 @@ async def get_show_by_id(
         else:
             return show_info
     except ValueError:
-        raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Show ID {show_id} not found"
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -102,8 +106,10 @@ async def get_show_by_id(
 async def get_show_by_date_string(
     show_date: Annotated[date, Path(title="ISO date for the show to get")]
 ):
-    """Retrieve a Show object, based on show date in ISO format
-    (YYYY-MM-DD), containing: Show ID, date and basic information."""
+    """Retrieve a Show by Show Date in YYYY-MM-DD format.
+
+    Returned data: Show ID, date, Best Of flag and Repeat flag
+    """
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_date_string(show_date.isoformat())
@@ -114,18 +120,19 @@ async def get_show_by_date_string(
         else:
             return show_info
     except ValueError:
-        raise HTTPException(status_code=404, detail=f"Show date {show_date} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Show date {show_date} not found"
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -138,10 +145,12 @@ async def get_show_by_date_string(
 async def get_shows_by_year(
     year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)]
 ):
-    """Retrieve an array of Show objects, based on year, containing:
-    Show ID, date and basic information.
+    """Retrieve All Shows by Year.
 
-    Results are sorted by show date."""
+    Returned data: Show ID, date, Best Of flag and Repeat flag
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_year(year)
@@ -152,18 +161,19 @@ async def get_shows_by_year(
         else:
             return {"shows": shows}
     except ValueError:
-        raise HTTPException(status_code=404, detail=f"Shows for {year:04d} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Shows for {year:04d} not found"
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -177,10 +187,12 @@ async def get_shows_by_year_month(
     year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
     month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
 ):
-    """Retrieve an array of Show objects, based on year and month,
-    containing: Show ID, date and basic information.
+    """Retrieve All Shows by Year and Month.
 
-    Results are sorted by show date."""
+    Returned data: Show ID, date, Best Of flag and Repeat flag
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_year_month(year, month)
@@ -193,18 +205,17 @@ async def get_shows_by_year_month(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -218,8 +229,12 @@ async def get_show_by_month_day(
     month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
     day: Annotated[int, Path(title="The day to get shows for", ge=1, le=31)],
 ):
-    """Retrieve a Show object, based on month and day, containing: Show
-    ID, date and basic information."""
+    """Retrieve All Shows by Month and Day.
+
+    Returned data: Show ID, date, Best Of flag and Repeat flag
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_month_day(month, day)
@@ -234,18 +249,17 @@ async def get_show_by_month_day(
         raise HTTPException(
             status_code=404,
             detail=f"Shows for month {month:02d} and {day:02d} not found",
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -260,8 +274,10 @@ async def get_show_by_date(
     month: Annotated[int, Path(title="The month to get a show for", ge=1, le=12)],
     day: Annotated[int, Path(title="The day to get a show for", ge=1, le=31)],
 ):
-    """Retrieve a Show object, based on year, month and day, containing:
-    Show ID, date and basic information."""
+    """Retrieve a Show by Year, Month and Day.
+
+    Returned data: Show ID, date, Best Of flag and Repeat flag
+    """
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_date(year, month, day)
@@ -276,18 +292,17 @@ async def get_show_by_date(
         raise HTTPException(
             status_code=404,
             detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -298,9 +313,10 @@ async def get_show_by_date(
 )
 @router.head("/dates", include_in_schema=False)
 async def get_all_show_dates():
-    """Retrieve an array of all show dates in ISO format (YYYY-MM-DD).
+    """Retrieve All Show Dates.
 
-    Results are sorted by show date."""
+    Returned data: Show dates in YYYY-MM-DD format
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_all_dates()
@@ -311,13 +327,12 @@ async def get_all_show_dates():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "shows from the database",
-        )
+            detail="Database error occurred while retrieving shows from the database",
+        ) from None
 
 
 @router.get(
@@ -328,10 +343,14 @@ async def get_all_show_dates():
 )
 @router.head("/details", include_in_schema=False)
 async def get_shows_details():
-    """Retrieve an array of Show objects, each containing: Show ID,
-    date, Host, Scorekeeper, Panelists, Guests and other information.
+    """Retrieve Details For All Shows.
 
-    Results are sorted by show date."""
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    location, description, notes, host, scorekeeper, panelists, Bluff
+    information and Not My Job guests
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_all_details(
@@ -344,13 +363,12 @@ async def get_shows_details():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "shows from the database",
-        )
+            detail="Database error occurred while retrieving shows from the database",
+        ) from None
 
 
 @router.get(
@@ -363,9 +381,12 @@ async def get_shows_details():
 async def get_show_details_by_date_string(
     show_date: Annotated[date, Path(title="ISO date for the show to get")]
 ):
-    """Retrieve an array of Show objects, based on show date in ISO
-    format (YYYY-MM-DD), containing: Show ID, date, Host, Scorekeeper,
-    Panelists, Guests and other information."""
+    """Retrieve Details for a Show by Show Date in YYYY-MM-DD format.
+
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    location, description, notes, host, scorekeeper, panelists, Bluff
+    information and Not My Job guests
+    """
     try:
         show = Show(database_connection=_database_connection)
         show_details = show.retrieve_details_by_date_string(
@@ -379,18 +400,19 @@ async def get_show_details_by_date_string(
         else:
             return show_details
     except ValueError:
-        raise HTTPException(status_code=404, detail=f"Show date {show_date} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Show date {show_date} not found"
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -403,11 +425,14 @@ async def get_show_details_by_date_string(
 async def get_shows_details_by_year(
     year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)]
 ):
-    """Retrieve an array of Show objects, based on year, containing:
-    Show ID, date, Host, Scorekeeper, Panelists, Guests and other
-    information.
+    """Retrieve Details for Shows by Year.
 
-    Results are sorted by show date."""
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    location, description, notes, host, scorekeeper, panelists, Bluff
+    information and Not My Job guests
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_details_by_year(
@@ -420,18 +445,19 @@ async def get_shows_details_by_year(
         else:
             return {"shows": shows}
     except ValueError:
-        raise HTTPException(status_code=404, detail=f"Shows for {year:04d} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Shows for {year:04d} not found"
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -445,11 +471,14 @@ async def get_shows_details_by_year_month(
     year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
     month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
 ):
-    """Retrieve an array of Show objects, based on year and month,
-    containing: Show ID, date, Host, Scorekeeper, Panelists, Guests and
-    other information.
+    """Retrieve Details for Shows by Year and Month.
 
-    Results are sorted by show date."""
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    location, description, notes, host, scorekeeper, panelists, Bluff
+    information and Not My Job guests
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_details_by_year_month(
@@ -466,18 +495,17 @@ async def get_shows_details_by_year_month(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -491,8 +519,14 @@ async def get_show_details_by_month_day(
     month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
     day: Annotated[int, Path(title="The day to get shows for", ge=1, le=31)],
 ):
-    """Retrieve a Show object, based on month and day, containing: Show
-    ID, date, Host, Scorekeeper, Panelists, Guests and other information."""
+    """Retrieve Details for Shows by Month and Day.
+
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    location, description, notes, host, scorekeeper, panelists, Bluff
+    information and Not My Job guests
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_details_by_month_day(
@@ -509,18 +543,17 @@ async def get_show_details_by_month_day(
         raise HTTPException(
             status_code=404,
             detail=f"Shows for month {month:02d} and day {day:02d} not found",
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -535,9 +568,12 @@ async def get_show_details_by_date(
     month: Annotated[int, Path(title="The month to get a show for", ge=1, le=12)],
     day: Annotated[int, Path(title="The day to get a show for", ge=1, le=31)],
 ):
-    """Retrieve a Show object, based on year, month and day, containing:
-    Show ID, date, Host, Scorekeeper, Panelists, Guests and other
-    information."""
+    """Retrieve Details for a Shows by Year, Month and Day.
+
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    location, description, notes, host, scorekeeper, panelists, Bluff
+    information and Not My Job guests
+    """
     try:
         show = Show(database_connection=_database_connection)
         show_details = show.retrieve_details_by_date(
@@ -557,18 +593,17 @@ async def get_show_details_by_date(
         raise HTTPException(
             status_code=404,
             detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -581,8 +616,12 @@ async def get_show_details_by_date(
 async def get_show_details_by_id(
     show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)]
 ):
-    """Retrieve a Show object, based on Show ID, containing: Show ID,
-    date, Host, Scorekeeper, Panelists, Guests and other information."""
+    """Retrieve Details for a Shows by Show ID.
+
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    location, description, notes, host, scorekeeper, panelists, Bluff
+    information and Not My Job guests
+    """
     try:
         show = Show(database_connection=_database_connection)
         show_details = show.retrieve_details_by_id(
@@ -593,18 +632,19 @@ async def get_show_details_by_id(
         else:
             return show_details
     except ValueError:
-        raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
+        raise HTTPException(
+            status_code=404, detail=f"Show ID {show_id} not found"
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500,
             detail="Unable to retrieve show information from the database",
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "show information from the database",
-        )
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
 
 
 @router.get(
@@ -615,11 +655,14 @@ async def get_show_details_by_id(
 )
 @router.head("/details/recent", include_in_schema=False)
 async def get_shows_recent_details():
-    """Retrieve an array of Show objects for recent shows, each
-    containing: Show ID, date, Host, Scorekeeper, Panelists, Guests
-    and other information.
+    """Retrieve Details for Recent Shows.
 
-    Results are sorted by show date."""
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    location, description, notes, host, scorekeeper, panelists, Bluff
+    information and Not My Job guests
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_recent_details(
@@ -632,13 +675,12 @@ async def get_shows_recent_details():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "shows from the database",
-        )
+            detail="Database error occurred while retrieving shows from the database",
+        ) from None
 
 
 @router.get(
@@ -649,10 +691,12 @@ async def get_shows_recent_details():
 )
 @router.head("/recent", include_in_schema=False)
 async def get_shows_recent():
-    """Retrieve an array of Show objects for recent shows, each
-    containing: Show ID, date and basic information.
+    """Retrieve Recent Shows.
 
-    Results are sorted by show date."""
+    Return data: Show ID, date, Best Of flag and Repeat flag
+
+    Shows are sorted by date.
+    """
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_recent()
@@ -663,10 +707,9 @@ async def get_shows_recent():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "shows from the database",
-        )
+            detail="Database error occurred while retrieving shows from the database",
+        ) from None
