@@ -1,25 +1,29 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""API routes for Panelists endpoints"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""API routes for Panelists endpoints."""
 
-from app.config import API_VERSION, load_config
-from fastapi import APIRouter, HTTPException, Path
+from typing import Annotated
+
 import mysql.connector
+from fastapi import APIRouter, HTTPException, Path
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.panelist import Panelist, PanelistDecimalScores, PanelistScores
+
+from app.config import API_VERSION, load_config
+from app.models.panelists import Panelist as ModelsPanelist
+from app.models.panelists import PanelistDetails as ModelsPanelistDetails
+from app.models.panelists import Panelists as ModelsPanelists
 from app.models.panelists import (
-    Panelist as ModelsPanelist,
-    Panelists as ModelsPanelists,
-    PanelistDetails as ModelsPanelistDetails,
-    PanelistsDetails as ModelsPanelistsDetails,
-    PanelistScoresList as ModelsPanelistScoresList,
-    PanelistScoresOrderedPair as ModelsPanelistScoresOrderedPair,
     PanelistScoresGroupedOrderedPair as ModelsPanelistScoresGroupedOrderedPair,
 )
-from typing_extensions import Annotated
+from app.models.panelists import PanelistScoresList as ModelsPanelistScoresList
+from app.models.panelists import (
+    PanelistScoresOrderedPair as ModelsPanelistScoresOrderedPair,
+)
+from app.models.panelists import PanelistsDetails as ModelsPanelistsDetails
 
 router = APIRouter(prefix=f"/v{API_VERSION}/panelists")
 _config = load_config()
@@ -35,10 +39,12 @@ _database_connection = mysql.connector.connect(**_database_config)
 )
 @router.head("", include_in_schema=False)
 async def get_panelists():
-    """Retrieve an array of Panelist objects, each containing: Panelist
-    ID, name, slug string, and gender.
+    """Retrieve All Panelists.
 
-    Results are sorted by panelist name."""
+    Returned data: Panelist ID, name, slug string and gender.
+
+    Panelists are sorted by panelist name.
+    """
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelists = panelist.retrieve_all()
@@ -49,13 +55,12 @@ async def get_panelists():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelists from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "panelists from the database",
-        )
+            detail="Database error occurred while retrieving panelists from the database",
+        ) from None
 
 
 @router.get(
@@ -70,8 +75,10 @@ async def get_panelist_by_id(
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve a Panelist object, based on Panelist ID, containing:
-    Panelist ID, name, slug string, and gender."""
+    """Retrieve a Panelist by Panelist ID.
+
+    Returned data: Panelist ID, name, slug string and gender.
+    """
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_info = panelist.retrieve_by_id(panelist_id)
@@ -84,17 +91,16 @@ async def get_panelist_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist information",
-        )
+            detail="Database error occurred while trying to retrieve panelist information",
+        ) from None
 
 
 @router.get(
@@ -107,8 +113,10 @@ async def get_panelist_by_id(
 async def get_panelist_by_slug(
     panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
 ):
-    """Retrieve a Panelist object, based on Panelist slug string,
-    containing: Panelist ID, name, slug string, and gender."""
+    """Retrieve a Panelist by Panelist Slug String.
+
+    Returned data: Panelist ID, name, slug string and gender.
+    """
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_info = panelist.retrieve_by_slug(panelist_slug.strip())
@@ -122,17 +130,16 @@ async def get_panelist_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist information",
-        )
+            detail="Database error occurred while trying to retrieve panelist information",
+        ) from None
 
 
 @router.get(
@@ -143,12 +150,14 @@ async def get_panelist_by_slug(
 )
 @router.head("/details", include_in_schema=False)
 async def get_panelists_details():
-    """Retrieve an array of Panelists objects, each containing:
-    Panelists ID, name, slug string, gender, and their statistics
-    and appearance details.
+    """Retrieve Details for All Panelists.
 
-    Results are sorted by panelist name, with panelist appearances
-    sorted by show date."""
+    Returned data: Panelists ID, name, slug string, gender, statistics
+    and appearances.
+
+    Panelists are sorted by panelist name. Appearances are sorted by
+    date.
+    """
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelists = panelist.retrieve_all_details(
@@ -161,13 +170,12 @@ async def get_panelists_details():
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelists from the database"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "panelists from the database",
-        )
+            detail="Database error occurred while retrieving panelists from the database",
+        ) from None
 
 
 @router.get(
@@ -182,11 +190,13 @@ async def get_panelist_details_by_id(
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve a Panelist object, based on Panelist ID, containing:
-    Panelist ID, name, slug string, gender, and their statistics and
-    appearance details.
+    """Retrieve Details for a Panelist by Panelist ID.
 
-    Panelist appearances are sorted by show date."""
+    Returned data: Panelist ID, name, slug string, gender, statistics
+    and appearances.
+
+    Appearances are sorted by date.
+    """
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_details = panelist.retrieve_details_by_id(
@@ -201,17 +211,16 @@ async def get_panelist_details_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist information",
-        )
+            detail="Database error occurred while trying to retrieve panelist information",
+        ) from None
 
 
 @router.get(
@@ -224,11 +233,13 @@ async def get_panelist_details_by_id(
 async def get_panelist_details_by_slug(
     panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
 ):
-    """Retrieve a Panelist object, based on Panelist slug string,
-    containing: Panelist ID, name, slug string, gender, and their
-    statistics and appearance details.
+    """Retrieve Details for a Panelist by Panelist Slug String.
 
-    Panelist appearances are sorted by show date."""
+    Returned data: Panelist ID, name, slug string, gender, statistics
+    and appearances.
+
+    Appearances are sorted by date.
+    """
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_details = panelist.retrieve_details_by_slug(
@@ -245,17 +256,16 @@ async def get_panelist_details_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist information"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist information",
-        )
+            detail="Database error occurred while trying to retrieve panelist information",
+        ) from None
 
 
 @router.get(
@@ -270,8 +280,10 @@ async def get_panelist_scores_by_id(
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve Panelist scores, based on Panelist ID, as a pair of
-    lists, one list of show dates and one list of corresponding scores."""
+    """Retrieve Panelist Scores by Panelist ID.
+
+    Returned data: One array with show dates and one array with scores.
+    """
     try:
         if _config["settings"]["use_decimal_scores"]:
             panelist_scores = PanelistDecimalScores(
@@ -293,17 +305,16 @@ async def get_panelist_scores_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist scores"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist scores",
-        )
+            detail="Database error occurred while trying to retrieve panelist scores",
+        ) from None
 
 
 @router.get(
@@ -316,9 +327,10 @@ async def get_panelist_scores_by_id(
 async def get_panelist_scores_by_slug(
     panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
 ):
-    """Retrieve Panelist scores, based on Panelist slug string, as a
-    pair of lists, one list of show dates and one list of corresponding
-    scores."""
+    """Retrieve Panelist Scores by Panelist Slug String.
+
+    Returned data: One array with show dates and one array with scores.
+    """
     try:
         if _config["settings"]["use_decimal_scores"]:
             panelist_scores = PanelistDecimalScores(
@@ -338,23 +350,21 @@ async def get_panelist_scores_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist scores"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist scores",
-        )
+            detail="Database error occurred while trying to retrieve panelist scores",
+        ) from None
 
 
 @router.get(
     "/scores/grouped-ordered-pair/id/{panelist_id}",
-    summary="Retrieve Panelist Scores as Ordered Pairs for Scores and Number "
-    "of Times It Has Been Earned by Panelist ID",
+    summary="Retrieve Panelist Scores as Ordered Pairs for Scores and Number of Times It Has Been Earned by Panelist ID",
     response_model=ModelsPanelistScoresGroupedOrderedPair,
     tags=["Panelists"],
 )
@@ -364,9 +374,10 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve Panelist scores, based on Panelist ID, as grouped
-    ordered pairs, each pair containing a score and the corresponding
-    number of times a panelist has earned that score.
+    """Retrieve Panelist Grouped Scores by Panelist ID.
+
+    Returned data: Array of two element arrays: one element with a score
+    and one element with corresponding score count.
     """
     try:
         if _config["settings"]["use_decimal_scores"]:
@@ -391,23 +402,21 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist scores"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist scores",
-        )
+            detail="Database error occurred while trying to retrieve panelist scores",
+        ) from None
 
 
 @router.get(
     "/scores/grouped-ordered-pair/slug/{panelist_slug}",
-    summary="Retrieve Panelist Scores as Ordered Pairs for Scores and Number "
-    "of Times It Has Been Earned by Panelist Slug String",
+    summary="Retrieve Panelist Scores as Ordered Pairs for Scores and Number of Times It Has Been Earned by Panelist Slug String",
     response_model=ModelsPanelistScoresGroupedOrderedPair,
     tags=["Panelists"],
 )
@@ -417,9 +426,10 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
 async def get_panelist_scores_grouped_ordered_pair_by_slug(
     panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
 ):
-    """Retrieve Panelist scores, based on Panelist slug string, as
-    grouped ordered pairs, each pair containing a score and the
-    corresponding number of times a panelist has earned that score.
+    """Retrieve Panelist Grouped Scores by Panelist Slug String.
+
+    Returned data: Array of two element arrays: one element with a score
+    and one element with corresponding score count.
     """
     try:
         if _config["settings"]["use_decimal_scores"]:
@@ -444,17 +454,16 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist scores"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist scores",
-        )
+            detail="Database error occurred while trying to retrieve panelist scores",
+        ) from None
 
 
 @router.get(
@@ -469,9 +478,10 @@ async def get_panelist_scores_ordered_pair_by_id(
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
     ]
 ):
-    """Retrieve Panelist scores, based on Panelist ID, as ordered
-    pairs, each pair containing the show date and the corresponding
-    score.
+    """Retrieve Panelist Scores as Ordered Pairs by Panelist ID.
+
+    Returned data: Array of two element arrays: one element with a show
+    date and one element with corresponding score.
     """
     try:
         if _config["settings"]["use_decimal_scores"]:
@@ -492,17 +502,17 @@ async def get_panelist_scores_ordered_pair_by_id(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist scores"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
             detail="Database error occurred while trying to "
             "retrieve panelist scores",
-        )
+        ) from None
 
 
 @router.get(
@@ -515,9 +525,10 @@ async def get_panelist_scores_ordered_pair_by_id(
 async def get_panelist_scores_ordered_pair_by_slug(
     panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
 ):
-    """Retrieve Panelist scores, based on Panelist slug string, as
-    ordered pairs, each pair containing the show date and the
-    corresponding score.
+    """Retrieve Panelist Scores as Ordered Pairs by Panelist Slug String.
+
+    Returned data: Array of two element arrays: one element with a show
+    date and one element with corresponding score.
     """
     try:
         if _config["settings"]["use_decimal_scores"]:
@@ -542,14 +553,13 @@ async def get_panelist_scores_ordered_pair_by_slug(
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        )
+        ) from None
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelist scores"
-        )
+        ) from None
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist scores",
-        )
+            detail="Database error occurred while trying to retrieve panelist scores",
+        ) from None

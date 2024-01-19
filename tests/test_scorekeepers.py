@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""Testing /v2.0/scorekeepers routes
-"""
-from fastapi.testclient import TestClient
-import pytest
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""Testing /v2.0/scorekeepers routes."""
 
-from app.main import app
+import pytest
+from fastapi.testclient import TestClient
+
 from app.config import API_VERSION
+from app.main import app
 
 client = TestClient(app)
 
 
 def test_scorekeepers():
-    """Test /v2.0/scorekeepers route"""
-
+    """Test /v2.0/scorekeepers route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers")
     scorekeepers = response.json()
 
@@ -29,8 +28,7 @@ def test_scorekeepers():
 
 @pytest.mark.parametrize("scorekeeper_id", [11])
 def test_scorekeepers_id(scorekeeper_id: int):
-    """Test /v2.0/scorekeepers/id/{scorekeeper_id} route"""
-
+    """Test /v2.0/scorekeepers/id/{scorekeeper_id} route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/id/{scorekeeper_id}")
     scorekeeper = response.json()
 
@@ -43,8 +41,7 @@ def test_scorekeepers_id(scorekeeper_id: int):
 
 @pytest.mark.parametrize("scorekeeper_slug", ["bill-kurtis"])
 def test_scorekeepers_slug(scorekeeper_slug: str):
-    """Test /v2.0/scorekeepers/slug/{scorekeeper_slug} route"""
-
+    """Test /v2.0/scorekeepers/slug/{scorekeeper_slug} route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/slug/{scorekeeper_slug}")
     scorekeeper = response.json()
 
@@ -56,8 +53,7 @@ def test_scorekeepers_slug(scorekeeper_slug: str):
 
 
 def test_scorekeepers_details():
-    """Test /v2.0/scorekeepers/details route"""
-
+    """Test /v2.0/scorekeepers/details route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/details")
     scorekeepers = response.json()
 
@@ -71,8 +67,7 @@ def test_scorekeepers_details():
 
 @pytest.mark.parametrize("scorekeeper_id", [11])
 def test_scorekeepers_details_id(scorekeeper_id: int):
-    """Test /v2.0/scorekeepers/details/id/{scorekeeper_id} route"""
-
+    """Test /v2.0/scorekeepers/details/id/{scorekeeper_id} route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/details/id/{scorekeeper_id}")
     scorekeeper = response.json()
 
@@ -86,8 +81,7 @@ def test_scorekeepers_details_id(scorekeeper_id: int):
 
 @pytest.mark.parametrize("scorekeeper_slug", ["bill-kurtis"])
 def test_scorekeepers_details_slug(scorekeeper_slug: str):
-    """Test /v2.0/scorekeepers/details/slug/{scorekeeper_slug} route"""
-
+    """Test /v2.0/scorekeepers/details/slug/{scorekeeper_slug} route."""
     response = client.get(
         f"/v{API_VERSION}/scorekeepers/details/slug/{scorekeeper_slug}"
     )

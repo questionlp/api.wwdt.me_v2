@@ -1,72 +1,69 @@
-# -*- coding: utf-8 -*-
-# vim: set noai syntax=python ts=4 sw=4:
-#
-# Copyright (c) 2018-2023 Linh Pham
+# Copyright (c) 2018-2024 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
-"""Scorekeepers Models"""
+# SPDX-License-Identifier: Apache-2.0
+#
+# vim: set noai syntax=python ts=4 sw=4:
+"""Scorekeepers Models."""
 
-from typing import List, Optional, Union
+from typing import Annotated
+
 from pydantic import BaseModel, Field
-from typing_extensions import Annotated
 
 
 class Scorekeeper(BaseModel):
-    """Scorekeeper Information"""
+    """Scorekeeper Information."""
 
     id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Scorekeeper ID")
     name: str = Field(title="Scorekeeper Name")
-    slug: Optional[str] = Field(default=None, title="Scorekeeper Slug String")
-    gender: Optional[str] = Field(default=None, title="Scorekeeper Gender")
+    slug: str | None = Field(default=None, title="Scorekeeper Slug String")
+    gender: str | None = Field(default=None, title="Scorekeeper Gender")
 
 
 class Scorekeepers(BaseModel):
-    """List of Scorekeepers"""
+    """List of Scorekeepers."""
 
-    scorekeepers: List[Scorekeeper] = Field(title="List of Scorekeepers")
+    scorekeepers: list[Scorekeeper] = Field(title="List of Scorekeepers")
 
 
 class ScorekeeperAppearanceCounts(BaseModel):
-    """Count of Show Appearances"""
+    """Count of Show Appearances."""
 
-    regular_shows: Optional[int] = Field(
+    regular_shows: int | None = Field(
         default=None, title="Count of Regular Show Appearances"
     )
-    all_shows: Optional[int] = Field(
-        default=None, title="Count of All Show Appearances"
-    )
+    all_shows: int | None = Field(default=None, title="Count of All Show Appearances")
 
 
 class ScorekeeperAppearance(BaseModel):
-    """Appearance Information"""
+    """Appearance Information."""
 
     show_id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Show ID")
     date: str = Field(title="Show Date")
     best_of: bool = Field(title="Best Of Show")
     repeat_show: bool = Field(title="Repeat Show")
     guest: bool = Field(title="Guest Scorekeeper")
-    description: Optional[str] = Field(default=None, title="Scorekeeper Introduction")
+    description: str | None = Field(default=None, title="Scorekeeper Introduction")
 
 
 class ScorekeeperAppearances(BaseModel):
-    """Scorekeeper Appearance Information"""
+    """Scorekeeper Appearance Information."""
 
-    count: Union[ScorekeeperAppearanceCounts, int] = Field(
-        title="Count of Show Appearances"
-    )
-    shows: Optional[List[ScorekeeperAppearance]] = Field(
+    count: ScorekeeperAppearanceCounts | int = Field(title="Count of Show Appearances")
+    shows: list[ScorekeeperAppearance] | None = Field(
         default=None, title="List of Show Appearances"
     )
 
 
 class ScorekeeperDetails(Scorekeeper):
-    """Scorekeeper Information with Appearances"""
+    """Scorekeeper Information with Appearances."""
 
-    appearances: Optional[ScorekeeperAppearances] = Field(
+    appearances: ScorekeeperAppearances | None = Field(
         default=None, title="List of Show Appearances"
     )
 
 
 class ScorekeepersDetails(BaseModel):
-    """List of Scorekeeper Details"""
+    """List of Scorekeeper Details."""
 
-    scorekeepers: List[ScorekeeperDetails] = Field(title="List of Scorekeeper Details")
+    scorekeepers: list[ScorekeeperDetails] = Field(title="List of Scorekeeper Details")
+    scorekeepers: list[ScorekeeperDetails] = Field(title="List of Scorekeeper Details")
