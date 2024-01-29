@@ -1,10 +1,17 @@
 # Changes
 
+## 2.8.2
+
+### Application Changes
+
+- Add support for GitHub sponsorship link in the side pop-out nav, dropdown nav menu and in the footer by way of the `settings.github_sponsor_url` config key
+
 ## 2.8.1
 
 ### Application Changes
 
 - Update Show route docstrings to include mention of NPR.org show URL in the returned data
+- Add support for Patreon link in the side pop-out nav, dropdown nav menu and in the footer by way of the `settings.patreon_url` config key
 
 ## 2.8.0
 

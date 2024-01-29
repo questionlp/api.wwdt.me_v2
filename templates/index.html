@@ -39,6 +39,11 @@
             <a class="links" href="https://stats.wwdt.me/">Stats Page →</a>
             {% endif %}
         </div>
+        {% if github_sponsor_url %}
+        <div class="page-link">
+            <a class="links" href="{{ github_sponsor_url }}">Sponsor the Wait Wait Stats project at GitHub →</a>
+        </div>
+        {% endif %}
         {% if patreon_url %}
         <div class="page-link">
             <a class="links" href="{{ patreon_url }}">Support the Wait Wait Stats project at Patreon →</a>

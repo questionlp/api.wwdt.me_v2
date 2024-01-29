@@ -55,11 +55,17 @@ async def default_page(request: Request):
         settings = config["settings"]
         stats_url: str | None = settings.get("stats_url", None)
         patreon_url: str | None = settings.get("patreon_url", None)
+        github_sponsor_url: str | None = settings.get("github_sponsor_url", None)
     else:
         stats_url = None
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "stats_url": stats_url, "patreon_url": patreon_url},
+        {
+            "request": request,
+            "stats_url": stats_url,
+            "patreon_url": patreon_url,
+            "github_sponsor_url": github_sponsor_url,
+        },
     )
 
 
