@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 API_VERSION = "2.0"
-APP_VERSION = "2.8.2"
+APP_VERSION = "2.8.3"
 
 
 def load_config(

@@ -1,5 +1,11 @@
 # Changes
 
+## 2.8.3
+
+### Component Changes
+
+- Upgrade fastapi from 0.109.0 to 0.109.1
+
 ## 2.8.2
 
 ### Application Changes
