@@ -18,6 +18,7 @@ class Panelist(BaseModel):
     name: str = Field(title="Panelist Name")
     slug: str | None = Field(default=None, title="Panelist Slug String")
     gender: str | None = Field(default=None, title="Panelist Gender")
+    pronouns: str | None = Field(default=None, title="Panelist Pronouns")
 
 
 class Panelists(BaseModel):
@@ -106,9 +107,7 @@ class MilestonesFirst(BaseModel):
 class MilestonesMostRecent(BaseModel):
     """Panelist Most Recent Appearance Milestone."""
 
-    show_id: Annotated[int, Field(ge=0, lt=2**31)] = Field(
-        title="Most Recent Show ID"
-    )
+    show_id: Annotated[int, Field(ge=0, lt=2**31)] = Field(title="Most Recent Show ID")
     show_date: str = Field(title="Most Recent Show Date")
 
 

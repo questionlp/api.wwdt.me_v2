@@ -25,6 +25,10 @@ def test_locations():
     assert "venue" in locations["locations"][0]
     assert "city" in locations["locations"][0]
     assert "state" in locations["locations"][0]
+    assert "coordinates" in locations["locations"][0]
+    if locations["locations"][0]["coordinates"]:
+        assert "latitude" in locations["locations"][0]["coordinates"]
+        assert "longitude" in locations["locations"][0]["coordinates"]
 
 
 @pytest.mark.parametrize("location_id", [32])
@@ -40,6 +44,10 @@ def test_locations_id(location_id: int):
     assert "venue" in location
     assert "city" in location
     assert "state" in location
+    assert "coordinates" in location
+    if location["coordinates"]:
+        assert "latitude" in location["coordinates"]
+        assert "longitude" in location["coordinates"]
 
 
 @pytest.mark.parametrize("location_slug", ["arlene-schnitzer-concert-hall-portland-or"])
@@ -55,6 +63,9 @@ def test_locations_slug(location_slug: str):
     assert "venue" in location
     assert "city" in location
     assert "state" in location
+    if location["coordinates"]:
+        assert "latitude" in location["coordinates"]
+        assert "longitude" in location["coordinates"]
 
 
 def test_locations_recordings():
@@ -69,6 +80,10 @@ def test_locations_recordings():
     assert "venue" in locations["locations"][0]
     assert "city" in locations["locations"][0]
     assert "state" in locations["locations"][0]
+    assert "coordinates" in locations["locations"][0]
+    if locations["locations"][0]["coordinates"]:
+        assert "latitude" in locations["locations"][0]["coordinates"]
+        assert "longitude" in locations["locations"][0]["coordinates"]
     assert "recordings" in locations["locations"][0]
 
 
@@ -85,6 +100,9 @@ def test_locations_recordings_id(location_id: int):
     assert "venue" in location
     assert "city" in location
     assert "state" in location
+    if location["coordinates"]:
+        assert "latitude" in location["coordinates"]
+        assert "longitude" in location["coordinates"]
     assert "recordings" in location
 
 
@@ -101,4 +119,7 @@ def test_locations_recordings_slug(location_slug: str):
     assert "venue" in location
     assert "city" in location
     assert "state" in location
+    if location["coordinates"]:
+        assert "latitude" in location["coordinates"]
+        assert "longitude" in location["coordinates"]
     assert "recordings" in location
