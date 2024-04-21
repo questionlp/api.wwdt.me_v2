@@ -25,6 +25,8 @@ def test_locations():
     assert "venue" in locations["locations"][0]
     assert "city" in locations["locations"][0]
     assert "state" in locations["locations"][0]
+    assert "latitude" in locations["locations"][0]
+    assert "longitude" in locations["locations"][0]
 
 
 @pytest.mark.parametrize("location_id", [32])
@@ -40,6 +42,8 @@ def test_locations_id(location_id: int):
     assert "venue" in location
     assert "city" in location
     assert "state" in location
+    assert "latitude" in location
+    assert "longitude" in location
 
 
 @pytest.mark.parametrize("location_slug", ["arlene-schnitzer-concert-hall-portland-or"])
@@ -55,6 +59,8 @@ def test_locations_slug(location_slug: str):
     assert "venue" in location
     assert "city" in location
     assert "state" in location
+    assert "latitude" in location
+    assert "longitude" in location
 
 
 def test_locations_recordings():
@@ -69,6 +75,8 @@ def test_locations_recordings():
     assert "venue" in locations["locations"][0]
     assert "city" in locations["locations"][0]
     assert "state" in locations["locations"][0]
+    assert "latitude" in locations["locations"][0]
+    assert "longitude" in locations["locations"][0]
     assert "recordings" in locations["locations"][0]
 
 
@@ -85,6 +93,8 @@ def test_locations_recordings_id(location_id: int):
     assert "venue" in location
     assert "city" in location
     assert "state" in location
+    assert "latitude" in location
+    assert "longitude" in location
     assert "recordings" in location
 
 
@@ -101,4 +111,6 @@ def test_locations_recordings_slug(location_slug: str):
     assert "venue" in location
     assert "city" in location
     assert "state" in location
+    assert "latitude" in location
+    assert "longitude" in location
     assert "recordings" in location

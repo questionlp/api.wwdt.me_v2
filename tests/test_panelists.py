@@ -23,6 +23,7 @@ def test_panelists():
     assert "panelists" in panelists
     assert "id" in panelists["panelists"][0]
     assert "name" in panelists["panelists"][0]
+    assert "pronouns" in panelists["panelists"][0]
     assert "slug" in panelists["panelists"][0]
 
 
@@ -36,6 +37,7 @@ def test_panelists_id(panelist_id: int):
     assert "id" in panelist
     assert panelist["id"] == panelist_id
     assert "name" in panelist
+    assert "pronouns" in panelist
     assert "slug" in panelist
 
 
@@ -48,6 +50,7 @@ def test_panelists_slug(panelist_slug: str):
     assert response.status_code == 200
     assert "id" in panelist
     assert "name" in panelist
+    assert "pronouns" in panelist
     assert "slug" in panelist
     assert panelist["slug"] == panelist_slug
 
@@ -61,6 +64,7 @@ def test_panelists_details():
     assert "panelists" in panelists
     assert "id" in panelists["panelists"][0]
     assert "name" in panelists["panelists"][0]
+    assert "pronouns" in panelists["panelists"][0]
     assert "slug" in panelists["panelists"][0]
     assert "appearances" in panelists["panelists"][0]
 
@@ -75,6 +79,7 @@ def test_panelists_details_id(panelist_id: int):
     assert "id" in panelist
     assert panelist["id"] == panelist_id
     assert "name" in panelist
+    assert "pronouns" in panelist
     assert "slug" in panelist
     assert "appearances" in panelist
 
@@ -88,6 +93,7 @@ def test_panelists_details_slug(panelist_slug: str):
     assert response.status_code == 200
     assert "id" in panelist
     assert "name" in panelist
+    assert "pronouns" in panelist
     assert "slug" in panelist
     assert panelist["slug"] == panelist_slug
     assert "appearances" in panelist

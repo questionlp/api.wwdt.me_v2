@@ -17,6 +17,7 @@ class Scorekeeper(BaseModel):
     name: str = Field(title="Scorekeeper Name")
     slug: str | None = Field(default=None, title="Scorekeeper Slug String")
     gender: str | None = Field(default=None, title="Scorekeeper Gender")
+    pronouns: str | None = Field(default=None, title="Scorekeeper Pronouns")
 
 
 class Scorekeepers(BaseModel):

@@ -1,5 +1,19 @@
 # Changes
 
+## 2.9.0
+
+### Application Changes
+
+- Starting with application version 2.9.0 of the Stats API, the minimum required version of the Wait Wait Stats Database is 4.6
+- Add `latitude` and `longitude` to any location object returned. If a value for either are present in the Stats Database, a string representation of a decimal would be returned. If not, `null` would be returned.
+- Add `pronouns` to any host, panelist and scorekeeper object returned. If a corresponding value is present in the State Database, a string would be returned. If not, `null` would be returned.
+
+### Component Changes
+
+- Upgrade wwdtm from 2.8.1 to 2.9.0
+- Upgrade fastapi from 0.109.1 to 0.110.2
+- Upgrade pydantic from 2.5.3 to 2.7.0
+
 ## 2.8.6
 
 ### Component Changes
