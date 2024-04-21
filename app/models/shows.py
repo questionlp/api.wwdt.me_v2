@@ -27,6 +27,13 @@ class Shows(BaseModel):
     shows: list[Show] = Field(title="List of Shows")
 
 
+class ShowLocationCoordinates(BaseModel):
+    """Coordinates for a Show Location."""
+
+    latitude: Decimal | None = Field(default=None, title="Venue Latitude")
+    longitude: Decimal | None = Field(default=None, title="Venue Longitude")
+
+
 class ShowLocation(BaseModel):
     """Show Location Information."""
 
@@ -35,6 +42,9 @@ class ShowLocation(BaseModel):
     city: str | None = Field(default=None, title="City")
     state: str | None = Field(default=None, title="State")
     venue: str | None = Field(default=None, title="Venue Name")
+    coordinates: ShowLocationCoordinates | None = Field(
+        default=None, title="Location Coordinates"
+    )
 
 
 class ShowHost(BaseModel):

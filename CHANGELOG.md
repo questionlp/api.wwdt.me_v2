@@ -1,6 +1,16 @@
 # Changes
 
-## 2.9.0
+## 2.9.1
+
+### Application Changes
+
+- Create `LocationCoordinates` and `ShowLocationCoordinates` models to contain location latitude and longitude values for locations and shows respectively
+
+### Component Changes
+
+- Upgrade wwdtm from 2.9.0 to 2.9.1
+
+## 2.9.0 (Unreleased)
 
 ### Application Changes
 

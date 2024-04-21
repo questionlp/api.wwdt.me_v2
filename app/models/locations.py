@@ -11,6 +11,13 @@ from typing import Annotated
 from pydantic import BaseModel, Field
 
 
+class LocationCoordinates(BaseModel):
+    """Coordinates for a Location."""
+
+    latitude: Decimal | None = Field(default=None, title="Venue Latitude")
+    longitude: Decimal | None = Field(default=None, title="Venue Longitude")
+
+
 class Location(BaseModel):
     """Location Information."""
 
@@ -18,8 +25,9 @@ class Location(BaseModel):
     city: str | None = Field(default=None, title="City")
     state: str | None = Field(default=None, title="State")
     venue: str | None = Field(default=None, title="Venue Name")
-    latitude: Decimal | None = Field(default=None, title="Venue Latitude")
-    longitude: Decimal | None = Field(default=None, title="Venue Longitude")
+    coordinates: LocationCoordinates | None = Field(
+        default=None, title="Location Coordinates"
+    )
     slug: str | None = Field(default=None, title="Location Slug String")
 
 
