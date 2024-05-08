@@ -1,5 +1,13 @@
 # Changes
 
+## 2.9.1.post1
+
+**Note:** The `APP_VERSION` was not correctly incremented with version 2.9.1 and has been corrected with this release.
+
+### Component Changes
+
+- Upgrade Jinja2 from 3.1.3 to 3.1.4
+
 ## 2.9.1
 
 ### Application Changes
