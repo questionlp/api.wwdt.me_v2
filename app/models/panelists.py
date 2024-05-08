@@ -18,7 +18,9 @@ class Panelist(BaseModel):
     name: str = Field(title="Panelist Name")
     slug: str | None = Field(default=None, title="Panelist Slug String")
     gender: str | None = Field(default=None, title="Panelist Gender")
-    pronouns: str | None = Field(default=None, title="Panelist Pronouns")
+    preferred_pronouns: list[str] | None = Field(
+        default=None, title="Panelist Pronouns"
+    )
 
 
 class Panelists(BaseModel):
