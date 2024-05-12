@@ -72,6 +72,10 @@ tags_metadata = [
         "description": "Retrieve information, statistics and appearances for Panelists",
     },
     {
+        "name": "Pronouns",
+        "description": "Retrieve information, statistics and appearances for Pronouns",
+    },
+    {
         "name": "Scorekeepers",
         "description": "Retrieve information and appearances for Scorekeepers",
     },
