@@ -20,6 +20,7 @@ from app.routers import (
     hosts,
     locations,
     panelists,
+    pronouns,
     scorekeepers,
     shows,
     version,
@@ -139,6 +140,7 @@ app.include_router(guests.router)
 app.include_router(hosts.router)
 app.include_router(locations.router)
 app.include_router(panelists.router)
+app.include_router(pronouns.router)
 app.include_router(scorekeepers.router)
 app.include_router(shows.router)
 app.include_router(version.router)
