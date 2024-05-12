@@ -17,7 +17,7 @@ class Host(BaseModel):
     name: str = Field(title="Host Name")
     slug: str | None = Field(default=None, title="Host Slug String")
     gender: str | None = Field(default=None, title="Host Gender")
-    pronouns: str | None = Field(default=None, title="Host Pronouns")
+    pronouns: list[str] | None = Field(default=None, title="Host Preferred Pronouns")
 
 
 class Hosts(BaseModel):

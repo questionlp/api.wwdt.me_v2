@@ -1,5 +1,14 @@
 # Changes
 
+## 2.10.0
+
+### Application Changes
+
+- Starting with application version 2.10.0 of the Stats API, the minimum required version of the Wait Wait Stats Database is 4.7
+- Change the `pronouns` property for Hosts, Panelists and Scorekeepers from returning a string to a list of pronouns
+- Add `Pronouns` and `PronounsInfoList` models
+- Add new Pronouns endpoints to retrieve all available pronouns or individual pronouns values
+
 ## 2.9.1.post1
 
 **Note:** The `APP_VERSION` was not correctly incremented with version 2.9.1 and has been corrected with this release.
