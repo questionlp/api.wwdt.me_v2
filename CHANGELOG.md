@@ -1,5 +1,11 @@
 # Changes
 
+## 2.10.0.post2
+
+### Component Changes
+
+- Upgrade requests from 2.32.0 to 2.32.3
+
 ## 2.10.0.post1
 
 ### Component Changes
