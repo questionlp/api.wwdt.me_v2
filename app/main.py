@@ -26,6 +26,8 @@ from app.routers import (
     version,
 )
 
+from .utility import format_umami_analytics
+
 app = FastAPI(
     title=app_metadata["title"],
     description=app_metadata["description"],
@@ -59,6 +61,10 @@ async def default_page(request: Request):
         github_sponsor_url: str | None = settings.get("github_sponsor_url", None)
     else:
         stats_url = None
+
+    umami = config["settings"].get("umami_analytics")
+    umami_analytics = format_umami_analytics(umami_analytics=umami)
+
     return templates.TemplateResponse(
         "index.html",
         {
@@ -66,6 +72,7 @@ async def default_page(request: Request):
             "stats_url": stats_url,
             "patreon_url": patreon_url,
             "github_sponsor_url": github_sponsor_url,
+            "umami_analytics": umami_analytics,
         },
     )
 
