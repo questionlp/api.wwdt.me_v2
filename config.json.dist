@@ -22,6 +22,14 @@
         "contact_url": "",
         "patreon_url": "",
         "github_sponsor_url": "",
-        "use_decimal_scores": false
+        "use_decimal_scores": false,
+        "umami_analytics": {
+            "_enabled": false,
+            "url": "",
+            "data_website_id": "",
+            "data_domains": "",
+            "data_host_url": "",
+            "data_auto_track": true
+        }
     }
 }
