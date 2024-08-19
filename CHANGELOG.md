@@ -1,5 +1,22 @@
 # Changes
 
+## 2.12.0
+
+### Component Changes
+
+- Upgrade pydantic from 2.5.3 to 2.8.2
+- Upgrade fastapi from 0.109.1 to 0.112.0
+- Upgrade uvicorn from 0.26.0 to 0.30.5
+- Upgrade gunicorn from 22.0.0 to 23.0.0
+- Upgrade httpx from 0.26.0 to 0.27.0
+- Upgrade aiofiles from 23.2.1 to 24.1.0
+
+### Development Changes
+
+- Upgrade ruff from 0.5.1 to 0.5.7
+- Upgrade black from 24.4.2 to 24.8.0
+- Upgrade pytest from 8.1.2 to 8.3.2
+
 ## 2.11.0
 
 ### Application Changes
