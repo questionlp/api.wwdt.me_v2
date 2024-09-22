@@ -41,10 +41,10 @@ async def get_hosts():
     try:
         host = Host(database_connection=_database_connection)
         hosts = host.retrieve_all()
-        if not hosts:
-            raise HTTPException(status_code=404, detail="No hosts found")
-        else:
+        if hosts:
             return {"hosts": hosts}
+
+        raise HTTPException(status_code=404, detail="No hosts found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve hosts from the database"
@@ -73,10 +73,10 @@ async def get_host_by_id(
     try:
         host = Host(database_connection=_database_connection)
         host_info = host.retrieve_by_id(host_id)
-        if not host_info:
-            raise HTTPException(status_code=404, detail=f"Host ID {host_id} not found")
-        else:
+        if host_info:
             return host_info
+
+        raise HTTPException(status_code=404, detail=f"Host ID {host_id} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Host ID {host_id} not found"
@@ -109,12 +109,12 @@ async def get_host_by_slug(
     try:
         host = Host(database_connection=_database_connection)
         host_info = host.retrieve_by_slug(host_slug)
-        if not host_info:
-            raise HTTPException(
-                status_code=404, detail=f"Host slug string {host_slug} not found"
-            )
-        else:
+        if host_info:
             return host_info
+
+        raise HTTPException(
+            status_code=404, detail=f"Host slug string {host_slug} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Host slug string {host_slug} not found"
@@ -147,10 +147,10 @@ async def get_hosts_details():
     try:
         host = Host(database_connection=_database_connection)
         hosts = host.retrieve_all_details()
-        if not hosts:
-            raise HTTPException(status_code=404, detail="No hosts found")
-        else:
+        if hosts:
             return {"hosts": hosts}
+
+        raise HTTPException(status_code=404, detail="No hosts found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve hosts from the database"
@@ -181,10 +181,10 @@ async def get_host_details_by_id(
     try:
         host = Host(database_connection=_database_connection)
         host_details = host.retrieve_details_by_id(host_id)
-        if not host_details:
-            raise HTTPException(status_code=404, detail=f"Host ID {host_id} not found")
-        else:
+        if host_details:
             return host_details
+
+        raise HTTPException(status_code=404, detail=f"Host ID {host_id} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Host ID {host_id} not found"
@@ -219,12 +219,12 @@ async def get_host_details_by_slug(
     try:
         host = Host(database_connection=_database_connection)
         host_details = host.retrieve_details_by_slug(host_slug)
-        if not host_details:
-            raise HTTPException(
-                status_code=404, detail=f"Host slug string {host_slug} not found"
-            )
-        else:
+        if host_details:
             return host_details
+
+        raise HTTPException(
+            status_code=404, detail=f"Host slug string {host_slug} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Host slug string {host_slug} not found"

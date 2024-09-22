@@ -39,10 +39,10 @@ async def get_pronouns():
     try:
         _pronouns = Pronouns(database_connection=_database_connection)
         all_pronouns = _pronouns.retrieve_all()
-        if not all_pronouns:
-            raise HTTPException(status_code=404, detail="No pronouns found")
-        else:
+        if all_pronouns:
             return {"pronouns": all_pronouns}
+
+        raise HTTPException(status_code=404, detail="No pronouns found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve pronouns from the database"
@@ -73,12 +73,12 @@ async def get_pronouns_by_id(
     try:
         _pronouns = Pronouns(database_connection=_database_connection)
         pronouns_info = _pronouns.retrieve_by_id(pronouns_id)
-        if not pronouns_info:
-            raise HTTPException(
-                status_code=404, detail=f"Pronouns ID {pronouns_id} not found"
-            )
-        else:
+        if pronouns_info:
             return pronouns_info
+
+        raise HTTPException(
+            status_code=404, detail=f"Pronouns ID {pronouns_id} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Pronouns ID {pronouns_id} not found"

@@ -36,15 +36,15 @@ async def get_locations():
 
     Returned data: Location ID, city, state, venue and slug string.
 
-    Locations are sorted by: city, state, then venue name.
+    Locations are sorted by venue name, city, and state.
     """
     try:
         location = Location(database_connection=_database_connection)
-        locations = location.retrieve_all()
-        if not locations:
-            raise HTTPException(status_code=404, detail="No locations found")
-        else:
+        locations = location.retrieve_all(sort_by_venue=True)
+        if locations:
             return {"locations": locations}
+
+        raise HTTPException(status_code=404, detail="No locations found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve locations from the database"
@@ -75,12 +75,12 @@ async def get_location_by_id(
     try:
         location = Location(database_connection=_database_connection)
         location_info = location.retrieve_by_id(location_id)
-        if not location_info:
-            raise HTTPException(
-                status_code=404, detail=f"Location ID {location_id} not found"
-            )
-        else:
+        if location_info:
             return location_info
+
+        raise HTTPException(
+            status_code=404, detail=f"Location ID {location_id} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Location ID {location_id} not found"
@@ -113,13 +113,13 @@ async def get_location_by_slug(
     try:
         location = Location(database_connection=_database_connection)
         location_info = location.retrieve_by_slug(location_slug.strip())
-        if not location_info:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Location slug string {location_slug} not found",
-            )
-        else:
+        if location_info:
             return location_info
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Location slug string {location_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Location slug string {location_slug} not found"
@@ -148,16 +148,16 @@ async def get_locations_details():
     Returned data: Location ID, city, state, venue, slug string and
     recordings.
 
-    Locations are sorted by: city, state, then venue name. Recordings
-    are sorted by show date.
+    Locations are sorted by venue name, city, and state. Recordings are
+    sorted by show date.
     """
     try:
         location = Location(database_connection=_database_connection)
-        locations = location.retrieve_all_details()
-        if not locations:
-            raise HTTPException(status_code=404, detail="No locations found")
-        else:
+        locations = location.retrieve_all_details(sort_by_venue=True)
+        if locations:
             return {"locations": locations}
+
+        raise HTTPException(status_code=404, detail="No locations found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve locations from the database"
@@ -191,12 +191,12 @@ async def get_location_recordings_by_id(
     try:
         location = Location(database_connection=_database_connection)
         location_recordings = location.retrieve_details_by_id(location_id)
-        if not location_recordings:
-            raise HTTPException(
-                status_code=404, detail=f"Location ID {location_id} not found"
-            )
-        else:
+        if location_recordings:
             return location_recordings
+
+        raise HTTPException(
+            status_code=404, detail=f"Location ID {location_id} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Location ID {location_id} not found"
@@ -233,13 +233,13 @@ async def get_location_recordings_by_slug(
     try:
         location = Location(database_connection=_database_connection)
         location_details = location.retrieve_details_by_slug(location_slug.strip())
-        if not location_details:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Location slug string {location_slug} not found",
-            )
-        else:
+        if location_details:
             return location_details
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Location slug string {location_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Location slug string {location_slug} not found"

@@ -41,10 +41,10 @@ async def get_scorekeepers():
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeepers = scorekeeper.retrieve_all()
-        if not scorekeepers:
-            raise HTTPException(status_code=404, detail="No scorekeepers found")
-        else:
+        if scorekeepers:
             return {"scorekeepers": scorekeepers}
+
+        raise HTTPException(status_code=404, detail="No scorekeepers found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve scorekeepers from the database"
@@ -75,12 +75,12 @@ async def get_scorekeeper_by_id(
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_info = scorekeeper.retrieve_by_id(scorekeeper_id)
-        if not scorekeeper_info:
-            raise HTTPException(
-                status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
-            )
-        else:
+        if scorekeeper_info:
             return scorekeeper_info
+
+        raise HTTPException(
+            status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
@@ -115,13 +115,13 @@ async def get_scorekeeper_by_slug(
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_info = scorekeeper.retrieve_by_slug(scorekeeper_slug.strip())
-        if not scorekeeper_info:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
-            )
-        else:
+        if scorekeeper_info:
             return scorekeeper_info
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404,
@@ -157,10 +157,10 @@ async def get_scorekeepers_details():
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeepers = scorekeeper.retrieve_all_details()
-        if not scorekeepers:
-            raise HTTPException(status_code=404, detail="No scorekeepers found")
-        else:
+        if scorekeepers:
             return {"scorekeepers": scorekeepers}
+
+        raise HTTPException(status_code=404, detail="No scorekeepers found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve scorekeepers from the database"
@@ -194,12 +194,12 @@ async def get_scorekeeper_details_by_id(
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_details = scorekeeper.retrieve_details_by_id(scorekeeper_id)
-        if not scorekeeper_details:
-            raise HTTPException(
-                status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
-            )
-        else:
+        if scorekeeper_details:
             return scorekeeper_details
+
+        raise HTTPException(
+            status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
@@ -239,13 +239,13 @@ async def get_scorekeeper_details_by_slug(
         scorekeeper_details = scorekeeper.retrieve_details_by_slug(
             scorekeeper_slug.strip()
         )
-        if not scorekeeper_details:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
-            )
-        else:
+        if scorekeeper_details:
             return scorekeeper_details
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404,

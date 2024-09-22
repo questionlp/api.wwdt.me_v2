@@ -96,10 +96,11 @@ async def robots_txt():
     robots_txt_dist_path = Path.cwd() / "static" / "robots.txt.dist"
     if robots_txt_path.exists():
         return FileResponse(path="static/robots.txt", media_type="text/plain")
-    elif robots_txt_dist_path.exists():
+
+    if robots_txt_dist_path.exists():
         return FileResponse(path="static/robots.txt.dist", media_type="text/plain")
-    else:
-        raise HTTPException(status_code=404)
+
+    raise HTTPException(status_code=404)
 
 
 @app.get("/docs", include_in_schema=False, response_class=RedirectResponse)

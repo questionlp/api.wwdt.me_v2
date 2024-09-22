@@ -1,5 +1,24 @@
 # Changes
 
+## 2.13.0
+
+### Application Changes
+
+- **NOTE:** Results for `/v2.0/locations` and `/v2.0/locations/recordings` are now sorted by venue name, city, then state. Previously, both endpoints had inconsistent behavior due to coding issues in the `wwdtm` library.
+- Code cleanup and fix pylint errors and warnings
+
+### Component Changes
+
+- Upgrade fastapi from 0.112.0 to 0.115.0
+- Upgrade uvicorn from 0.30.5 to 0.30.6
+- Upgrade httpx from 0.27.0 to 0.27.2
+- Upgrade email-validator from 2.1.0.post1 to 2.2.0
+- Upgrade wwdtm from 2.10.1 to 2.11.0
+
+### Development Changes
+
+- Upgrade ruff from 0.5.7 to 0.6.7
+
 ## 2.12.0
 
 ### Component Changes

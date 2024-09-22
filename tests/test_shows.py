@@ -7,7 +7,6 @@
 
 import pytest
 from fastapi.testclient import TestClient
-from requests.models import Response
 
 from app.config import API_VERSION
 from app.main import app

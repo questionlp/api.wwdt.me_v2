@@ -44,10 +44,10 @@ async def get_shows():
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_all()
-        if not shows:
-            raise HTTPException(status_code=404, detail="No shows found")
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(status_code=404, detail="No shows found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
@@ -78,10 +78,10 @@ async def get_show_by_id(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_id(show_id)
-        if not show_info:
-            raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
-        else:
+        if show_info:
             return show_info
+
+        raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Show ID {show_id} not found"
@@ -116,12 +116,10 @@ async def get_show_by_date_string(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_date_string(show_date.isoformat())
-        if not show_info:
-            raise HTTPException(
-                status_code=404, detail=f"Show date {show_date} not found"
-            )
-        else:
+        if show_info:
             return show_info
+
+        raise HTTPException(status_code=404, detail=f"Show date {show_date} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Show date {show_date} not found"
@@ -158,12 +156,10 @@ async def get_shows_by_year(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_year(year)
-        if not shows:
-            raise HTTPException(
-                status_code=404, detail=f"Shows for {year:04d} not found"
-            )
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(status_code=404, detail=f"Shows for {year:04d} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Shows for {year:04d} not found"
@@ -201,12 +197,12 @@ async def get_shows_by_year_month(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_year_month(year, month)
-        if not shows:
-            raise HTTPException(
-                status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
-            )
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(
+            status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
@@ -244,13 +240,13 @@ async def get_show_by_month_day(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_month_day(month, day)
-        if not shows:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Shows for month {month:02d} and {day:02d} not found",
-            )
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Shows for month {month:02d} and {day:02d} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404,
@@ -288,13 +284,13 @@ async def get_show_by_date(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_date(year, month, day)
-        if not show_info:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
-            )
-        else:
+        if show_info:
             return show_info
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404,
@@ -327,10 +323,10 @@ async def get_all_show_dates():
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_all_dates()
-        if not shows:
-            raise HTTPException(status_code=404, detail="No shows found")
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(status_code=404, detail="No shows found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
@@ -363,10 +359,10 @@ async def get_shows_details():
         shows = show.retrieve_all_details(
             include_decimal_scores=_config["settings"]["use_decimal_scores"]
         )
-        if not shows:
-            raise HTTPException(status_code=404, detail="No shows found")
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(status_code=404, detail="No shows found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
@@ -400,12 +396,10 @@ async def get_show_details_by_date_string(
             show_date.isoformat(),
             include_decimal_scores=_config["settings"]["use_decimal_scores"],
         )
-        if not show_details:
-            raise HTTPException(
-                status_code=404, detail=f"Show date {show_date} not found"
-            )
-        else:
+        if show_details:
             return show_details
+
+        raise HTTPException(status_code=404, detail=f"Show date {show_date} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Show date {show_date} not found"
@@ -445,12 +439,10 @@ async def get_shows_details_by_year(
         shows = show.retrieve_details_by_year(
             year, include_decimal_scores=_config["settings"]["use_decimal_scores"]
         )
-        if not shows:
-            raise HTTPException(
-                status_code=404, detail=f"Shows for {year:04d} not found"
-            )
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(status_code=404, detail=f"Shows for {year:04d} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Shows for {year:04d} not found"
@@ -493,12 +485,12 @@ async def get_shows_details_by_year_month(
             month,
             include_decimal_scores=_config["settings"]["use_decimal_scores"],
         )
-        if not shows:
-            raise HTTPException(
-                status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
-            )
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(
+            status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
@@ -539,13 +531,13 @@ async def get_show_details_by_month_day(
         shows = show.retrieve_details_by_month_day(
             month, day, include_decimal_scores=_config["settings"]["use_decimal_scores"]
         )
-        if not shows:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Shows for month {month:02d} and day {day:02d} not found",
-            )
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Shows for month {month:02d} and day {day:02d} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404,
@@ -589,13 +581,13 @@ async def get_show_details_by_date(
             day,
             include_decimal_scores=_config["settings"]["use_decimal_scores"],
         )
-        if not show_details:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
-            )
-        else:
+        if show_details:
             return show_details
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404,
@@ -634,10 +626,10 @@ async def get_show_details_by_id(
         show_details = show.retrieve_details_by_id(
             show_id, include_decimal_scores=_config["settings"]["use_decimal_scores"]
         )
-        if not show_details:
-            raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
-        else:
+        if show_details:
             return show_details
+
+        raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Show ID {show_id} not found"
@@ -675,10 +667,10 @@ async def get_shows_recent_details():
         shows = show.retrieve_recent_details(
             include_decimal_scores=_config["settings"]["use_decimal_scores"]
         )
-        if not shows:
-            raise HTTPException(status_code=404, detail="No recent shows found")
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(status_code=404, detail="No recent shows found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
@@ -708,10 +700,10 @@ async def get_shows_recent():
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_recent()
-        if not shows:
-            raise HTTPException(status_code=404, detail="No recent shows found")
-        else:
+        if shows:
             return {"shows": shows}
+
+        raise HTTPException(status_code=404, detail="No recent shows found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve shows from the database"
