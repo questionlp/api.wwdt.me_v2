@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # vim: set noai syntax=python ts=4 sw=4:
+# pylint: disable=R1705
 """Application Configuration."""
 
 import json
@@ -10,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 API_VERSION = "2.0"
-APP_VERSION = "2.12.0"
+APP_VERSION = "2.13.0"
 
 
 def load_config(

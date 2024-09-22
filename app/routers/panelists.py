@@ -48,10 +48,10 @@ async def get_panelists():
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelists = panelist.retrieve_all()
-        if not panelists:
-            raise HTTPException(status_code=404, detail="No panelists found")
-        else:
+        if panelists:
             return {"panelists": panelists}
+
+        raise HTTPException(status_code=404, detail="No panelists found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelists from the database"
@@ -82,12 +82,12 @@ async def get_panelist_by_id(
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_info = panelist.retrieve_by_id(panelist_id)
-        if not panelist_info:
-            raise HTTPException(
-                status_code=404, detail=f"Panelist ID {panelist_id} not found"
-            )
-        else:
+        if panelist_info:
             return panelist_info
+
+        raise HTTPException(
+            status_code=404, detail=f"Panelist ID {panelist_id} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
@@ -120,13 +120,13 @@ async def get_panelist_by_slug(
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_info = panelist.retrieve_by_slug(panelist_slug.strip())
-        if not panelist_info:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Panelist slug string {panelist_slug} not found",
-            )
-        else:
+        if panelist_info:
             return panelist_info
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Panelist slug string {panelist_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
@@ -163,10 +163,10 @@ async def get_panelists_details():
         panelists = panelist.retrieve_all_details(
             use_decimal_scores=_config["settings"]["use_decimal_scores"]
         )
-        if not panelists:
-            raise HTTPException(status_code=404, detail="No panelists found")
-        else:
+        if panelists:
             return {"panelists": panelists}
+
+        raise HTTPException(status_code=404, detail="No panelists found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve panelists from the database"
@@ -202,12 +202,12 @@ async def get_panelist_details_by_id(
         panelist_details = panelist.retrieve_details_by_id(
             panelist_id, use_decimal_scores=_config["settings"]["use_decimal_scores"]
         )
-        if not panelist_details:
-            raise HTTPException(
-                status_code=404, detail=f"Panelist ID {panelist_id} not found"
-            )
-        else:
+        if panelist_details:
             return panelist_details
+
+        raise HTTPException(
+            status_code=404, detail=f"Panelist ID {panelist_id} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
@@ -246,13 +246,13 @@ async def get_panelist_details_by_slug(
             panelist_slug.strip(),
             use_decimal_scores=_config["settings"]["use_decimal_scores"],
         )
-        if not panelist_details:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Panelist slug string {panelist_slug} not found",
-            )
-        else:
+        if panelist_details:
             return panelist_details
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Panelist slug string {panelist_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
@@ -295,13 +295,13 @@ async def get_panelist_scores_by_id(
         else:
             panelist_scores = PanelistScores(database_connection=_database_connection)
             scores = panelist_scores.retrieve_scores_list_by_id(panelist_id)
-        if not scores:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Scoring data for Panelist ID {panelist_id} not found",
-            )
-        else:
+        if scores:
             return scores
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scoring data for Panelist ID {panelist_id} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
@@ -340,13 +340,13 @@ async def get_panelist_scores_by_slug(
         else:
             panelist_scores = PanelistScores(database_connection=_database_connection)
             scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug.strip())
-        if not scores:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
-            )
-        else:
+        if scores:
             return scores
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
@@ -364,7 +364,10 @@ async def get_panelist_scores_by_slug(
 
 @router.get(
     "/scores/grouped-ordered-pair/id/{panelist_id}",
-    summary="Retrieve Panelist Scores as Ordered Pairs for Scores and Number of Times It Has Been Earned by Panelist ID",
+    summary=(
+        "Retrieve Panelist Scores as Ordered Pairs for Scores and Number of "
+        "Times It Has Been Earned by Panelist ID"
+    ),
     response_model=ModelsPanelistScoresGroupedOrderedPair,
     tags=["Panelists"],
 )
@@ -392,13 +395,13 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
             scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(
                 panelist_id
             )
-        if not scores:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Scoring data for Panelist ID {panelist_id} not found",
-            )
-        else:
+        if scores:
             return {"scores": scores}
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scoring data for Panelist ID {panelist_id} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
@@ -416,7 +419,10 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
 
 @router.get(
     "/scores/grouped-ordered-pair/slug/{panelist_slug}",
-    summary="Retrieve Panelist Scores as Ordered Pairs for Scores and Number of Times It Has Been Earned by Panelist Slug String",
+    summary=(
+        "Retrieve Panelist Scores as Ordered Pairs for Scores and Number of "
+        "Times It Has Been Earned by Panelist Slug String"
+    ),
     response_model=ModelsPanelistScoresGroupedOrderedPair,
     tags=["Panelists"],
 )
@@ -444,13 +450,13 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
             scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
                 panelist_slug.strip()
             )
-        if not scores:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
-            )
-        else:
+        if scores:
             return {"scores": scores}
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
@@ -492,13 +498,13 @@ async def get_panelist_scores_ordered_pair_by_id(
         else:
             panelist_scores = PanelistScores(database_connection=_database_connection)
             scores = panelist_scores.retrieve_scores_ordered_pair_by_id(panelist_id)
-        if not scores:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Scoring data for Panelist ID {panelist_id} not found",
-            )
-        else:
+        if scores:
             return {"scores": scores}
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scoring data for Panelist ID {panelist_id} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist ID {panelist_id} not found"
@@ -543,13 +549,13 @@ async def get_panelist_scores_ordered_pair_by_slug(
             scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(
                 panelist_slug.strip()
             )
-        if not scores:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
-            )
-        else:
+        if scores:
             return {"scores": scores}
+
+        raise HTTPException(
+            status_code=404,
+            detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Panelist slug string {panelist_slug} not found"

@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # vim: set noai syntax=python ts=4 sw=4:
+# pylint: disable=W0107
 """Panelists Models."""
 
 from decimal import Decimal

@@ -41,10 +41,10 @@ async def get_guests():
     try:
         guest = Guest(database_connection=_database_connection)
         guests = guest.retrieve_all()
-        if not guests:
-            raise HTTPException(status_code=404, detail="No guests found")
-        else:
+        if guests:
             return {"guests": guests}
+
+        raise HTTPException(status_code=404, detail="No guests found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve guests from the database"
@@ -73,12 +73,10 @@ async def get_guest_by_id(
     try:
         guest = Guest(database_connection=_database_connection)
         guest_info = guest.retrieve_by_id(guest_id)
-        if not guest_info:
-            raise HTTPException(
-                status_code=404, detail=f"Guest ID {guest_id} not found"
-            )
-        else:
+        if guest_info:
             return guest_info
+
+        raise HTTPException(status_code=404, detail=f"Guest ID {guest_id} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Guest ID {guest_id} not found"
@@ -111,12 +109,12 @@ async def get_guest_by_slug(
     try:
         guest = Guest(database_connection=_database_connection)
         guest_info = guest.retrieve_by_slug(guest_slug.strip())
-        if not guest_info:
-            raise HTTPException(
-                status_code=404, detail=f"Guest slug string {guest_slug} not found"
-            )
-        else:
+        if guest_info:
             return guest_info
+
+        raise HTTPException(
+            status_code=404, detail=f"Guest slug string {guest_slug} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Guest slug string {guest_slug} not found"
@@ -149,10 +147,10 @@ async def get_guests_details():
     try:
         guest = Guest(database_connection=_database_connection)
         guests = guest.retrieve_all_details()
-        if not guests:
-            raise HTTPException(status_code=404, detail="No guests found")
-        else:
+        if guests:
             return {"guests": guests}
+
+        raise HTTPException(status_code=404, detail="No guests found")
     except ProgrammingError:
         raise HTTPException(
             status_code=500, detail="Unable to retrieve guests from the database"
@@ -183,12 +181,10 @@ async def get_guest_details_by_id(
     try:
         guest = Guest(database_connection=_database_connection)
         guest_details = guest.retrieve_details_by_id(guest_id)
-        if not guest_details:
-            raise HTTPException(
-                status_code=404, detail=f"Guest ID {guest_id} not found"
-            )
-        else:
+        if guest_details:
             return guest_details
+
+        raise HTTPException(status_code=404, detail=f"Guest ID {guest_id} not found")
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Guest ID {guest_id} not found"
@@ -223,12 +219,12 @@ async def get_guest_details_by_slug(
     try:
         guest = Guest(database_connection=_database_connection)
         guest_details = guest.retrieve_details_by_slug(guest_slug.strip())
-        if not guest_details:
-            raise HTTPException(
-                status_code=404, detail=f"Guest slug string {guest_slug} not found"
-            )
-        else:
+        if guest_details:
             return guest_details
+
+        raise HTTPException(
+            status_code=404, detail=f"Guest slug string {guest_slug} not found"
+        )
     except ValueError:
         raise HTTPException(
             status_code=404, detail=f"Guest slug string {guest_slug} not found"
