@@ -4,7 +4,7 @@
 
 ### Component Changes
 
-- Upgrade wwdtm from 2.11.0 to 2.12.0
+- Upgrade wwdtm from 2.11.0 to 2.12.0.post0
 
 ### Development Changes
 
