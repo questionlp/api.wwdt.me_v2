@@ -1,5 +1,29 @@
 # Changes
 
+## 2.15.0
+
+### Application Changes
+
+- Add `/v2.0/shows/best-ofs` endpoint that provides information for all Best Of shows
+- Add `/v2.0/shows/details/best-ofs` endpoint that provides detailed information for all Best Of shows
+- Add `/v2.0/shows/best-of-repeats` endpoint that provides information for all Best Of Repeat shows
+- Add `/v2.0/shows/details/best-of-repeats` endpoint that provides detailed information for all Best Of Repeat shows
+- Add `/v2.0/shows/repeats` endpoint that provides information for all Repeat shows
+- Add `/v2.0/shows/details/repeats/` endpoint that provides detailed information for all Repeat shows
+- Add missing `original_show_id` and `original_show_date` for `Show`, `ShowDetails`, `Shows` and `ShowsDetails` models
+
+### Component Changes
+
+- Upgrade wwdtm from 2.12.1.post0 to 2.14.0
+  - **Note:** Even though wwdtm version >= 2.13.0 has initial support for Python 3.13, FastAPI has not been validated against Python 3.13; thus, api.wwdt.me_v2 still only supports Python 3.10, 3.11 and 3.12.
+
+### Development Changes
+
+- Upgrade black from 24.8.0 to 24.10.0
+- Upgrade ruff from 0.6.9 to 0.7.0
+- Increase minimum pytest version from 8.0 to 8.3 in `pyproject.toml`
+- Add missing validation of `original_show_id` and `original_show_date` in endpoints that return `Show`, `ShowDetails`, `Shows` and `ShowsDetails` models
+
 ## 2.14.0
 
 ### Component Changes

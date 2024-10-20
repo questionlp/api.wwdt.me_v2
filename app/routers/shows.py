@@ -55,8 +55,38 @@ async def get_shows():
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while retrieving "
-            "shows from the database",
+            detail="Database error occurred while retrieving shows from the database",
+        ) from None
+
+
+@router.get(
+    "/best-ofs",
+    summary="Retrieve Information for All Best Of Shows",
+    response_model=ModelsShows,
+    tags=["Shows"],
+)
+@router.head("/best-ofs", include_in_schema=False)
+async def get_best_ofs():
+    """Retrieve all Best Of Shows.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
+    show url
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_info = show.retrieve_all_best_ofs()
+        if show_info:
+            return {"shows": show_info}
+
+        raise HTTPException(status_code=404, detail="No Best Of shows found")
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve Best Of shows from the database"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving Best Of shows from the database",
         ) from None
 
 
@@ -375,6 +405,78 @@ async def get_shows_details():
 
 
 @router.get(
+    "/details/best-ofs",
+    summary="Retrieve Detailed Information for All Best Of Shows",
+    response_model=ModelsShowDetails,
+    tags=["Shows"],
+)
+@router.head("/details/best-ofs", include_in_schema=False)
+async def get_details_best_ofs():
+    """Retrieve all Best Of Shows.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
+    show url
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_details = show.retrieve_all_best_ofs_details()
+        if show_details:
+            return show_details
+
+        raise HTTPException(status_code=404, detail="No Best Of shows found")
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve Best Of shows from the database"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving Best Of shows from the database",
+        ) from None
+
+
+@router.get(
+    "/details/id/{show_id}",
+    summary="Retrieve Detailed Information by Show ID",
+    response_model=ModelsShowDetails,
+    tags=["Shows"],
+)
+@router.head("/details/id/{show_id}", include_in_schema=False)
+async def get_show_details_by_id(
+    show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)]
+):
+    """Retrieve Details for a Shows by Show ID.
+
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_details = show.retrieve_details_by_id(
+            show_id, include_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
+        if show_details:
+            return show_details
+
+        raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail=f"Show ID {show_id} not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve show information from the database",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
+
+
+@router.get(
     "/details/date/iso/{show_date}",
     summary="Retrieve Detailed Information for Shows by Year, Month, and Day using ISO format date",
     response_model=ModelsShowDetails,
@@ -606,47 +708,6 @@ async def get_show_details_by_date(
 
 
 @router.get(
-    "/details/id/{show_id}",
-    summary="Retrieve Detailed Information by Show ID",
-    response_model=ModelsShowDetails,
-    tags=["Shows"],
-)
-@router.head("/details/id/{show_id}", include_in_schema=False)
-async def get_show_details_by_id(
-    show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)]
-):
-    """Retrieve Details for a Shows by Show ID.
-
-    Return data: Show ID, date, Best Of flag, Repeat flag or date,
-    NPR.org show URL, location, description, notes, host, scorekeeper,
-    panelists, Bluff information and Not My Job guests
-    """
-    try:
-        show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_details_by_id(
-            show_id, include_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
-        if show_details:
-            return show_details
-
-        raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
-    except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Show ID {show_id} not found"
-        ) from None
-    except ProgrammingError:
-        raise HTTPException(
-            status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
-            status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
-
-
-@router.get(
     "/details/recent",
     summary="Retrieve Detailed Information for Recent Shows",
     response_model=ModelsShowsDetails,
@@ -683,6 +744,71 @@ async def get_shows_recent_details():
 
 
 @router.get(
+    "/details/repeat-best-ofs",
+    summary="Retrieve Detailed Information for All Repeat Best Of Shows",
+    response_model=ModelsShowDetails,
+    tags=["Shows"],
+)
+@router.head("/details/repeat-best-ofs", include_in_schema=False)
+async def get_details_repeat_best_ofs():
+    """Retrieve all Repeat Best Of Shows.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
+    show url
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_details = show.retrieve_all_repeat_best_ofs_details()
+        if show_details:
+            return show_details
+
+        raise HTTPException(status_code=404, detail="No Repeat Best Of shows found")
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve Repeat Best Of shows from the database",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving Repeat Best Of shows from "
+            "the database",
+        ) from None
+
+
+@router.get(
+    "/details/repeats",
+    summary="Retrieve Detailed Information for All Repeat Shows",
+    response_model=ModelsShowDetails,
+    tags=["Shows"],
+)
+@router.head("/details/repeats", include_in_schema=False)
+async def get_details_repeats():
+    """Retrieve all Repeat Shows.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
+    show url
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_details = show.retrieve_all_repeats_details()
+        if show_details:
+            return show_details
+
+        raise HTTPException(status_code=404, detail="No Repeat shows found")
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve Repeat shows from the database",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving Repeat shows from the database",
+        ) from None
+
+
+@router.get(
     "/recent",
     summary="Retrieve Information for Recent Shows",
     response_model=ModelsShows,
@@ -712,4 +838,68 @@ async def get_shows_recent():
         raise HTTPException(
             status_code=500,
             detail="Database error occurred while retrieving shows from the database",
+        ) from None
+
+
+@router.get(
+    "/repeats",
+    summary="Retrieve Information for All Repeat Shows",
+    response_model=ModelsShows,
+    tags=["Shows"],
+)
+@router.head("/repeats", include_in_schema=False)
+async def get_repeats():
+    """Retrieve all Repeat Shows.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
+    show url
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_info = show.retrieve_all_repeats()
+        if show_info:
+            return {"shows": show_info}
+
+        raise HTTPException(status_code=404, detail="No Repeat shows found")
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve Repeat shows from the database"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving Repeat shows from the database",
+        ) from None
+
+
+@router.get(
+    "/repeat-best-ofs",
+    summary="Retrieve Information for All Repeat Best Of Shows",
+    response_model=ModelsShows,
+    tags=["Shows"],
+)
+@router.head("/repeat-best-ofs", include_in_schema=False)
+async def get_repeat_best_ofs():
+    """Retrieve all Repeat Best Of Shows.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
+    show url
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_info = show.retrieve_all_repeat_best_ofs()
+        if show_info:
+            return {"shows": show_info}
+
+        raise HTTPException(status_code=404, detail="No Repeat Best Of shows found")
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve Repeat Best Of shows from the database",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving Repeat Best Of shows "
+            "from the database",
         ) from None
