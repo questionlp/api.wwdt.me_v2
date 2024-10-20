@@ -41,6 +41,25 @@ def test_shows_id(show_id: int):
     assert "best_of" in show
     assert "repeat_show" in show
     assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
+
+
+def test_shows_best_ofs():
+    """Test /v2.0/shows/best-ofs route."""
+    response = client.get(f"/v{API_VERSION}/shows/best-ofs")
+    shows = response.json()
+
+    assert response.status_code == 200
+    assert "shows" in shows
+    assert "id" in shows["shows"][0]
+    assert "date" in shows["shows"][0]
+    assert "best_of" in shows["shows"][0]
+    assert shows["shows"][0]["best_of"] is True
+    assert "repeat_show" in shows["shows"][0]
+    assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
 
 
 @pytest.mark.parametrize("show_date", ["2018-10-27"])
@@ -56,6 +75,8 @@ def test_shows_date_iso_show_date(show_date: str):
     assert "best_of" in show
     assert "repeat_show" in show
     assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
 
 
 @pytest.mark.parametrize("year", [2006])
@@ -73,6 +94,8 @@ def test_shows_date_year(year: int):
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
 
 
 @pytest.mark.parametrize("year, month", [(2006, 6)])
@@ -90,6 +113,8 @@ def test_shows_date_year_month(year: int, month: int):
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
 
 
 @pytest.mark.parametrize("month, day", [(10, 27)])
@@ -107,6 +132,8 @@ def test_shows_date_month_day(month: int, day: int):
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
 
 
 @pytest.mark.parametrize("year, month, day", [(2018, 10, 27)])
@@ -123,6 +150,8 @@ def test_shows_date_year_month_day(year: int, month: int, day: int):
     assert "best_of" in show
     assert "repeat_show" in show
     assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
 
 
 def test_show_dates():
@@ -147,6 +176,8 @@ def test_shows_details():
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
     assert "location" in shows["shows"][0]
     assert "description" in shows["shows"][0]
     assert "host" in shows["shows"][0]
@@ -168,6 +199,8 @@ def test_shows_details_date_iso_show_date(show_date: str):
     assert "best_of" in show
     assert "repeat_show" in show
     assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
     assert "location" in show
     assert "description" in show
     assert "host" in show
@@ -191,6 +224,8 @@ def test_shows_details_date_year(year: int):
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
     assert "location" in shows["shows"][0]
     assert "description" in shows["shows"][0]
     assert "host" in shows["shows"][0]
@@ -214,6 +249,8 @@ def test_shows_details_date_year_month(year: int, month: int):
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
     assert "location" in shows["shows"][0]
     assert "description" in shows["shows"][0]
     assert "host" in shows["shows"][0]
@@ -237,6 +274,8 @@ def test_shows_details_date_month_day(month: int, day: int):
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
     assert "location" in shows["shows"][0]
     assert "description" in shows["shows"][0]
     assert "host" in shows["shows"][0]
@@ -259,6 +298,8 @@ def test_shows_details_date_year_month_day(year: int, month: int, day: int):
     assert "best_of" in show
     assert "repeat_show" in show
     assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
     assert "location" in show
     assert "description" in show
     assert "host" in show
@@ -280,6 +321,8 @@ def test_shows_details_id(show_id: int):
     assert "best_of" in show
     assert "repeat_show" in show
     assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
     assert "location" in show
     assert "description" in show
     assert "host" in show
@@ -300,6 +343,8 @@ def test_shows_details_recent():
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
     assert "location" in shows["shows"][0]
     assert "description" in shows["shows"][0]
     assert "host" in shows["shows"][0]
@@ -320,3 +365,44 @@ def test_shows_recent():
     assert "best_of" in shows["shows"][0]
     assert "repeat_show" in shows["shows"][0]
     assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert "original_show_date" in shows["shows"][0]
+
+
+def test_shows_repeat_best_ofs():
+    """Test /v2.0/shows/repeat-best-ofs route."""
+    response = client.get(f"/v{API_VERSION}/shows/repeat-best-ofs")
+    shows = response.json()
+
+    assert response.status_code == 200
+    assert "shows" in shows
+    assert "id" in shows["shows"][0]
+    assert "date" in shows["shows"][0]
+    assert "best_of" in shows["shows"][0]
+    assert shows["shows"][0]["best_of"] is True
+    assert "repeat_show" in shows["shows"][0]
+    assert shows["shows"][0]["repeat_show"] is True
+    assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert isinstance(shows["shows"][0]["original_show_id"], int)
+    assert "original_show_date" in shows["shows"][0]
+    assert isinstance(shows["shows"][0]["original_show_date"], str)
+
+
+def test_shows_repeats():
+    """Test /v2.0/shows/repeats route."""
+    response = client.get(f"/v{API_VERSION}/shows/repeats")
+    shows = response.json()
+
+    assert response.status_code == 200
+    assert "shows" in shows
+    assert "id" in shows["shows"][0]
+    assert "date" in shows["shows"][0]
+    assert "best_of" in shows["shows"][0]
+    assert "repeat_show" in shows["shows"][0]
+    assert shows["shows"][0]["repeat_show"] is True
+    assert "show_url" in shows["shows"][0]
+    assert "original_show_id" in shows["shows"][0]
+    assert isinstance(shows["shows"][0]["original_show_id"], int)
+    assert "original_show_date" in shows["shows"][0]
+    assert isinstance(shows["shows"][0]["original_show_date"], str)

@@ -19,6 +19,9 @@ class Show(BaseModel):
     best_of: bool = Field(title="Best Of Show")
     repeat_show: bool = Field(title="Best Of Show")
     show_url: str | None = Field(default=None, title="URL for Show Page on NPR.org")
+    original_show_id: Annotated[int, Field(ge=0, lt=2**31)] | None = \
+        Field(default=None, title="Original Show ID")
+    original_show_date: str | None = Field(default=None, title="Original Show Date")
 
 
 class Shows(BaseModel):
