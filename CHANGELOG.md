@@ -6,8 +6,8 @@
 
 - Add `/v2.0/shows/best-ofs` endpoint that provides information for all Best Of shows
 - Add `/v2.0/shows/details/best-ofs` endpoint that provides detailed information for all Best Of shows
-- Add `/v2.0/shows/best-of-repeats` endpoint that provides information for all Best Of Repeat shows
-- Add `/v2.0/shows/details/best-of-repeats` endpoint that provides detailed information for all Best Of Repeat shows
+- Add `/v2.0/shows/repeat-best-ofs` endpoint that provides information for all Repeat Best Of shows
+- Add `/v2.0/shows/details/repeat-best-ofs` endpoint that provides detailed information for all Repeat Best Of shows
 - Add `/v2.0/shows/repeats` endpoint that provides information for all Repeat shows
 - Add `/v2.0/shows/details/repeats/` endpoint that provides detailed information for all Repeat shows
 - Add missing `original_show_id` and `original_show_date` for `Show`, `ShowDetails`, `Shows` and `ShowsDetails` models
