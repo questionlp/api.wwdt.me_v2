@@ -1,5 +1,11 @@
 # Changes
 
+## 2.15.1
+
+### Component Changes
+
+- Upgrade jinja2 from 3.1.4 to 3.1.5
+
 ## 2.15.0
 
 ### Application Changes
