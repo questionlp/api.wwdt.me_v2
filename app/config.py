@@ -1,4 +1,4 @@
-# Copyright (c) 2018-2024 Linh Pham
+# Copyright (c) 2018-2025 Linh Pham
 # api.wwdt.me is released under the terms of the Apache License 2.0
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 API_VERSION = "2.0"
-APP_VERSION = "2.15.0"
+APP_VERSION = "2.15.1"
 
 
 def load_config(
