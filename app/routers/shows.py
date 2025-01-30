@@ -98,7 +98,7 @@ async def get_best_ofs():
 )
 @router.head("/id/{show_id}", include_in_schema=False)
 async def get_show_by_id(
-    show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)]
+    show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)],
 ):
     """Retrieve a Show by Show ID.
 
@@ -136,7 +136,7 @@ async def get_show_by_id(
 )
 @router.head("/date/iso/{show_date}", include_in_schema=False)
 async def get_show_by_date_string(
-    show_date: Annotated[date, Path(title="ISO date for the show to get")]
+    show_date: Annotated[date, Path(title="ISO date for the show to get")],
 ):
     """Retrieve a Show by Show Date in YYYY-MM-DD format.
 
@@ -174,7 +174,7 @@ async def get_show_by_date_string(
 )
 @router.head("/date/{year}", include_in_schema=False)
 async def get_shows_by_year(
-    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)]
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
 ):
     """Retrieve All Shows by Year.
 
@@ -443,7 +443,7 @@ async def get_details_best_ofs():
 )
 @router.head("/details/id/{show_id}", include_in_schema=False)
 async def get_show_details_by_id(
-    show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)]
+    show_id: Annotated[int, Path(title="The ID of the show to get", ge=0, lt=2**31)],
 ):
     """Retrieve Details for a Shows by Show ID.
 
@@ -484,7 +484,7 @@ async def get_show_details_by_id(
 )
 @router.head("/details/date/iso/{show_date}", include_in_schema=False)
 async def get_show_details_by_date_string(
-    show_date: Annotated[date, Path(title="ISO date for the show to get")]
+    show_date: Annotated[date, Path(title="ISO date for the show to get")],
 ):
     """Retrieve Details for a Show by Show Date in YYYY-MM-DD format.
 
@@ -526,7 +526,7 @@ async def get_show_details_by_date_string(
 )
 @router.head("/details/date/{year}", include_in_schema=False)
 async def get_shows_details_by_year(
-    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)]
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
 ):
     """Retrieve Details for Shows by Year.
 

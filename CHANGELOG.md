@@ -1,5 +1,22 @@
 # Changes
 
+## 2.15.2
+
+### Application Changes
+
+- Add missing `patreon_url` and `github_sponsor_url` variable initialization for appropriate codepaths
+- Fix issue where locations with a null value for state aren't listed in various `locations` API endpoint responses
+
+### Component Changes
+
+- Upgrade wwdtm from 2.14.0 to 2.15.0
+
+### Development Changes
+
+- Upgrade ruff from 0.9.2 to 0.9.3
+- Remove black from required development packages as part of migrating entirely to Ruff
+- Ran `ruff format` to format Python code files using the Ruff 2025 Style Guide
+
 ## 2.15.1
 
 ### Component Changes

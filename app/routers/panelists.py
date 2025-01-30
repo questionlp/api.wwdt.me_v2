@@ -73,7 +73,7 @@ async def get_panelists():
 async def get_panelist_by_id(
     panelist_id: Annotated[
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve a Panelist by Panelist ID.
 
@@ -111,7 +111,7 @@ async def get_panelist_by_id(
 )
 @router.head("/slug/{panelist_slug}", include_in_schema=False)
 async def get_panelist_by_slug(
-    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")],
 ):
     """Retrieve a Panelist by Panelist Slug String.
 
@@ -188,7 +188,7 @@ async def get_panelists_details():
 async def get_panelist_details_by_id(
     panelist_id: Annotated[
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve Details for a Panelist by Panelist ID.
 
@@ -231,7 +231,7 @@ async def get_panelist_details_by_id(
 )
 @router.head("/details/slug/{panelist_slug}", include_in_schema=False)
 async def get_panelist_details_by_slug(
-    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")],
 ):
     """Retrieve Details for a Panelist by Panelist Slug String.
 
@@ -278,7 +278,7 @@ async def get_panelist_details_by_slug(
 async def get_panelist_scores_by_id(
     panelist_id: Annotated[
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve Panelist Scores by Panelist ID.
 
@@ -325,7 +325,7 @@ async def get_panelist_scores_by_id(
 )
 @router.head("/scores/slug/{panelist_slug}", include_in_schema=False)
 async def get_panelist_scores_by_slug(
-    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")],
 ):
     """Retrieve Panelist Scores by Panelist Slug String.
 
@@ -375,7 +375,7 @@ async def get_panelist_scores_by_slug(
 async def get_panelist_scores_grouped_ordered_pair_by_id(
     panelist_id: Annotated[
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve Panelist Grouped Scores by Panelist ID.
 
@@ -430,7 +430,7 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
     "/scores/grouped-ordered-pair/slug/{panelist_slug}", include_in_schema=False
 )
 async def get_panelist_scores_grouped_ordered_pair_by_slug(
-    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")],
 ):
     """Retrieve Panelist Grouped Scores by Panelist Slug String.
 
@@ -482,7 +482,7 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
 async def get_panelist_scores_ordered_pair_by_id(
     panelist_id: Annotated[
         int, Path(title="The ID of the panelist to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve Panelist Scores as Ordered Pairs by Panelist ID.
 
@@ -516,8 +516,7 @@ async def get_panelist_scores_ordered_pair_by_id(
     except DatabaseError:
         raise HTTPException(
             status_code=500,
-            detail="Database error occurred while trying to "
-            "retrieve panelist scores",
+            detail="Database error occurred while trying to retrieve panelist scores",
         ) from None
 
 
@@ -529,7 +528,7 @@ async def get_panelist_scores_ordered_pair_by_id(
 )
 @router.head("/scores/ordered-pair/slug/{panelist_slug}", include_in_schema=False)
 async def get_panelist_scores_ordered_pair_by_slug(
-    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")]
+    panelist_slug: Annotated[str, Path(title="The slug string of the panelist to get")],
 ):
     """Retrieve Panelist Scores as Ordered Pairs by Panelist Slug String.
 

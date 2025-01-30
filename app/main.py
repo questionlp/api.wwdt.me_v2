@@ -61,6 +61,8 @@ async def default_page(request: Request):
         github_sponsor_url: str | None = settings.get("github_sponsor_url", None)
     else:
         stats_url = None
+        patreon_url = None
+        github_sponsor_url = None
 
     umami = config["settings"].get("umami_analytics")
     umami_analytics = format_umami_analytics(umami_analytics=umami)

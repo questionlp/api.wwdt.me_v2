@@ -66,7 +66,7 @@ async def get_scorekeepers():
 async def get_scorekeeper_by_id(
     scorekeeper_id: Annotated[
         int, Path(title="The ID of the scorekeeper to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve a Scorekeeper by Scorekeeper ID.
 
@@ -106,7 +106,7 @@ async def get_scorekeeper_by_id(
 async def get_scorekeeper_by_slug(
     scorekeeper_slug: Annotated[
         str, Path(title="The slug string of the scorekeeper to get")
-    ]
+    ],
 ):
     """Retrieve a Scorekeeper by Scorekeeper Slug String.
 
@@ -182,7 +182,7 @@ async def get_scorekeepers_details():
 async def get_scorekeeper_details_by_id(
     scorekeeper_id: Annotated[
         int, Path(title="The ID of the scorekeeper to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve Details for a Scorekeeper by Scorekeeper ID.
 
@@ -225,7 +225,7 @@ async def get_scorekeeper_details_by_id(
 async def get_scorekeeper_details_by_slug(
     scorekeeper_slug: Annotated[
         str, Path(title="The slug string of the scorekeeper to get")
-    ]
+    ],
 ):
     """Retrieve Details for a Scorekeeper by Scorekeeper ID.
 
