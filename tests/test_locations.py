@@ -31,7 +31,7 @@ def test_locations():
         assert "longitude" in locations["locations"][0]["coordinates"]
 
 
-@pytest.mark.parametrize("location_id", [32])
+@pytest.mark.parametrize("location_id", [32, 148])
 def test_locations_id(location_id: int):
     """Test /v2.0/locations/id/{location_id} route."""
     response = client.get(f"/v{API_VERSION}/locations/id/{location_id}")
@@ -50,7 +50,10 @@ def test_locations_id(location_id: int):
         assert "longitude" in location["coordinates"]
 
 
-@pytest.mark.parametrize("location_slug", ["arlene-schnitzer-concert-hall-portland-or"])
+@pytest.mark.parametrize(
+    "location_slug",
+    ["arlene-schnitzer-concert-hall-portland-or", "home-remote-studios"],
+)
 def test_locations_slug(location_slug: str):
     """Test /v2.0/locations/slug/{location_slug} route."""
     response = client.get(f"/v{API_VERSION}/locations/slug/{location_slug}")
@@ -87,7 +90,7 @@ def test_locations_recordings():
     assert "recordings" in locations["locations"][0]
 
 
-@pytest.mark.parametrize("location_id", [32])
+@pytest.mark.parametrize("location_id", [32, 148])
 def test_locations_recordings_id(location_id: int):
     """Test /v2.0/locations/recordings/id/{location_id} route."""
     response = client.get(f"/v{API_VERSION}/locations/recordings/id/{location_id}")
@@ -106,7 +109,10 @@ def test_locations_recordings_id(location_id: int):
     assert "recordings" in location
 
 
-@pytest.mark.parametrize("location_slug", ["arlene-schnitzer-concert-hall-portland-or"])
+@pytest.mark.parametrize(
+    "location_slug",
+    ["arlene-schnitzer-concert-hall-portland-or", "home-remote-studios"],
+)
 def test_locations_recordings_slug(location_slug: str):
     """Test /v2.0/locations/recordings/slug/{location_slug} route."""
     response = client.get(f"/v{API_VERSION}/locations/recordings/slug/{location_slug}")

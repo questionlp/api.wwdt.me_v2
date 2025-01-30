@@ -64,7 +64,7 @@ async def get_hosts():
 )
 @router.head("/id/{host_id}", include_in_schema=False)
 async def get_host_by_id(
-    host_id: Annotated[int, Path(title="The ID of the host to get", ge=0, lt=2**31)]
+    host_id: Annotated[int, Path(title="The ID of the host to get", ge=0, lt=2**31)],
 ):
     """Retrieve a Host by Host ID.
 
@@ -100,7 +100,7 @@ async def get_host_by_id(
 )
 @router.head("/slug/{host_slug}", include_in_schema=False)
 async def get_host_by_slug(
-    host_slug: Annotated[str, Path(title="The slug string of the host to get")]
+    host_slug: Annotated[str, Path(title="The slug string of the host to get")],
 ):
     """Retrieve a Host by Host Slug String.
 
@@ -170,7 +170,7 @@ async def get_hosts_details():
 )
 @router.head("/details/id/{host_id}", include_in_schema=False)
 async def get_host_details_by_id(
-    host_id: Annotated[int, Path(title="The ID of the host to get", ge=0, lt=2**31)]
+    host_id: Annotated[int, Path(title="The ID of the host to get", ge=0, lt=2**31)],
 ):
     """Retrieve Details for a Host by Host ID.
 
@@ -208,7 +208,7 @@ async def get_host_details_by_id(
 )
 @router.head("/details/slug/{host_slug}", include_in_schema=False)
 async def get_host_details_by_slug(
-    host_slug: Annotated[str, Path(title="The slug string of the guest to get")]
+    host_slug: Annotated[str, Path(title="The slug string of the guest to get")],
 ):
     """Retrieve Details for a Host by Host Slug String.
 

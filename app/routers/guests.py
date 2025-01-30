@@ -64,7 +64,7 @@ async def get_guests():
 )
 @router.head("/id/{guest_id}", include_in_schema=False)
 async def get_guest_by_id(
-    guest_id: Annotated[int, Path(title="The ID of the guest to get", ge=0, lt=2**31)]
+    guest_id: Annotated[int, Path(title="The ID of the guest to get", ge=0, lt=2**31)],
 ):
     """Retrieve a Not My Job Guest by Guest ID.
 
@@ -100,7 +100,7 @@ async def get_guest_by_id(
 )
 @router.head("/slug/{guest_slug}", include_in_schema=False)
 async def get_guest_by_slug(
-    guest_slug: Annotated[str, Path(title="The slug string of the guest to get")]
+    guest_slug: Annotated[str, Path(title="The slug string of the guest to get")],
 ):
     """Retrieve a Not My Job Guest by Guest Slug String.
 
@@ -170,7 +170,7 @@ async def get_guests_details():
 )
 @router.head("/details/id/{guest_id}", include_in_schema=False)
 async def get_guest_details_by_id(
-    guest_id: Annotated[int, Path(title="The ID of the guest to get", ge=0, lt=2**31)]
+    guest_id: Annotated[int, Path(title="The ID of the guest to get", ge=0, lt=2**31)],
 ):
     """Retrieve Details for a Not My Job Guest by Guest ID.
 
@@ -208,7 +208,7 @@ async def get_guest_details_by_id(
 )
 @router.head("/details/slug/{guest_slug}", include_in_schema=False)
 async def get_guest_details_by_slug(
-    guest_slug: Annotated[str, Path(title="The slug string of the guest to get")]
+    guest_slug: Annotated[str, Path(title="The slug string of the guest to get")],
 ):
     """Retrieve Details for a Not My Job Guest by Guest Slug String.
 

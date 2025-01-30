@@ -66,7 +66,7 @@ async def get_locations():
 async def get_location_by_id(
     location_id: Annotated[
         int, Path(title="The ID of the location to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve a Show Location by Location ID.
 
@@ -104,7 +104,7 @@ async def get_location_by_id(
 )
 @router.head("/slug/{location_slug}", include_in_schema=False)
 async def get_location_by_slug(
-    location_slug: Annotated[str, Path(title="The slug string of the location to get")]
+    location_slug: Annotated[str, Path(title="The slug string of the location to get")],
 ):
     """Retrieve a Show Location by Location Slug String.
 
@@ -179,7 +179,7 @@ async def get_locations_details():
 async def get_location_recordings_by_id(
     location_id: Annotated[
         int, Path(title="The ID of the location to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve Details for a Show Location by Location ID.
 
@@ -221,7 +221,7 @@ async def get_location_recordings_by_id(
 )
 @router.head("/recordings/slug/{location_slug}", include_in_schema=False)
 async def get_location_recordings_by_slug(
-    location_slug: Annotated[str, Path(title="The slug string of the location to get")]
+    location_slug: Annotated[str, Path(title="The slug string of the location to get")],
 ):
     """Retrieve Details for a Show Location by Location Slug String.
 

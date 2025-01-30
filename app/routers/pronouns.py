@@ -64,7 +64,7 @@ async def get_pronouns():
 async def get_pronouns_by_id(
     pronouns_id: Annotated[
         int, Path(title="The ID of the pronouns to get", ge=0, lt=2**31)
-    ]
+    ],
 ):
     """Retrieve a Pronouns String by Pronouns ID.
 
