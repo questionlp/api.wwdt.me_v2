@@ -67,3 +67,15 @@ class HostsDetails(BaseModel):
 
     hosts: list[HostDetails] = Field(title="List of Host Details")
     hosts: list[HostDetails] = Field(title="List of Host Details")
+
+
+class HostID(BaseModel):
+    """Host ID."""
+
+    id: int = Field(title="Host ID")
+
+
+class HostSlug(BaseModel):
+    """Host Slug String."""
+
+    slug: str = Field(title="Host Slug String")

@@ -1,5 +1,22 @@
 # Changes
 
+## 2.16.0
+
+### Application Changes
+
+- Add `/random`, `/random/details`, `/random/id`, and `/random/slug` endpoints to Guests, Hosts, Locations, Panelists and Scorekeepers to retrieve a random item, ID or slug string from the corresponding sections
+- Add `/random`, `/random/details`, `/random/id` and `/random/date` endpoints to Shows to retrieve a random show, ID or ISO-formatted date string
+- Add `/postal-abbreviations`, `/postal-abbreviations/details` and `/postal-abbreviations/details/{abbreviation}` endpoints to Locations to get a list of postal abbreviations, get details for all available postal abbreviations, and get details for a specific postal abbreviation
+- Add `PostalAbbreviationDetails`, `PostalAbbreviations` and `PostalAbbreviationsDetails` models for the above endpoints
+
+### Component Changes
+
+- Upgrade wwdtm from 2.15.0 to 2.16.1
+
+### Development Changes
+
+- Added tests for all of the new endpoints
+
 ## 2.15.2
 
 ### Application Changes

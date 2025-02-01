@@ -191,6 +191,18 @@ class PanelistsDetails(BaseModel):
     )
 
 
+class PanelistID(BaseModel):
+    """Panelist ID."""
+
+    id: int = Field(title="Panelist ID")
+
+
+class PanelistSlug(BaseModel):
+    """Panelist Slug String."""
+
+    slug: str = Field(title="Panelist Slug String")
+
+
 class PanelistScoresList(BaseModel):
     """List of Panelist Appearances as Show Dates and a list of corresponding Panelist scores."""
 

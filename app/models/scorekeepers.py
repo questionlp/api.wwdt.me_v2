@@ -70,3 +70,15 @@ class ScorekeepersDetails(BaseModel):
 
     scorekeepers: list[ScorekeeperDetails] = Field(title="List of Scorekeeper Details")
     scorekeepers: list[ScorekeeperDetails] = Field(title="List of Scorekeeper Details")
+
+
+class ScorekeeperID(BaseModel):
+    """Scorekeeper ID."""
+
+    id: int = Field(title="Scorekeeper ID")
+
+
+class ScorekeeperSlug(BaseModel):
+    """Scorekeeper Slug String."""
+
+    slug: str = Field(title="Scorekeeper Slug String")

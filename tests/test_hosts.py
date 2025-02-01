@@ -97,3 +97,48 @@ def test_hosts_details_slug(host_slug: str):
     assert "slug" in host
     assert host["slug"] == host_slug
     assert "appearances" in host
+
+
+def test_hosts_random():
+    """Test /v2.0/hosts/random route."""
+    response = client.get(f"/v{API_VERSION}/hosts/random")
+    host = response.json()
+
+    assert response.status_code == 200
+    assert "id" in host
+    assert "name" in host
+    assert "pronouns" in host
+    assert "slug" in host
+
+
+def test_hosts_random_details():
+    """Test /v2.0/hosts/random/details route."""
+    response = client.get(f"/v{API_VERSION}/hosts/random/details")
+    host = response.json()
+
+    assert response.status_code == 200
+    assert "id" in host
+    assert "name" in host
+    assert "pronouns" in host
+    assert "slug" in host
+    assert "appearances" in host
+
+
+def test_hosts_random_id():
+    """Test /v2.0/hosts/random/id route."""
+    response = client.get(f"/v{API_VERSION}/hosts/random/id")
+    _id = response.json()
+
+    assert response.status_code == 200
+    assert "id" in _id
+    assert isinstance(_id["id"], int)
+
+
+def test_hosts_random_slug():
+    """Test /v2.0/hosts/random/slug route."""
+    response = client.get(f"/v{API_VERSION}/hosts/random/slug")
+    _slug = response.json()
+
+    assert response.status_code == 200
+    assert "slug" in _slug
+    assert isinstance(_slug["slug"], str)

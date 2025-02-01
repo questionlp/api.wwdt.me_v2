@@ -15,8 +15,10 @@ from wwdtm.scorekeeper import Scorekeeper
 from app.config import API_VERSION, load_config
 from app.models.scorekeepers import Scorekeeper as ModelsScorekeeper
 from app.models.scorekeepers import ScorekeeperDetails as ModelsScorekeeperDetails
+from app.models.scorekeepers import ScorekeeperID as ModelsScorekeeperID
 from app.models.scorekeepers import Scorekeepers as ModelsScorekeepers
 from app.models.scorekeepers import ScorekeepersDetails as ModelsScorekeepersDetails
+from app.models.scorekeepers import ScorekeeperSlug as ModelsScorekeeperSlug
 
 router = APIRouter(prefix=f"/v{API_VERSION}/scorekeepers")
 _config = load_config()
@@ -259,4 +261,148 @@ async def get_scorekeeper_details_by_slug(
         raise HTTPException(
             status_code=500,
             detail="Database error occurred while trying to retrieve scorekeeper information",
+        ) from None
+
+
+@router.get(
+    "/random",
+    summary="Retrieve Information for a Random Scorekeeper",
+    response_model=ModelsScorekeeper,
+    tags=["Scorekeepers"],
+)
+@router.head("/random", include_in_schema=False)
+async def get_random_scorekeeper():
+    """Retrieve a Random Scorekeeper.
+
+    Returned data: Scorekeeper ID, name, slug string and gender.
+    """
+    try:
+        scorekeeper = Scorekeeper(database_connection=_database_connection)
+        scorekeeper_info = scorekeeper.retrieve_random()
+        if scorekeeper_info:
+            return scorekeeper_info
+
+        raise HTTPException(status_code=404, detail="Random Scorekeeper not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Scorekeeper not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve scorekeeper information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve scorekeeper information",
+        ) from None
+
+
+@router.get(
+    "/random/details",
+    summary="Retrieve Information and Appearances for a Random Scorekeeper",
+    response_model=ModelsScorekeeperDetails,
+    tags=["Scorekeepers"],
+)
+@router.head("/random/details", include_in_schema=False)
+async def get_random_scorekeeper_details():
+    """Retrieve a Random Scorekeeper.
+
+    Returned data: Scorekeeper ID, name, slug string, gender, and
+    appearances.
+
+    Appearances are sorted by date.
+    """
+    try:
+        scorekeeper = Scorekeeper(database_connection=_database_connection)
+        scorekeeper_details = scorekeeper.retrieve_random_details()
+        if scorekeeper_details:
+            return scorekeeper_details
+
+        raise HTTPException(status_code=404, detail="Random Scorekeeper not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Scorekeeper not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve scorekeeper information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve scorekeeper information",
+        ) from None
+
+
+@router.get(
+    "/random/id",
+    summary="Retrieve a Random Scorekeeper ID",
+    response_model=ModelsScorekeeperID,
+    tags=["Scorekeepers"],
+)
+@router.head("/random/id", include_in_schema=False)
+async def get_random_scorekeeper_id():
+    """Retrieve a Random Scorekeeper ID.
+
+    Returned data: Scorekeeper ID.
+    """
+    try:
+        scorekeeper = Scorekeeper(database_connection=_database_connection)
+        scorekeeper_id = scorekeeper.retrieve_random_id()
+        if scorekeeper_id:
+            return {"id": scorekeeper_id}
+
+        raise HTTPException(
+            status_code=404, detail="Random Scorekeeper ID not returned"
+        )
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Scorekeeper ID not returned"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve a random scorekeeper ID"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve a random scorekeeper ID",
+        ) from None
+
+
+@router.get(
+    "/random/slug",
+    summary="Retrieve a Random Scorekeeper Slug String",
+    response_model=ModelsScorekeeperSlug,
+    tags=["Scorekeepers"],
+)
+@router.head("/random/slug", include_in_schema=False)
+async def get_random_scorekeeper_slug():
+    """Retrieve a Random Scorekeeper Slug String.
+
+    Returned data: Scorekeeper slug string.
+    """
+    try:
+        scorekeeper = Scorekeeper(database_connection=_database_connection)
+        scorekeeper_slug = scorekeeper.retrieve_random_slug()
+        if scorekeeper_slug:
+            return {"slug": scorekeeper_slug}
+
+        raise HTTPException(
+            status_code=404, detail="Random Scorekeeper slug string not returned"
+        )
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Scorekeeper slug string not returned"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve a random scorekeeper slug string",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve a random scorekeeper slug string",
         ) from None

@@ -165,3 +165,48 @@ def test_panelists_scores_grouped_ordered_pair_slug(panelist_slug: str):
 
     assert response.status_code == 200
     assert "scores" in scores
+
+
+def test_panelists_random():
+    """Test /v2.0/panelists/random route."""
+    response = client.get(f"/v{API_VERSION}/panelists/random")
+    panelist = response.json()
+
+    assert response.status_code == 200
+    assert "id" in panelist
+    assert "name" in panelist
+    assert "pronouns" in panelist
+    assert "slug" in panelist
+
+
+def test_panelists_random_details():
+    """Test /v2.0/panelists/random/details route."""
+    response = client.get(f"/v{API_VERSION}/panelists/random/details")
+    panelist = response.json()
+
+    assert response.status_code == 200
+    assert "id" in panelist
+    assert "name" in panelist
+    assert "pronouns" in panelist
+    assert "slug" in panelist
+    assert "appearances" in panelist
+
+
+def test_panelists_random_id():
+    """Test /v2.0/panelists/random/id route."""
+    response = client.get(f"/v{API_VERSION}/panelists/random/id")
+    _id = response.json()
+
+    assert response.status_code == 200
+    assert "id" in _id
+    assert isinstance(_id["id"], int)
+
+
+def test_panelists_random_slug():
+    """Test /v2.0/panelists/random/slug route."""
+    response = client.get(f"/v{API_VERSION}/panelists/random/slug")
+    _slug = response.json()
+
+    assert response.status_code == 200
+    assert "slug" in _slug
+    assert isinstance(_slug["slug"], str)

@@ -15,6 +15,7 @@ from wwdtm.panelist import Panelist, PanelistDecimalScores, PanelistScores
 from app.config import API_VERSION, load_config
 from app.models.panelists import Panelist as ModelsPanelist
 from app.models.panelists import PanelistDetails as ModelsPanelistDetails
+from app.models.panelists import PanelistID as ModelsPanelistID
 from app.models.panelists import Panelists as ModelsPanelists
 from app.models.panelists import (
     PanelistScoresGroupedOrderedPair as ModelsPanelistScoresGroupedOrderedPair,
@@ -24,6 +25,7 @@ from app.models.panelists import (
     PanelistScoresOrderedPair as ModelsPanelistScoresOrderedPair,
 )
 from app.models.panelists import PanelistsDetails as ModelsPanelistsDetails
+from app.models.panelists import PanelistSlug as ModelsPanelistSlug
 
 router = APIRouter(prefix=f"/v{API_VERSION}/panelists")
 _config = load_config()
@@ -567,4 +569,145 @@ async def get_panelist_scores_ordered_pair_by_slug(
         raise HTTPException(
             status_code=500,
             detail="Database error occurred while trying to retrieve panelist scores",
+        ) from None
+
+
+@router.get(
+    "/random",
+    summary="Retrieve Information for a Random Panelist",
+    response_model=ModelsPanelist,
+    tags=["Panelists"],
+)
+@router.head("/random", include_in_schema=False)
+async def get_random_panelist():
+    """Retrieve a Random Panelist.
+
+    Returned data: Panelist ID, name, slug string and gender.
+    """
+    try:
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_info = panelist.retrieve_random()
+        if panelist_info:
+            return panelist_info
+
+        raise HTTPException(status_code=404, detail="Random Panelist not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Panelist not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve panelist information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve panelist information",
+        ) from None
+
+
+@router.get(
+    "/random/details",
+    summary="Retrieve Information and Appearances for a Random Panelist",
+    response_model=ModelsPanelistDetails,
+    tags=["Panelists"],
+)
+@router.head("/random/details", include_in_schema=False)
+async def get_random_panelist_details():
+    """Retrieve a Random Panelist.
+
+    Returned data: Panelist ID, name, slug string, gender, statistics
+    and appearances.
+
+    Appearances are sorted by date.
+    """
+    try:
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_details = panelist.retrieve_random_details()
+        if panelist_details:
+            return panelist_details
+
+        raise HTTPException(status_code=404, detail="Random Panelist not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Panelist not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve panelist information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve panelist information",
+        ) from None
+
+
+@router.get(
+    "/random/id",
+    summary="Retrieve a Random Panelist ID",
+    response_model=ModelsPanelistID,
+    tags=["Panelists"],
+)
+@router.head("/random/id", include_in_schema=False)
+async def get_random_panelist_id():
+    """Retrieve a Random Panelist ID.
+
+    Returned data: Panelist ID.
+    """
+    try:
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_id = panelist.retrieve_random_id()
+        if panelist_id:
+            return {"id": panelist_id}
+
+        raise HTTPException(status_code=404, detail="Random Panelist ID not returned")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Panelist ID not returned"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve a random panelist ID"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve a random panelist ID",
+        ) from None
+
+
+@router.get(
+    "/random/slug",
+    summary="Retrieve a Random Panelist Slug String",
+    response_model=ModelsPanelistSlug,
+    tags=["Panelists"],
+)
+@router.head("/random/slug", include_in_schema=False)
+async def get_random_panelist_slug():
+    """Retrieve a Random Panelist Slug String.
+
+    Returned data: Panelist slug string.
+    """
+    try:
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_slug = panelist.retrieve_random_slug()
+        if panelist_slug:
+            return {"slug": panelist_slug}
+
+        raise HTTPException(
+            status_code=404, detail="Random Panelist slug string not returned"
+        )
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Panelist slug string not returned"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve a random panelist slug string"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve a random panelist slug string",
         ) from None

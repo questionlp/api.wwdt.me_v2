@@ -66,3 +66,15 @@ class GuestsDetails(BaseModel):
 
     guests: list[GuestDetails] = Field(title="List of Guest Details")
     guests: list[GuestDetails] = Field(title="List of Guest Details")
+
+
+class GuestID(BaseModel):
+    """Not My Job Guest ID."""
+
+    id: int = Field(title="Guest ID")
+
+
+class GuestSlug(BaseModel):
+    """Not My Job Guest Slug String."""
+
+    slug: str = Field(title="Guest Slug String")
