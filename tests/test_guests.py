@@ -91,3 +91,46 @@ def test_guests_details_slug(guest_slug: str):
     assert "slug" in guest
     assert guest["slug"] == guest_slug
     assert "appearances" in guest
+
+
+def test_guests_random():
+    """Test /v2.0/guests/random route."""
+    response = client.get(f"/v{API_VERSION}/guests/random")
+    guest = response.json()
+
+    assert response.status_code == 200
+    assert "id" in guest
+    assert "name" in guest
+    assert "slug" in guest
+
+
+def test_guests_random_details():
+    """Test /v2.0/guests/random/details route."""
+    response = client.get(f"/v{API_VERSION}/guests/random/details")
+    guest = response.json()
+
+    assert response.status_code == 200
+    assert "id" in guest
+    assert "name" in guest
+    assert "slug" in guest
+    assert "appearances" in guest
+
+
+def test_guests_random_id():
+    """Test /v2.0/guests/random/id route."""
+    response = client.get(f"/v{API_VERSION}/guests/random/id")
+    _id = response.json()
+
+    assert response.status_code == 200
+    assert "id" in _id
+    assert isinstance(_id["id"], int)
+
+
+def test_guests_random_slug():
+    """Test /v2.0/guests/random/slug route."""
+    response = client.get(f"/v{API_VERSION}/guests/random/slug")
+    _slug = response.json()
+
+    assert response.status_code == 200
+    assert "slug" in _slug
+    assert isinstance(_slug["slug"], str)

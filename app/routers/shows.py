@@ -15,8 +15,10 @@ from wwdtm.show import Show
 
 from app.config import API_VERSION, load_config
 from app.models.shows import Show as ModelsShow
+from app.models.shows import ShowDate as ModelsShowDate
 from app.models.shows import ShowDates as ModelsShowDates
 from app.models.shows import ShowDetails as ModelsShowDetails
+from app.models.shows import ShowID as ModelsShowID
 from app.models.shows import Shows as ModelsShows
 from app.models.shows import ShowsDetails as ModelsShowsDetails
 
@@ -902,4 +904,143 @@ async def get_repeat_best_ofs():
             status_code=500,
             detail="Database error occurred while retrieving Repeat Best Of shows "
             "from the database",
+        ) from None
+
+
+@router.get(
+    "/random",
+    summary="Retrieve Information for a Random Show",
+    response_model=ModelsShow,
+    tags=["Shows"],
+)
+@router.head("/random", include_in_schema=False)
+async def get_random_show():
+    """Retrieve Information for a Random Show.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_info = show.retrieve_random()
+        if show_info:
+            return show_info
+
+        raise HTTPException(status_code=404, detail="Random Show not found")
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Random Show not found") from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve show information from the database",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
+
+
+@router.get(
+    "/random/details",
+    summary="Retrieve Detailed Information for a Random Show",
+    response_model=ModelsShowDetails,
+    tags=["Shows"],
+)
+@router.head("/random/details", include_in_schema=False)
+async def get_random_show_details():
+    """Retrieve Details for a Random Show.
+
+    Return data: Show ID, date, Best Of flag, Repeat flag or date,
+    NPR.org show URL, location, description, notes, host, scorekeeper,
+    panelists, Bluff information and Not My Job guests
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_details = show.retrieve_random_details()
+        if show_details:
+            return show_details
+
+        raise HTTPException(status_code=404, detail="Random Show not found")
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Random Show not found") from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve show information from the database",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while retrieving show information from the database",
+        ) from None
+
+
+@router.get(
+    "/random/id",
+    summary="Retrieve a Random Show ID",
+    response_model=ModelsShowID,
+    tags=["Shows"],
+)
+@router.head("/random/id", include_in_schema=False)
+async def get_random_show_id():
+    """Retrieve a Random Show ID.
+
+    Returned data: Show ID.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        _id = show.retrieve_random_id()
+        if _id:
+            return {"id": _id}
+
+        raise HTTPException(status_code=404, detail="Random Show ID not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Show ID not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve a random show ID",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve a random show ID",
+        ) from None
+
+
+@router.get(
+    "/random/date",
+    summary="Retrieve a Random Show Date",
+    response_model=ModelsShowDate,
+    tags=["Shows"],
+)
+@router.head("/random/date", include_in_schema=False)
+async def get_random_show_date():
+    """Retrieve a Random Show Date.
+
+    Returned data: Show Date.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        _date = show.retrieve_random_date()
+        if _date:
+            return {"date": _date}
+
+        raise HTTPException(status_code=404, detail="Random Show Date not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Show Date not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500,
+            detail="Unable to retrieve a random show date",
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve a random show date",
         ) from None

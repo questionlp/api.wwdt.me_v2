@@ -60,6 +60,18 @@ class ShowHost(BaseModel):
     guest: bool = Field(title="Guest Host")
 
 
+class ShowID(BaseModel):
+    """Show ID."""
+
+    id: int = Field(title="Show ID")
+
+
+class ShowDate(BaseModel):
+    """Show Date String."""
+
+    date: str = Field(title="Show Date String")
+
+
 class ShowScorekeeper(BaseModel):
     """Show Scorekeeper Information."""
 

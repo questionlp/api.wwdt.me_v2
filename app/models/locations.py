@@ -8,7 +8,7 @@
 from decimal import Decimal
 from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 
 
 class LocationCoordinates(BaseModel):
@@ -78,4 +78,35 @@ class LocationsDetails(BaseModel):
     """List of Location Details."""
 
     locations: list[LocationDetails] = Field(title="List of Location Details")
-    locations: list[LocationDetails] = Field(title="List of Location Details")
+
+
+class LocationID(BaseModel):
+    """Location ID."""
+
+    id: int = Field(title="Location ID")
+
+
+class LocationSlug(BaseModel):
+    """Location Slug String."""
+
+    slug: str = Field(title="Location Slug String")
+
+
+class PostalAbbreviationDetails(BaseModel):
+    """Postal Abbreviation Details."""
+
+    postal_abbreviation: str = Field("Postal Abbreviation")
+    name: str = Field(title="State, Province or Territory Name")
+    country: str = Field(title="Country Name")
+
+
+class PostalAbbreviations(RootModel[list[str]]):
+    """List of Postal Abbreviations."""
+
+
+class PostalAbbreviationsDetails(BaseModel):
+    """List of Postal Abbreviations Details."""
+
+    postal_abbreviations: list[PostalAbbreviationDetails] = Field(
+        "List of Postal Abbreviations Details"
+    )

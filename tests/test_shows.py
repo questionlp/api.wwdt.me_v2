@@ -406,3 +406,59 @@ def test_shows_repeats():
     assert isinstance(shows["shows"][0]["original_show_id"], int)
     assert "original_show_date" in shows["shows"][0]
     assert isinstance(shows["shows"][0]["original_show_date"], str)
+
+
+def test_shows_random():
+    """Test /v2.0/shows/random route."""
+    response = client.get(f"/v{API_VERSION}/shows/random")
+    show = response.json()
+
+    assert response.status_code == 200
+    assert "id" in show
+    assert "date" in show
+    assert "best_of" in show
+    assert "repeat_show" in show
+    assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
+
+
+def test_shows_random_details():
+    """Test /v2.0/shows/random/details route."""
+    response = client.get(f"/v{API_VERSION}/shows/random/details")
+    show = response.json()
+
+    assert response.status_code == 200
+    assert "id" in show
+    assert "date" in show
+    assert "best_of" in show
+    assert "repeat_show" in show
+    assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
+    assert "location" in show
+    assert "description" in show
+    assert "host" in show
+    assert "scorekeeper" in show
+    assert "panelists" in show
+    assert "guests" in show
+
+
+def test_shows_random_id():
+    """Test /v2.0/shows/random/id route."""
+    response = client.get(f"/v{API_VERSION}/shows/random/id")
+    _id = response.json()
+
+    assert response.status_code == 200
+    assert "id" in _id
+    assert isinstance(_id["id"], int)
+
+
+def test_shows_random_date():
+    """Test /v2.0/shows/random/date route."""
+    response = client.get(f"/v{API_VERSION}/shows/random/date")
+    _date = response.json()
+
+    assert response.status_code == 200
+    assert "date" in _date
+    assert isinstance(_date["date"], str)

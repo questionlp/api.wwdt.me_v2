@@ -15,8 +15,10 @@ from wwdtm.guest import Guest
 from app.config import API_VERSION, load_config
 from app.models.guests import Guest as ModelsGuest
 from app.models.guests import GuestDetails as ModelsGuestDetails
+from app.models.guests import GuestID as ModelsGuestID
 from app.models.guests import Guests as ModelsGuests
 from app.models.guests import GuestsDetails as ModelsGuestsDetails
+from app.models.guests import GuestSlug as ModelsGuestSlug
 
 router = APIRouter(prefix=f"/v{API_VERSION}/guests")
 _config = load_config()
@@ -237,4 +239,140 @@ async def get_guest_details_by_slug(
         raise HTTPException(
             status_code=500,
             detail="Database error occurred while trying to retrieve guest information",
+        ) from None
+
+
+@router.get(
+    "/random",
+    summary="Retrieve Information for a Random Not My Job Guest",
+    response_model=ModelsGuest,
+    tags=["Guests"],
+)
+@router.head("/random", include_in_schema=False)
+async def get_random_guest():
+    """Retrieve a Random Not My Job Guest.
+
+    Returned data: Guest ID, name and slug string.
+    """
+    try:
+        guest = Guest(database_connection=_database_connection)
+        guest_info = guest.retrieve_random()
+        if guest_info:
+            return guest_info
+
+        raise HTTPException(status_code=404, detail="Random Guest not found")
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Random Guest not found") from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve guest information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve guest information",
+        ) from None
+
+
+@router.get(
+    "/random/details",
+    summary="Retrieve Information and Appearances for a Random Not My Job Guest",
+    response_model=ModelsGuestDetails,
+    tags=["Guests"],
+)
+@router.head("/random/details", include_in_schema=False)
+async def get_random_guest_details():
+    """Retrieve a Random Not My Job Guest.
+
+    Returned data: Guest ID, name, slug string, appearances and scores.
+
+    Appearances are sorted by date.
+    """
+    try:
+        guest = Guest(database_connection=_database_connection)
+        guest_details = guest.retrieve_random_details()
+        if guest_details:
+            return guest_details
+
+        raise HTTPException(status_code=404, detail="Random Guest not found")
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Random Guest not found") from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve guest information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve guest information",
+        ) from None
+
+
+@router.get(
+    "/random/id",
+    summary="Retrieve a Random Not My Job Guest ID",
+    response_model=ModelsGuestID,
+    tags=["Guests"],
+)
+@router.head("/random/id", include_in_schema=False)
+async def get_random_guest_id():
+    """Retrieve a Random Not My Job Guest ID.
+
+    Returned data: Guest ID.
+    """
+    try:
+        guest = Guest(database_connection=_database_connection)
+        guest_id = guest.retrieve_random_id()
+        if guest_id:
+            return {"id": guest_id}
+
+        raise HTTPException(status_code=404, detail="Random Guest ID not returned")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Guest ID not returned"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve a random guest ID"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve a random guest ID",
+        ) from None
+
+
+@router.get(
+    "/random/slug",
+    summary="Retrieve a Random Not My Job Guest Slug String",
+    response_model=ModelsGuestSlug,
+    tags=["Guests"],
+)
+@router.head("/random/slug", include_in_schema=False)
+async def get_random_guest_slug():
+    """Retrieve a Random Not My Job Guest Slug String.
+
+    Returned data: Guest slug string.
+    """
+    try:
+        guest = Guest(database_connection=_database_connection)
+        guest_slug = guest.retrieve_random_slug()
+        if guest_slug:
+            return {"slug": guest_slug}
+
+        raise HTTPException(
+            status_code=404, detail="Random Guest slug string not returned"
+        )
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Guest slug string not returned"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve a random guest slug string"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve a random guest slug string",
         ) from None

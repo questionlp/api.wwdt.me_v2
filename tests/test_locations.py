@@ -7,6 +7,7 @@
 
 import pytest
 from fastapi.testclient import TestClient
+from numpy import isin
 
 from app.config import API_VERSION
 from app.main import app
@@ -129,3 +130,85 @@ def test_locations_recordings_slug(location_slug: str):
         assert "latitude" in location["coordinates"]
         assert "longitude" in location["coordinates"]
     assert "recordings" in location
+
+
+def test_locations_postal_abbreviations():
+    """Test /v2.0/locations/postal-abbreviations route."""
+    response = client.get(f"/v{API_VERSION}/locations/postal-abbreviations")
+    abbreviations = response.json()
+
+    assert response.status_code == 200
+    assert isinstance(abbreviations, list)
+    assert isinstance(abbreviations[0], str)
+
+
+def test_locations_postal_abbreviations_details_all():
+    """Test /v2.0/locations/postal-abbreviations/details route."""
+    response = client.get(f"/v{API_VERSION}/locations/postal-abbreviations/details")
+    abbreviations = response.json()
+
+    assert response.status_code == 200
+    assert "postal_abbreviations" in abbreviations
+    assert isinstance(abbreviations["postal_abbreviations"], list)
+    assert isinstance(abbreviations["postal_abbreviations"][0], dict)
+    assert "postal_abbreviation" in abbreviations["postal_abbreviations"][0]
+    assert "name" in abbreviations["postal_abbreviations"][0]
+    assert "country" in abbreviations["postal_abbreviations"][0]
+
+
+@pytest.mark.parametrize("abbreviation", ["OR", "DC"])
+def test_locations_postal_abbreviations_details(abbreviation: str):
+    """Test /v2.0/locations/postal-abbreviations/details route."""
+    response = client.get(
+        f"/v{API_VERSION}/locations/postal-abbreviations/details/{abbreviation}"
+    )
+    info = response.json()
+
+    assert response.status_code == 200
+    assert isinstance(info, dict)
+    assert "postal_abbreviation" in info
+    assert "name" in info
+    assert "country" in info
+
+
+def test_locations_random():
+    """Test /v2.0/locations/random route."""
+    response = client.get(f"/v{API_VERSION}/locations/random")
+    location = response.json()
+
+    assert response.status_code == 200
+    assert "id" in location
+    assert "venue" in location
+    assert "slug" in location
+
+
+def test_locations_random_details():
+    """Test /v2.0/locations/random/details route."""
+    response = client.get(f"/v{API_VERSION}/locations/random/details")
+    location = response.json()
+
+    assert response.status_code == 200
+    assert "id" in location
+    assert "venue" in location
+    assert "slug" in location
+    assert "recordings" in location
+
+
+def test_locations_random_id():
+    """Test /v2.0/locations/random/id route."""
+    response = client.get(f"/v{API_VERSION}/locations/random/id")
+    _id = response.json()
+
+    assert response.status_code == 200
+    assert "id" in _id
+    assert isinstance(_id["id"], int)
+
+
+def test_locations_random_slug():
+    """Test /v2.0/locations/random/slug route."""
+    response = client.get(f"/v{API_VERSION}/locations/random/slug")
+    _slug = response.json()
+
+    assert response.status_code == 200
+    assert "slug" in _slug
+    assert isinstance(_slug["slug"], str)
