@@ -1,5 +1,26 @@
 # Changes
 
+## 2.17.0
+
+### Application Changes
+
+- Change `/random/details` to `/details/random` and `/recordings/random` for the appropriate endpoints to match the endpoint naming with the other endpoints
+- Passthrough the `use_decimal_scores` configuration settings value to the `include_decimal_scores` and `use_decimal_scores` corresponding method parameters
+
+### Component Changes
+
+- Upgrade pydantic from 2.8.2 to 2.10.6
+- Upgrade fastapi from 0.115.0 to 0.115.8
+- Upgrade uvicorn from 0.30.6 to 0.34.0
+- Upgrade httpx from 0.27.2 to 0.28.1
+- Upgrade wwdtm from 2.16.1 to 2.17.1
+
+### Development Changes
+
+- Upgrade pytest from 8.3.3
+- Upgrade pytest-cov from 5.0.0 to 6.0.0
+- Add testing for the `format_umami_analytics` function in `/app/umami_analytics.py`
+
 ## 2.16.0
 
 ### Application Changes

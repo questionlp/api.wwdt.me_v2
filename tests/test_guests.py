@@ -105,8 +105,8 @@ def test_guests_random():
 
 
 def test_guests_random_details():
-    """Test /v2.0/guests/random/details route."""
-    response = client.get(f"/v{API_VERSION}/guests/random/details")
+    """Test /v2.0/guests/details/random route."""
+    response = client.get(f"/v{API_VERSION}/guests/details/random")
     guest = response.json()
 
     assert response.status_code == 200

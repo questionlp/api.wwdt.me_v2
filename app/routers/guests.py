@@ -203,6 +203,40 @@ async def get_guest_details_by_id(
 
 
 @router.get(
+    "/details/random",
+    summary="Retrieve Information and Appearances for a Random Not My Job Guest",
+    response_model=ModelsGuestDetails,
+    tags=["Guests"],
+)
+@router.head("/details/random", include_in_schema=False)
+async def get_random_guest_details():
+    """Retrieve a Random Not My Job Guest.
+
+    Returned data: Guest ID, name, slug string, appearances and scores.
+
+    Appearances are sorted by date.
+    """
+    try:
+        guest = Guest(database_connection=_database_connection)
+        guest_details = guest.retrieve_random_details()
+        if guest_details:
+            return guest_details
+
+        raise HTTPException(status_code=404, detail="Random Guest not found")
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Random Guest not found") from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve guest information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve guest information",
+        ) from None
+
+
+@router.get(
     "/details/slug/{guest_slug}",
     summary="Retrieve Information and Appearances by Guest Slug String",
     response_model=ModelsGuestDetails,
@@ -259,40 +293,6 @@ async def get_random_guest():
         guest_info = guest.retrieve_random()
         if guest_info:
             return guest_info
-
-        raise HTTPException(status_code=404, detail="Random Guest not found")
-    except ValueError:
-        raise HTTPException(status_code=404, detail="Random Guest not found") from None
-    except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guest information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
-            status_code=500,
-            detail="Database error occurred while trying to retrieve guest information",
-        ) from None
-
-
-@router.get(
-    "/random/details",
-    summary="Retrieve Information and Appearances for a Random Not My Job Guest",
-    response_model=ModelsGuestDetails,
-    tags=["Guests"],
-)
-@router.head("/random/details", include_in_schema=False)
-async def get_random_guest_details():
-    """Retrieve a Random Not My Job Guest.
-
-    Returned data: Guest ID, name, slug string, appearances and scores.
-
-    Appearances are sorted by date.
-    """
-    try:
-        guest = Guest(database_connection=_database_connection)
-        guest_details = guest.retrieve_random_details()
-        if guest_details:
-            return guest_details
 
         raise HTTPException(status_code=404, detail="Random Guest not found")
     except ValueError:

@@ -424,13 +424,53 @@ def test_shows_random():
 
 
 def test_shows_random_details():
-    """Test /v2.0/shows/random/details route."""
-    response = client.get(f"/v{API_VERSION}/shows/random/details")
+    """Test /v2.0/shows/details/random route."""
+    response = client.get(f"/v{API_VERSION}/shows/details/random")
     show = response.json()
 
     assert response.status_code == 200
     assert "id" in show
     assert "date" in show
+    assert "best_of" in show
+    assert "repeat_show" in show
+    assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
+    assert "location" in show
+    assert "description" in show
+    assert "host" in show
+    assert "scorekeeper" in show
+    assert "panelists" in show
+    assert "guests" in show
+
+
+@pytest.mark.parametrize("year", [1998, 2020])
+def test_shows_random_show_by_year(year: int):
+    """Test /v2.0/shows/random/year/{year} route."""
+    response = client.get(f"/v{API_VERSION}/shows/random/year/{year}")
+    show = response.json()
+
+    assert response.status_code == 200
+    assert "id" in show
+    assert "date" in show
+    assert str(year) in show["date"]
+    assert "best_of" in show
+    assert "repeat_show" in show
+    assert "show_url" in show
+    assert "original_show_id" in show
+    assert "original_show_date" in show
+
+
+@pytest.mark.parametrize("year", [1998, 2020])
+def test_shows_random_show_by_year_details(year: int):
+    """Test /v2.0/shows/details/random/year/{year} route."""
+    response = client.get(f"/v{API_VERSION}/shows/details/random/year/{year}")
+    show = response.json()
+
+    assert response.status_code == 200
+    assert "id" in show
+    assert "date" in show
+    assert str(year) in show["date"]
     assert "best_of" in show
     assert "repeat_show" in show
     assert "show_url" in show

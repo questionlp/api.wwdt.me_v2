@@ -183,8 +183,8 @@ def test_locations_random():
 
 
 def test_locations_random_details():
-    """Test /v2.0/locations/random/details route."""
-    response = client.get(f"/v{API_VERSION}/locations/random/details")
+    """Test /v2.0/locations/recordings/random route."""
+    response = client.get(f"/v{API_VERSION}/locations/recordings/random")
     location = response.json()
 
     assert response.status_code == 200

@@ -114,8 +114,8 @@ def test_scorekeepers_random():
 
 
 def test_scorekeepers_random_details():
-    """Test /v2.0/scorekeepers/random/details route."""
-    response = client.get(f"/v{API_VERSION}/scorekeepers/random/details")
+    """Test /v2.0/scorekeepers/details/random route."""
+    response = client.get(f"/v{API_VERSION}/scorekeepers/details/random")
     scorekeeper = response.json()
 
     assert response.status_code == 200

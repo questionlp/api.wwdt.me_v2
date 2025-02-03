@@ -112,8 +112,8 @@ def test_hosts_random():
 
 
 def test_hosts_random_details():
-    """Test /v2.0/hosts/random/details route."""
-    response = client.get(f"/v{API_VERSION}/hosts/random/details")
+    """Test /v2.0/hosts/details/random route."""
+    response = client.get(f"/v{API_VERSION}/hosts/details/random")
     host = response.json()
 
     assert response.status_code == 200

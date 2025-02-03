@@ -222,6 +222,42 @@ async def get_location_recordings_by_id(
 
 
 @router.get(
+    "/recordings/random",
+    summary="Retrieve Information and Recordings for a Random Location",
+    response_model=ModelsLocationDetails,
+    tags=["Locations"],
+)
+@router.head("/recordings/random", include_in_schema=False)
+async def get_random_location_details():
+    """Retrieve a Random Location.
+
+    Returned data: Location ID, venue, city, state, slug string, and recordings.
+
+    Appearances are sorted by date.
+    """
+    try:
+        location = Location(database_connection=_database_connection)
+        location_details = location.retrieve_random_details()
+        if location_details:
+            return location_details
+
+        raise HTTPException(status_code=404, detail="Random Location not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Location not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve location information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve location information",
+        ) from None
+
+
+@router.get(
     "/recordings/slug/{location_slug}",
     summary="Retrieve Information and Recordings by Location Slug String",
     response_model=ModelsLocationDetails,
@@ -392,42 +428,6 @@ async def get_random_location():
         location_info = location.retrieve_random()
         if location_info:
             return location_info
-
-        raise HTTPException(status_code=404, detail="Random Location not found")
-    except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Location not found"
-        ) from None
-    except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve location information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
-            status_code=500,
-            detail="Database error occurred while trying to retrieve location information",
-        ) from None
-
-
-@router.get(
-    "/random/details",
-    summary="Retrieve Information and Appearances for a Random Location",
-    response_model=ModelsLocationDetails,
-    tags=["Locations"],
-)
-@router.head("/random/details", include_in_schema=False)
-async def get_random_location_details():
-    """Retrieve a Random Location.
-
-    Returned data: Location ID, venue, city, state, slug string, and recordings.
-
-    Appearances are sorted by date.
-    """
-    try:
-        location = Location(database_connection=_database_connection)
-        location_details = location.retrieve_random_details()
-        if location_details:
-            return location_details
 
         raise HTTPException(status_code=404, detail="Random Location not found")
     except ValueError:
