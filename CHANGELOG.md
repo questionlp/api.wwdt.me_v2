@@ -1,5 +1,11 @@
 # Changes
 
+## 2.17.1
+
+### Application Changes
+
+- Bump application version that was missed in the previous update
+
 ## 2.17.0
 
 ### Application Changes
