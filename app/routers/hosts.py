@@ -203,6 +203,40 @@ async def get_host_details_by_id(
 
 
 @router.get(
+    "/details/random",
+    summary="Retrieve Information and Appearances for a Random Host",
+    response_model=ModelsHostDetails,
+    tags=["Hosts"],
+)
+@router.head("/details/random", include_in_schema=False)
+async def get_random_host_details():
+    """Retrieve a Random Host.
+
+    Returned data: Host ID, name, slug string, gender, and appearances.
+
+    Appearances are sorted by date.
+    """
+    try:
+        host = Host(database_connection=_database_connection)
+        host_details = host.retrieve_random_details()
+        if host_details:
+            return host_details
+
+        raise HTTPException(status_code=404, detail="Random Host not found")
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Random Host not found") from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve host information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve host information",
+        ) from None
+
+
+@router.get(
     "/details/slug/{host_slug}",
     summary="Retrieve Information and Appearances by Host by Slug String",
     response_model=ModelsHostDetails,
@@ -259,40 +293,6 @@ async def get_random_host():
         host_info = host.retrieve_random()
         if host_info:
             return host_info
-
-        raise HTTPException(status_code=404, detail="Random Host not found")
-    except ValueError:
-        raise HTTPException(status_code=404, detail="Random Host not found") from None
-    except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve host information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
-            status_code=500,
-            detail="Database error occurred while trying to retrieve host information",
-        ) from None
-
-
-@router.get(
-    "/random/details",
-    summary="Retrieve Information and Appearances for a Random Host",
-    response_model=ModelsHostDetails,
-    tags=["Hosts"],
-)
-@router.head("/random/details", include_in_schema=False)
-async def get_random_host_details():
-    """Retrieve a Random Host.
-
-    Returned data: Host ID, name, slug string, gender, and appearances.
-
-    Appearances are sorted by date.
-    """
-    try:
-        host = Host(database_connection=_database_connection)
-        host_details = host.retrieve_random_details()
-        if host_details:
-            return host_details
 
         raise HTTPException(status_code=404, detail="Random Host not found")
     except ValueError:

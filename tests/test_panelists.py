@@ -180,8 +180,8 @@ def test_panelists_random():
 
 
 def test_panelists_random_details():
-    """Test /v2.0/panelists/random/details route."""
-    response = client.get(f"/v{API_VERSION}/panelists/random/details")
+    """Test /v2.0/panelists/details/random route."""
+    response = client.get(f"/v{API_VERSION}/panelists/details/random")
     panelist = response.json()
 
     assert response.status_code == 200

@@ -11,7 +11,7 @@ def format_umami_analytics(umami_analytics: dict = None) -> str:
     if not umami_analytics:
         return None
 
-    _enabled = bool(umami_analytics.get("_enabled", False))
+    _enabled = bool(umami_analytics.get("enabled", False))
 
     if not _enabled:
         return None

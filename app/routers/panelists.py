@@ -226,6 +226,45 @@ async def get_panelist_details_by_id(
 
 
 @router.get(
+    "/details/random",
+    summary="Retrieve Information and Appearances for a Random Panelist",
+    response_model=ModelsPanelistDetails,
+    tags=["Panelists"],
+)
+@router.head("/details/random", include_in_schema=False)
+async def get_random_panelist_details():
+    """Retrieve a Random Panelist.
+
+    Returned data: Panelist ID, name, slug string, gender, statistics
+    and appearances.
+
+    Appearances are sorted by date.
+    """
+    try:
+        panelist = Panelist(database_connection=_database_connection)
+        panelist_details = panelist.retrieve_random_details(
+            use_decimal_scores=_config["settings"]["use_decimal_scores"]
+        )
+        if panelist_details:
+            return panelist_details
+
+        raise HTTPException(status_code=404, detail="Random Panelist not found")
+    except ValueError:
+        raise HTTPException(
+            status_code=404, detail="Random Panelist not found"
+        ) from None
+    except ProgrammingError:
+        raise HTTPException(
+            status_code=500, detail="Unable to retrieve panelist information"
+        ) from None
+    except DatabaseError:
+        raise HTTPException(
+            status_code=500,
+            detail="Database error occurred while trying to retrieve panelist information",
+        ) from None
+
+
+@router.get(
     "/details/slug/{panelist_slug}",
     summary="Retrieve Information, Statistics and Appearances by Panelist by Slug String",
     response_model=ModelsPanelistDetails,
@@ -589,43 +628,6 @@ async def get_random_panelist():
         panelist_info = panelist.retrieve_random()
         if panelist_info:
             return panelist_info
-
-        raise HTTPException(status_code=404, detail="Random Panelist not found")
-    except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Panelist not found"
-        ) from None
-    except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
-            status_code=500,
-            detail="Database error occurred while trying to retrieve panelist information",
-        ) from None
-
-
-@router.get(
-    "/random/details",
-    summary="Retrieve Information and Appearances for a Random Panelist",
-    response_model=ModelsPanelistDetails,
-    tags=["Panelists"],
-)
-@router.head("/random/details", include_in_schema=False)
-async def get_random_panelist_details():
-    """Retrieve a Random Panelist.
-
-    Returned data: Panelist ID, name, slug string, gender, statistics
-    and appearances.
-
-    Appearances are sorted by date.
-    """
-    try:
-        panelist = Panelist(database_connection=_database_connection)
-        panelist_details = panelist.retrieve_random_details()
-        if panelist_details:
-            return panelist_details
 
         raise HTTPException(status_code=404, detail="Random Panelist not found")
     except ValueError:
