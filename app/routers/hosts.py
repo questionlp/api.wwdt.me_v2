@@ -8,7 +8,8 @@
 from typing import Annotated
 
 import mysql.connector
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Path
+from fastapi.responses import JSONResponse
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.host import Host
 
@@ -19,6 +20,7 @@ from app.models.hosts import HostID as ModelsHostID
 from app.models.hosts import Hosts as ModelsHosts
 from app.models.hosts import HostsDetails as ModelsHostsDetails
 from app.models.hosts import HostSlug as ModelsHostSlug
+from app.models.messages import MessageDetails
 
 router = APIRouter(prefix=f"/v{API_VERSION}/hosts")
 _config = load_config()
@@ -30,6 +32,7 @@ _database_connection = mysql.connector.connect(**_database_config)
     "",
     summary="Retrieve Information for All Hosts",
     response_model=ModelsHosts,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("", include_in_schema=False)
@@ -46,22 +49,26 @@ async def get_hosts():
         if hosts:
             return {"hosts": hosts}
 
-        raise HTTPException(status_code=404, detail="No hosts found")
+        return JSONResponse(status_code=404, content={"detail": "No hosts found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve hosts from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving hosts from the database",
-        ) from None
+            content={"detail": "Unable to retrieve hosts from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving hosts from the database"
+            },
+        )
 
 
 @router.get(
     "/id/{host_id}",
     summary="Retrieve Information by Host ID",
     response_model=ModelsHost,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/id/{host_id}", include_in_schema=False)
@@ -78,26 +85,31 @@ async def get_host_by_id(
         if host_info:
             return host_info
 
-        raise HTTPException(status_code=404, detail=f"Host ID {host_id} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Host ID {host_id} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Host ID {host_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Host ID {host_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve host information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve host information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve host information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve host information"
+            },
+        )
 
 
 @router.get(
     "/slug/{host_slug}",
     summary="Retrieve Information by Host Slug String",
     response_model=ModelsHost,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/slug/{host_slug}", include_in_schema=False)
@@ -114,28 +126,33 @@ async def get_host_by_slug(
         if host_info:
             return host_info
 
-        raise HTTPException(
-            status_code=404, detail=f"Host slug string {host_slug} not found"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Host slug string {host_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Host slug string {host_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Host slug string {host_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve host information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve host information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve host information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve host information"
+            },
+        )
 
 
 @router.get(
     "/details",
     summary="Retrieve Information and Appearances for All Hosts",
     response_model=ModelsHostsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/details", include_in_schema=False)
@@ -152,22 +169,26 @@ async def get_hosts_details():
         if hosts:
             return {"hosts": hosts}
 
-        raise HTTPException(status_code=404, detail="No hosts found")
+        return JSONResponse(status_code=404, content={"detail": "No hosts found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve hosts from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving hosts from the database",
-        ) from None
+            content={"detail": "Unable to retrieve hosts from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving hosts from the database"
+            },
+        )
 
 
 @router.get(
     "/details/id/{host_id}",
     summary="Retrieve Information and Appearances by Host ID",
     response_model=ModelsHostDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/details/id/{host_id}", include_in_schema=False)
@@ -186,26 +207,31 @@ async def get_host_details_by_id(
         if host_details:
             return host_details
 
-        raise HTTPException(status_code=404, detail=f"Host ID {host_id} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Host ID {host_id} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Host ID {host_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Host ID {host_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve host information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve host information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve host information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve host information"
+            },
+        )
 
 
 @router.get(
     "/details/random",
     summary="Retrieve Information and Appearances for a Random Host",
     response_model=ModelsHostDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/details/random", include_in_schema=False)
@@ -222,24 +248,31 @@ async def get_random_host_details():
         if host_details:
             return host_details
 
-        raise HTTPException(status_code=404, detail="Random Host not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Host not found"}
+        )
     except ValueError:
-        raise HTTPException(status_code=404, detail="Random Host not found") from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Host not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve host information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve host information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve host information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve host information"
+            },
+        )
 
 
 @router.get(
     "/details/slug/{host_slug}",
     summary="Retrieve Information and Appearances by Host by Slug String",
     response_model=ModelsHostDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/details/slug/{host_slug}", include_in_schema=False)
@@ -258,28 +291,33 @@ async def get_host_details_by_slug(
         if host_details:
             return host_details
 
-        raise HTTPException(
-            status_code=404, detail=f"Host slug string {host_slug} not found"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Host slug string {host_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Host slug string {host_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Host slug string {host_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve host information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve host information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve host information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve host information"
+            },
+        )
 
 
 @router.get(
     "/random",
     summary="Retrieve Information for a Random Host",
     response_model=ModelsHost,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/random", include_in_schema=False)
@@ -294,24 +332,31 @@ async def get_random_host():
         if host_info:
             return host_info
 
-        raise HTTPException(status_code=404, detail="Random Host not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Host not found"}
+        )
     except ValueError:
-        raise HTTPException(status_code=404, detail="Random Host not found") from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Host not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve host information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve host information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve host information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve host information"
+            },
+        )
 
 
 @router.get(
     "/random/id",
     summary="Retrieve a Random Host ID",
     response_model=ModelsHostID,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/random/id", include_in_schema=False)
@@ -326,26 +371,31 @@ async def get_random_host_id():
         if host_id:
             return {"id": host_id}
 
-        raise HTTPException(status_code=404, detail="Random Host ID not returned")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Host ID not returned"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Host ID not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Host ID not returned"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random host ID"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve a random host ID"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random host ID",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve a random host ID"
+            },
+        )
 
 
 @router.get(
     "/random/slug",
     summary="Retrieve a Random Host Slug String",
     response_model=ModelsHostSlug,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Hosts"],
 )
 @router.head("/random/slug", include_in_schema=False)
@@ -360,19 +410,22 @@ async def get_random_host_slug():
         if host_slug:
             return {"slug": host_slug}
 
-        raise HTTPException(
-            status_code=404, detail="Random Host slug string not returned"
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Host slug string not returned"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Host slug string not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Host slug string not returned"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random host slug string"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random host slug string",
-        ) from None
+            content={"detail": "Unable to retrieve a random host slug string"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve a random host slug string"
+            },
+        )

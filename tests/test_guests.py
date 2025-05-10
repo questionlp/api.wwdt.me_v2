@@ -14,7 +14,7 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_guests():
+def test_get_guests():
     """Test /v2.0/guests route."""
     response = client.get(f"/v{API_VERSION}/guests")
     guests = response.json()
@@ -27,7 +27,7 @@ def test_guests():
 
 
 @pytest.mark.parametrize("guest_id", [54])
-def test_guests_id(guest_id: int):
+def test_get_guest_by_id(guest_id: int):
     """Test /v2.0/guests/id/{guest_id} route."""
     response = client.get(f"/v{API_VERSION}/guests/id/{guest_id}")
     guest = response.json()
@@ -39,8 +39,18 @@ def test_guests_id(guest_id: int):
     assert "slug" in guest
 
 
+@pytest.mark.parametrize("guest_id", [0])
+def test_get_guest_by_id_not_found(guest_id: int):
+    """Test /v2.0/guests/id/{guest_id} route."""
+    response = client.get(f"/v{API_VERSION}/guests/id/{guest_id}")
+    guest = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in guest
+
+
 @pytest.mark.parametrize("guest_slug", ["tom-hanks"])
-def test_guests_slug(guest_slug: str):
+def test_get_guest_by_slug(guest_slug: str):
     """Test /v2.0/guests/slug/{guest_slug} route."""
     response = client.get(f"/v{API_VERSION}/guests/slug/{guest_slug}")
     guest = response.json()
@@ -52,7 +62,17 @@ def test_guests_slug(guest_slug: str):
     assert guest["slug"] == guest_slug
 
 
-def test_guests_details():
+@pytest.mark.parametrize("guest_slug", ["-abcdef"])
+def test_get_guest_by_slug_not_found(guest_slug: str):
+    """Test /v2.0/guests/slug/{guest_slug} route."""
+    response = client.get(f"/v{API_VERSION}/guests/slug/{guest_slug}")
+    guest = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in guest
+
+
+def test_get_guests_details():
     """Test /v2.0/guests/details route."""
     response = client.get(f"/v{API_VERSION}/guests/details")
     guests = response.json()
@@ -66,7 +86,7 @@ def test_guests_details():
 
 
 @pytest.mark.parametrize("guest_id", [54])
-def test_guests_details_id(guest_id: int):
+def test_get_guest_details_by_id(guest_id: int):
     """Test /v2.0/guests/details/id/{guest_id} route."""
     response = client.get(f"/v{API_VERSION}/guests/details/id/{guest_id}")
     guest = response.json()
@@ -79,8 +99,30 @@ def test_guests_details_id(guest_id: int):
     assert "appearances" in guest
 
 
+@pytest.mark.parametrize("guest_id", [0])
+def test_get_guest_details_by_id_not_found(guest_id: int):
+    """Test /v2.0/guests/details/id/{guest_id} route."""
+    response = client.get(f"/v{API_VERSION}/guests/details/id/{guest_id}")
+    guest = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in guest
+
+
+def test_get_random_guest_details():
+    """Test /v2.0/guests/details/random route."""
+    response = client.get(f"/v{API_VERSION}/guests/details/random")
+    guest = response.json()
+
+    assert response.status_code == 200
+    assert "id" in guest
+    assert "name" in guest
+    assert "slug" in guest
+    assert "appearances" in guest
+
+
 @pytest.mark.parametrize("guest_slug", ["tom-hanks"])
-def test_guests_details_slug(guest_slug: str):
+def test_get_guest_details_by_slug(guest_slug: str):
     """Test /v2.0/guests/details/slug/{guest_slug} route."""
     response = client.get(f"/v{API_VERSION}/guests/details/slug/{guest_slug}")
     guest = response.json()
@@ -93,7 +135,17 @@ def test_guests_details_slug(guest_slug: str):
     assert "appearances" in guest
 
 
-def test_guests_random():
+@pytest.mark.parametrize("guest_slug", ["-abcdef"])
+def test_get_guest_details_by_slug_not_found(guest_slug: str):
+    """Test /v2.0/guests/details/slug/{guest_slug} route."""
+    response = client.get(f"/v{API_VERSION}/guests/details/slug/{guest_slug}")
+    guest = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in guest
+
+
+def test_get_random_guest():
     """Test /v2.0/guests/random route."""
     response = client.get(f"/v{API_VERSION}/guests/random")
     guest = response.json()
@@ -104,19 +156,7 @@ def test_guests_random():
     assert "slug" in guest
 
 
-def test_guests_random_details():
-    """Test /v2.0/guests/details/random route."""
-    response = client.get(f"/v{API_VERSION}/guests/details/random")
-    guest = response.json()
-
-    assert response.status_code == 200
-    assert "id" in guest
-    assert "name" in guest
-    assert "slug" in guest
-    assert "appearances" in guest
-
-
-def test_guests_random_id():
+def test_get_random_guest_id():
     """Test /v2.0/guests/random/id route."""
     response = client.get(f"/v{API_VERSION}/guests/random/id")
     _id = response.json()
@@ -126,7 +166,7 @@ def test_guests_random_id():
     assert isinstance(_id["id"], int)
 
 
-def test_guests_random_slug():
+def test_get_randon_guest_slug():
     """Test /v2.0/guests/random/slug route."""
     response = client.get(f"/v{API_VERSION}/guests/random/slug")
     _slug = response.json()

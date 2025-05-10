@@ -30,7 +30,7 @@ from .utility import format_umami_analytics
 
 app = FastAPI(
     title=app_metadata["title"],
-    description=app_metadata["description"],
+    description=app_metadata["description"].strip(),
     openapi_tags=tags_metadata,
     version=APP_VERSION,
     contact=app_metadata["contact_info"],
@@ -102,7 +102,7 @@ async def robots_txt():
     if robots_txt_dist_path.exists():
         return FileResponse(path="static/robots.txt.dist", media_type="text/plain")
 
-    raise HTTPException(status_code=404)
+    return HTTPException(status_code=404)
 
 
 @app.get("/docs", include_in_schema=False, response_class=RedirectResponse)

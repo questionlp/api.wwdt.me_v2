@@ -14,7 +14,7 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_version():
+def test_get_version():
     """Test /version route."""
     response = client.get(f"/v{API_VERSION}/version")
     version = response.json()

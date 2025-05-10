@@ -8,7 +8,8 @@
 from typing import Annotated
 
 import mysql.connector
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Path
+from fastapi.responses import JSONResponse
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.location import Location
 
@@ -26,6 +27,7 @@ from app.models.locations import PostalAbbreviations as ModelsPostalAbbreviation
 from app.models.locations import (
     PostalAbbreviationsDetails as ModelsPostalAbbreviationsDetails,
 )
+from app.models.messages import MessageDetails
 
 router = APIRouter(prefix=f"/v{API_VERSION}/locations")
 _config = load_config()
@@ -37,6 +39,7 @@ _database_connection = mysql.connector.connect(**_database_config)
     "",
     summary="Retrieve Information for All Locations",
     response_model=ModelsLocations,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("", include_in_schema=False)
@@ -53,22 +56,26 @@ async def get_locations():
         if locations:
             return {"locations": locations}
 
-        raise HTTPException(status_code=404, detail="No locations found")
+        return JSONResponse(status_code=404, content={"detail": "No locations found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve locations from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving locations from the database",
-        ) from None
+            content={"detail": "Unable to retrieve locations from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving locations from the database"
+            },
+        )
 
 
 @router.get(
     "/id/{location_id}",
     summary="Retrieve Information by Location ID",
     response_model=ModelsLocation,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/id/{location_id}", include_in_schema=False)
@@ -87,28 +94,32 @@ async def get_location_by_id(
         if location_info:
             return location_info
 
-        raise HTTPException(
-            status_code=404, detail=f"Location ID {location_id} not found"
+        return JSONResponse(
+            status_code=404, content={"detail": f"Location ID {location_id} not found"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Location ID {location_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Location ID {location_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve location information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve location information",
-        ) from None
+            content={"detail": "Unable to retrieve location information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve location information"
+            },
+        )
 
 
 @router.get(
     "/slug/{location_slug}",
     summary="Retrieve Information by Location Slug String",
     response_model=ModelsLocation,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/slug/{location_slug}", include_in_schema=False)
@@ -125,29 +136,34 @@ async def get_location_by_slug(
         if location_info:
             return location_info
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Location slug string {location_slug} not found",
+            content={"detail": f"Location slug string {location_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Location slug string {location_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Location slug string {location_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve location information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve location information",
-        ) from None
+            content={"detail": "Unable to retrieve location information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve location information"
+            },
+        )
 
 
 @router.get(
     "/recordings",
     summary="Retrieve Information and Recordings for All Locations",
     response_model=ModelsLocationsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/recordings", include_in_schema=False)
@@ -166,26 +182,30 @@ async def get_locations_details():
         if locations:
             return {"locations": locations}
 
-        raise HTTPException(status_code=404, detail="No locations found")
+        return JSONResponse(status_code=404, content={"detail": "No locations found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve locations from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving locations from the database",
-        ) from None
+            content={"detail": "Unable to retrieve locations from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving locations from the database"
+            },
+        )
 
 
 @router.get(
     "/recordings/id/{location_id}",
     summary="Retrieve Information and Recordings by Location ID",
     response_model=ModelsLocationDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/recordings/id/{location_id}", include_in_schema=False)
-async def get_location_recordings_by_id(
+async def get_location_details_by_id(
     location_id: Annotated[
         int, Path(title="The ID of the location to get", ge=0, lt=2**31)
     ],
@@ -203,28 +223,32 @@ async def get_location_recordings_by_id(
         if location_recordings:
             return location_recordings
 
-        raise HTTPException(
-            status_code=404, detail=f"Location ID {location_id} not found"
+        return JSONResponse(
+            status_code=404, content={"detail": f"Location ID {location_id} not found"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Location ID {location_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Location ID {location_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve location information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve location information",
-        ) from None
+            content={"detail": "Unable to retrieve location information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve location information"
+            },
+        )
 
 
 @router.get(
     "/recordings/random",
     summary="Retrieve Information and Recordings for a Random Location",
     response_model=ModelsLocationDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/recordings/random", include_in_schema=False)
@@ -241,30 +265,36 @@ async def get_random_location_details():
         if location_details:
             return location_details
 
-        raise HTTPException(status_code=404, detail="Random Location not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Location not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Location not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Location not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve location information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve location information",
-        ) from None
+            content={"detail": "Unable to retrieve location information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve location information"
+            },
+        )
 
 
 @router.get(
     "/recordings/slug/{location_slug}",
     summary="Retrieve Information and Recordings by Location Slug String",
     response_model=ModelsLocationDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/recordings/slug/{location_slug}", include_in_schema=False)
-async def get_location_recordings_by_slug(
+async def get_location_details_by_slug(
     location_slug: Annotated[str, Path(title="The slug string of the location to get")],
 ):
     """Retrieve Details for a Show Location by Location Slug String.
@@ -280,29 +310,34 @@ async def get_location_recordings_by_slug(
         if location_details:
             return location_details
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Location slug string {location_slug} not found",
+            content={"detail": f"Location slug string {location_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Location slug string {location_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Location slug string {location_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve location information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve location information",
-        ) from None
+            content={"detail": "Unable to retrieve location information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve location information"
+            },
+        )
 
 
 @router.get(
     "/postal-abbreviations",
     summary="Retrieve Postal Abbreviations",
     response_model=ModelsPostalAbbreviations,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/postal-abbreviations", include_in_schema=False)
@@ -320,22 +355,28 @@ async def get_postal_abbreviations() -> list[str]:
         if abbreviations:
             return list(abbreviations.keys())
 
-        raise HTTPException(status_code=404, detail="No postal abbreviations found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No postal abbreviations found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve postal abbreviations"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve postal abbreviations",
-        ) from None
+            content={"detail": "Unable to retrieve postal abbreviations"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve postal abbreviations"
+            },
+        )
 
 
 @router.get(
     "/postal-abbreviations/details",
     summary="Retrieve Information for All Postal Abbreviations",
     response_model=ModelsPostalAbbreviationsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/postal-abbreviations/details", include_in_schema=False)
@@ -353,26 +394,32 @@ async def get_postal_abbreviations_details() -> list[dict[str, str]]:
         if abbreviations:
             return {"postal_abbreviations": abbreviations}
 
-        raise HTTPException(status_code=404, detail="No postal abbreviations found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No postal abbreviations found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve postal abbreviations"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve postal abbreviations",
-        ) from None
+            content={"detail": "Unable to retrieve postal abbreviations"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve postal abbreviations"
+            },
+        )
 
 
 @router.get(
     "/postal-abbreviations/details/{abbreviation}",
     summary="Retrieve Information for a Postal Abbreviation",
     response_model=ModelsPostalAbbreviationDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/postal-abbreviations/details/{abbreviation}", include_in_schema=False)
-async def get_postal_abbreviation(
+async def get_postal_abbreviation_details(
     abbreviation: Annotated[
         str, Path(title="Postal Abbreviation to retrieve information")
     ],
@@ -390,31 +437,34 @@ async def get_postal_abbreviation(
         if info:
             return info
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Postal abbreviation {abbreviation} not found",
+            content={"detail": f"Postal abbreviation {abbreviation} not found"},
         )
     except ValueError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Postal abbreviation {abbreviation} not found",
-        ) from None
+            content={"detail": f"Postal abbreviation {abbreviation} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve postal abbreviation information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve postal "
-            "abbreviaton information",
-        ) from None
+            content={"detail": "Unable to retrieve postal abbreviation information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve postal abbreviaton information"
+            },
+        )
 
 
 @router.get(
     "/random",
     summary="Retrieve Information for a Random Location",
     response_model=ModelsLocation,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/random", include_in_schema=False)
@@ -429,26 +479,32 @@ async def get_random_location():
         if location_info:
             return location_info
 
-        raise HTTPException(status_code=404, detail="Random Location not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Location not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Location not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Location not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve location information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve location information",
-        ) from None
+            content={"detail": "Unable to retrieve location information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve location information"
+            },
+        )
 
 
 @router.get(
     "/random/id",
     summary="Retrieve a Random Location ID",
     response_model=ModelsLocationID,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/random/id", include_in_schema=False)
@@ -463,26 +519,32 @@ async def get_random_location_id():
         if location_id:
             return {"id": location_id}
 
-        raise HTTPException(status_code=404, detail="Random Location ID not returned")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Location ID not returned"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Location ID not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Location ID not returned"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random location ID"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random location ID",
-        ) from None
+            content={"detail": "Unable to retrieve a random location ID"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve a random location ID"
+            },
+        )
 
 
 @router.get(
     "/random/slug",
     summary="Retrieve a Random Location Slug String",
     response_model=ModelsLocationSlug,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Locations"],
 )
 @router.head("/random/slug", include_in_schema=False)
@@ -497,19 +559,24 @@ async def get_random_location_slug():
         if location_slug:
             return {"slug": location_slug}
 
-        raise HTTPException(
-            status_code=404, detail="Random Location slug string not returned"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": "Random Location slug string not returned"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Location slug string not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": "Random Location slug string not returned"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random location slug string"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a location host slug string",
-        ) from None
+            content={"detail": "Unable to retrieve a random location slug string"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve a location host slug string"
+            },
+        )

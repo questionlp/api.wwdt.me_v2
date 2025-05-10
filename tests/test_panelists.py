@@ -14,7 +14,7 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_panelists():
+def test_get_panelists():
     """Test /v2.0/panelists route."""
     response = client.get(f"/v{API_VERSION}/panelists")
     panelists = response.json()
@@ -28,7 +28,7 @@ def test_panelists():
 
 
 @pytest.mark.parametrize("panelist_id", [30])
-def test_panelists_id(panelist_id: int):
+def test_get_panelist_by_id(panelist_id: int):
     """Test /v2.0/panelists/id/{panelist_id} route."""
     response = client.get(f"/v{API_VERSION}/panelists/id/{panelist_id}")
     panelist = response.json()
@@ -41,8 +41,18 @@ def test_panelists_id(panelist_id: int):
     assert "slug" in panelist
 
 
+@pytest.mark.parametrize("panelist_id", [0])
+def test_get_panelist_by_id_not_found(panelist_id: int):
+    """Test /v2.0/panelists/id/{panelist_id} route."""
+    response = client.get(f"/v{API_VERSION}/panelists/id/{panelist_id}")
+    panelist = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in panelist
+
+
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
-def test_panelists_slug(panelist_slug: str):
+def test_get_panelist_by_slug(panelist_slug: str):
     """Test /v2.0/panelists/slug/{panelist_slug} route."""
     response = client.get(f"/v{API_VERSION}/panelists/slug/{panelist_slug}")
     panelist = response.json()
@@ -55,7 +65,17 @@ def test_panelists_slug(panelist_slug: str):
     assert panelist["slug"] == panelist_slug
 
 
-def test_panelists_details():
+@pytest.mark.parametrize("panelist_slug", ["-abcdef"])
+def test_get_panelist_by_slug_not_found(panelist_slug: str):
+    """Test /v2.0/panelists/slug/{panelist_slug} route."""
+    response = client.get(f"/v{API_VERSION}/panelists/slug/{panelist_slug}")
+    panelist = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in panelist
+
+
+def test_get_panelists_details():
     """Test /v2.0/panelists/details route."""
     response = client.get(f"/v{API_VERSION}/panelists/details")
     panelists = response.json()
@@ -70,7 +90,7 @@ def test_panelists_details():
 
 
 @pytest.mark.parametrize("panelist_id", [30])
-def test_panelists_details_id(panelist_id: int):
+def test_get_panelist_details_by_id(panelist_id: int):
     """Test /v2.0/panelists/details/id/{panelist_id} route."""
     response = client.get(f"/v{API_VERSION}/panelists/details/id/{panelist_id}")
     panelist = response.json()
@@ -84,8 +104,31 @@ def test_panelists_details_id(panelist_id: int):
     assert "appearances" in panelist
 
 
+@pytest.mark.parametrize("panelist_id", [0])
+def test_get_panelist_details_by_id_not_found(panelist_id: int):
+    """Test /v2.0/panelists/details/id/{panelist_id} route."""
+    response = client.get(f"/v{API_VERSION}/panelists/details/id/{panelist_id}")
+    panelist = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in panelist
+
+
+def test_get_random_panelist_details():
+    """Test /v2.0/panelists/details/random route."""
+    response = client.get(f"/v{API_VERSION}/panelists/details/random")
+    panelist = response.json()
+
+    assert response.status_code == 200
+    assert "id" in panelist
+    assert "name" in panelist
+    assert "pronouns" in panelist
+    assert "slug" in panelist
+    assert "appearances" in panelist
+
+
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
-def test_panelists_details_slug(panelist_slug: str):
+def test_get_panelist_details_by_slug(panelist_slug: str):
     """Test /v2.0/panelists/details/slug/{panelist_slug} route."""
     response = client.get(f"/v{API_VERSION}/panelists/details/slug/{panelist_slug}")
     panelist = response.json()
@@ -99,8 +142,18 @@ def test_panelists_details_slug(panelist_slug: str):
     assert "appearances" in panelist
 
 
+@pytest.mark.parametrize("panelist_slug", ["-abcdef"])
+def test_get_panelist_details_by_slug_not_found(panelist_slug: str):
+    """Test /v2.0/panelists/details/slug/{panelist_slug} route."""
+    response = client.get(f"/v{API_VERSION}/panelists/details/slug/{panelist_slug}")
+    panelist = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in panelist
+
+
 @pytest.mark.parametrize("panelist_id", [30])
-def test_panelists_scores_id(panelist_id: int):
+def test_get_panelist_scores_by_id(panelist_id: int):
     """Test /v2.0/panelists/scores/id/{panelist_id} route."""
     response = client.get(f"/v{API_VERSION}/panelists/scores/id/{panelist_id}")
     scores = response.json()
@@ -109,8 +162,18 @@ def test_panelists_scores_id(panelist_id: int):
     assert "scores" in scores
 
 
+@pytest.mark.parametrize("panelist_id", [0])
+def test_get_panelist_scores_by_id_not_found(panelist_id: int):
+    """Test /v2.0/panelists/scores/id/{panelist_id} route."""
+    response = client.get(f"/v{API_VERSION}/panelists/scores/id/{panelist_id}")
+    scores = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scores
+
+
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
-def test_panelists_scores_slug(panelist_slug: str):
+def test_get_panelist_scores_by_slug(panelist_slug: str):
     """Test /v2.0/panelists/scores/slug/{panelist_slug} route."""
     response = client.get(f"/v{API_VERSION}/panelists/scores/slug/{panelist_slug}")
     scores = response.json()
@@ -119,32 +182,18 @@ def test_panelists_scores_slug(panelist_slug: str):
     assert "scores" in scores
 
 
-@pytest.mark.parametrize("panelist_id", [30])
-def test_panelists_scores_ordered_pair_id(panelist_id: int):
-    """Test /v2.0/panelists/scores/ordered-pair/id/{panelist_id} route."""
-    response = client.get(
-        f"/v{API_VERSION}/panelists/scores/ordered-pair/id/{panelist_id}"
-    )
+@pytest.mark.parametrize("panelist_slug", ["-abcdef"])
+def test_get_panelist_scores_by_slug_not_found(panelist_slug: str):
+    """Test /v2.0/panelists/scores/slug/{panelist_slug} route."""
+    response = client.get(f"/v{API_VERSION}/panelists/scores/slug/{panelist_slug}")
     scores = response.json()
 
-    assert response.status_code == 200
-    assert "scores" in scores
-
-
-@pytest.mark.parametrize("panelist_slug", ["faith-salie"])
-def test_panelists_scores_ordered_pair_slug(panelist_slug: str):
-    """Test /v2.0/panelists/scores/ordered-pair/slug/{panelist_slug} route."""
-    response = client.get(
-        f"/v{API_VERSION}/panelists/scores/ordered-pair/slug/{panelist_slug}"
-    )
-    scores = response.json()
-
-    assert response.status_code == 200
-    assert "scores" in scores
+    assert response.status_code == 404
+    assert "detail" in scores
 
 
 @pytest.mark.parametrize("panelist_id", [30])
-def test_panelists_scores_grouped_ordered_pair_id(panelist_id: int):
+def test_get_panelist_scores_grouped_ordered_pair_by_id(panelist_id: int):
     """Test /v2.0/panelists/scores/grouped-ordered-pair/id/{panelist_id} route."""
     response = client.get(
         f"/v{API_VERSION}/panelists/scores/grouped-ordered-pair/id/{panelist_id}"
@@ -155,8 +204,20 @@ def test_panelists_scores_grouped_ordered_pair_id(panelist_id: int):
     assert "scores" in scores
 
 
+@pytest.mark.parametrize("panelist_id", [0])
+def test_get_panelist_scores_grouped_ordered_pair_by_id_not_found(panelist_id: int):
+    """Test /v2.0/panelists/scores/grouped-ordered-pair/id/{panelist_id} route."""
+    response = client.get(
+        f"/v{API_VERSION}/panelists/scores/grouped-ordered-pair/id/{panelist_id}"
+    )
+    scores = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scores
+
+
 @pytest.mark.parametrize("panelist_slug", ["faith-salie"])
-def test_panelists_scores_grouped_ordered_pair_slug(panelist_slug: str):
+def test_get_panelist_scores_grouped_ordered_pair_by_slug(panelist_slug: str):
     """Test /v2.0/panelists/scores/grouped-ordered-pair/slug/{panelist_slug} route."""
     response = client.get(
         f"/v{API_VERSION}/panelists/scores/grouped-ordered-pair/slug/{panelist_slug}"
@@ -167,7 +228,67 @@ def test_panelists_scores_grouped_ordered_pair_slug(panelist_slug: str):
     assert "scores" in scores
 
 
-def test_panelists_random():
+@pytest.mark.parametrize("panelist_slug", ["-abcdef"])
+def test_get_panelist_scores_grouped_ordered_pair_by_slug_not_found(panelist_slug: str):
+    """Test /v2.0/panelists/scores/grouped-ordered-pair/slug/{panelist_slug} route."""
+    response = client.get(
+        f"/v{API_VERSION}/panelists/scores/grouped-ordered-pair/slug/{panelist_slug}"
+    )
+    scores = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scores
+
+
+@pytest.mark.parametrize("panelist_id", [30])
+def test_get_panelists_scores_ordered_pair_by_id(panelist_id: int):
+    """Test /v2.0/panelists/scores/ordered-pair/id/{panelist_id} route."""
+    response = client.get(
+        f"/v{API_VERSION}/panelists/scores/ordered-pair/id/{panelist_id}"
+    )
+    scores = response.json()
+
+    assert response.status_code == 200
+    assert "scores" in scores
+
+
+@pytest.mark.parametrize("panelist_id", [0])
+def test_get_panelists_scores_ordered_pair_by_id_not_found(panelist_id: int):
+    """Test /v2.0/panelists/scores/ordered-pair/id/{panelist_id} route."""
+    response = client.get(
+        f"/v{API_VERSION}/panelists/scores/ordered-pair/id/{panelist_id}"
+    )
+    scores = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scores
+
+
+@pytest.mark.parametrize("panelist_slug", ["faith-salie"])
+def test_get_panelists_scores_ordered_pair_by_slug(panelist_slug: str):
+    """Test /v2.0/panelists/scores/ordered-pair/slug/{panelist_slug} route."""
+    response = client.get(
+        f"/v{API_VERSION}/panelists/scores/ordered-pair/slug/{panelist_slug}"
+    )
+    scores = response.json()
+
+    assert response.status_code == 200
+    assert "scores" in scores
+
+
+@pytest.mark.parametrize("panelist_slug", ["-abcdef"])
+def test_get_panelists_scores_ordered_pair_by_slug_not_found(panelist_slug: str):
+    """Test /v2.0/panelists/scores/ordered-pair/slug/{panelist_slug} route."""
+    response = client.get(
+        f"/v{API_VERSION}/panelists/scores/ordered-pair/slug/{panelist_slug}"
+    )
+    scores = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scores
+
+
+def test_get_random_panelist():
     """Test /v2.0/panelists/random route."""
     response = client.get(f"/v{API_VERSION}/panelists/random")
     panelist = response.json()
@@ -179,20 +300,7 @@ def test_panelists_random():
     assert "slug" in panelist
 
 
-def test_panelists_random_details():
-    """Test /v2.0/panelists/details/random route."""
-    response = client.get(f"/v{API_VERSION}/panelists/details/random")
-    panelist = response.json()
-
-    assert response.status_code == 200
-    assert "id" in panelist
-    assert "name" in panelist
-    assert "pronouns" in panelist
-    assert "slug" in panelist
-    assert "appearances" in panelist
-
-
-def test_panelists_random_id():
+def test_get_random_panelist_id():
     """Test /v2.0/panelists/random/id route."""
     response = client.get(f"/v{API_VERSION}/panelists/random/id")
     _id = response.json()
@@ -202,7 +310,7 @@ def test_panelists_random_id():
     assert isinstance(_id["id"], int)
 
 
-def test_panelists_random_slug():
+def test_get_panelist_slug():
     """Test /v2.0/panelists/random/slug route."""
     response = client.get(f"/v{API_VERSION}/panelists/random/slug")
     _slug = response.json()

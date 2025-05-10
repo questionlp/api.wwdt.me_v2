@@ -8,11 +8,13 @@
 from typing import Annotated
 
 import mysql.connector
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Path
+from fastapi.responses import JSONResponse
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.scorekeeper import Scorekeeper
 
 from app.config import API_VERSION, load_config
+from app.models.messages import MessageDetails
 from app.models.scorekeepers import Scorekeeper as ModelsScorekeeper
 from app.models.scorekeepers import ScorekeeperDetails as ModelsScorekeeperDetails
 from app.models.scorekeepers import ScorekeeperID as ModelsScorekeeperID
@@ -30,6 +32,7 @@ _database_connection = mysql.connector.connect(**_database_config)
     "",
     summary="Retrieve Information for All Scorekeepers",
     response_model=ModelsScorekeepers,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("", include_in_schema=False)
@@ -46,22 +49,28 @@ async def get_scorekeepers():
         if scorekeepers:
             return {"scorekeepers": scorekeepers}
 
-        raise HTTPException(status_code=404, detail="No scorekeepers found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No scorekeepers found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve scorekeepers from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving scorekeepers from the database",
-        ) from None
+            content={"detail": "Unable to retrieve scorekeepers from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving scorekeepers from the database"
+            },
+        )
 
 
 @router.get(
     "/id/{scorekeeper_id}",
     summary="Retrieve Information by Scorekeeper ID",
     response_model=ModelsScorekeeper,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/id/{scorekeeper_id}", include_in_schema=False)
@@ -80,28 +89,34 @@ async def get_scorekeeper_by_id(
         if scorekeeper_info:
             return scorekeeper_info
 
-        raise HTTPException(
-            status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Scorekeeper ID {scorekeeper_id} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Scorekeeper ID {scorekeeper_id} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve scorekeeper information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve scorekeeper information",
-        ) from None
+            content={"detail": "Unable to retrieve scorekeeper information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve scorekeeper information"
+            },
+        )
 
 
 @router.get(
     "/slug/{scorekeeper_slug}",
     summary="Retrieve Information by Scorekeeper Slug String",
     response_model=ModelsScorekeeper,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/slug/{scorekeeper_slug}", include_in_schema=False)
@@ -120,30 +135,34 @@ async def get_scorekeeper_by_slug(
         if scorekeeper_info:
             return scorekeeper_info
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
+            content={"detail": f"Scorekeeper slug string {scorekeeper_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
-        ) from None
+            content={"detail": f"Scorekeeper slug string {scorekeeper_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve scorekeeper information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve scorekeeper information",
-        ) from None
+            content={"detail": "Unable to retrieve scorekeeper information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve scorekeeper information"
+            },
+        )
 
 
 @router.get(
     "/details",
     summary="Retrieve Information and Appearances for All Scorekeepers",
     response_model=ModelsScorekeepersDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/details", include_in_schema=False)
@@ -162,22 +181,28 @@ async def get_scorekeepers_details():
         if scorekeepers:
             return {"scorekeepers": scorekeepers}
 
-        raise HTTPException(status_code=404, detail="No scorekeepers found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No scorekeepers found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve scorekeepers from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving scorekeepers from the database",
-        ) from None
+            content={"detail": "Unable to retrieve scorekeepers from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving scorekeepers from the database"
+            },
+        )
 
 
 @router.get(
     "/details/id/{scorekeeper_id}",
     summary="Retrieve Information and Appearances by Scorekeeper ID",
     response_model=ModelsScorekeeperDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/details/id/{scorekeeper_id}", include_in_schema=False)
@@ -199,28 +224,34 @@ async def get_scorekeeper_details_by_id(
         if scorekeeper_details:
             return scorekeeper_details
 
-        raise HTTPException(
-            status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Scorekeeper ID {scorekeeper_id} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Scorekeeper ID {scorekeeper_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Scorekeeper ID {scorekeeper_id} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve scorekeeper information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve scorekeeper information",
-        ) from None
+            content={"detail": "Unable to retrieve scorekeeper information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve scorekeeper information"
+            },
+        )
 
 
 @router.get(
     "/details/random",
     summary="Retrieve Information and Appearances for a Random Scorekeeper",
     response_model=ModelsScorekeeperDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/details/random", include_in_schema=False)
@@ -238,26 +269,32 @@ async def get_random_scorekeeper_details():
         if scorekeeper_details:
             return scorekeeper_details
 
-        raise HTTPException(status_code=404, detail="Random Scorekeeper not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Scorekeeper not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Scorekeeper not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Scorekeeper not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve scorekeeper information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve scorekeeper information",
-        ) from None
+            content={"detail": "Unable to retrieve scorekeeper information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve scorekeeper information"
+            },
+        )
 
 
 @router.get(
     "/details/slug/{scorekeeper_slug}",
     summary="Retrieve Information and Appearances by Scorekeeper by Slug String",
     response_model=ModelsScorekeeperDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/details/slug/{scorekeeper_slug}", include_in_schema=False)
@@ -281,30 +318,34 @@ async def get_scorekeeper_details_by_slug(
         if scorekeeper_details:
             return scorekeeper_details
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
+            content={"detail": f"Scorekeeper slug string {scorekeeper_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scorekeeper slug string {scorekeeper_slug} not found",
-        ) from None
+            content={"detail": f"Scorekeeper slug string {scorekeeper_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve scorekeeper information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve scorekeeper information",
-        ) from None
+            content={"detail": "Unable to retrieve scorekeeper information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve scorekeeper information"
+            },
+        )
 
 
 @router.get(
     "/random",
     summary="Retrieve Information for a Random Scorekeeper",
     response_model=ModelsScorekeeper,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/random", include_in_schema=False)
@@ -319,26 +360,32 @@ async def get_random_scorekeeper():
         if scorekeeper_info:
             return scorekeeper_info
 
-        raise HTTPException(status_code=404, detail="Random Scorekeeper not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Scorekeeper not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Scorekeeper not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Scorekeeper not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve scorekeeper information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve scorekeeper information",
-        ) from None
+            content={"detail": "Unable to retrieve scorekeeper information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve scorekeeper information"
+            },
+        )
 
 
 @router.get(
     "/random/id",
     summary="Retrieve a Random Scorekeeper ID",
     response_model=ModelsScorekeeperID,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/random/id", include_in_schema=False)
@@ -353,28 +400,32 @@ async def get_random_scorekeeper_id():
         if scorekeeper_id:
             return {"id": scorekeeper_id}
 
-        raise HTTPException(
-            status_code=404, detail="Random Scorekeeper ID not returned"
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Scorekeeper ID not returned"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Scorekeeper ID not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Scorekeeper ID not returned"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random scorekeeper ID"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random scorekeeper ID",
-        ) from None
+            content={"detail": "Unable to retrieve a random scorekeeper ID"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve a random scorekeeper ID"
+            },
+        )
 
 
 @router.get(
     "/random/slug",
     summary="Retrieve a Random Scorekeeper Slug String",
     response_model=ModelsScorekeeperSlug,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Scorekeepers"],
 )
 @router.head("/random/slug", include_in_schema=False)
@@ -389,20 +440,24 @@ async def get_random_scorekeeper_slug():
         if scorekeeper_slug:
             return {"slug": scorekeeper_slug}
 
-        raise HTTPException(
-            status_code=404, detail="Random Scorekeeper slug string not returned"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": "Random Scorekeeper slug string not returned"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Scorekeeper slug string not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": "Random Scorekeeper slug string not returned"},
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve a random scorekeeper slug string",
-        ) from None
+            content={"detail": "Unable to retrieve a random scorekeeper slug string"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random scorekeeper slug string",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve a random scorekeeper slug string"
+            },
+        )

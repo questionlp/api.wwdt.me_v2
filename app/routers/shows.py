@@ -9,11 +9,13 @@ from datetime import date
 from typing import Annotated
 
 import mysql.connector
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Path, Query
+from fastapi.responses import JSONResponse
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.show import Show
 
 from app.config import API_VERSION, load_config
+from app.models.messages import MessageDetails
 from app.models.shows import Show as ModelsShow
 from app.models.shows import ShowDate as ModelsShowDate
 from app.models.shows import ShowDates as ModelsShowDates
@@ -32,6 +34,7 @@ _database_connection = mysql.connector.connect(**_database_config)
     "",
     summary="Retrieve Information for All Shows",
     response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("", include_in_schema=False)
@@ -49,53 +52,67 @@ async def get_shows():
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail="No shows found")
+        return JSONResponse(status_code=404, content={"detail": "No shows found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve shows from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving shows from the database",
-        ) from None
+            content={"detail": "Unable to retrieve shows from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving shows from the database"
+            },
+        )
 
 
 @router.get(
     "/best-ofs",
     summary="Retrieve Information for All Best Of Shows",
     response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/best-ofs", include_in_schema=False)
-async def get_best_ofs():
+async def get_shows_best_ofs(
+    inclusive: Annotated[
+        bool, Query(title="Include repeat Best Of shows with Best Of shows")
+    ] = True,
+):
     """Retrieve all Best Of Shows.
 
-    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
     show url
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_info = show.retrieve_all_best_ofs()
+        show_info = show.retrieve_all_best_ofs(inclusive=inclusive)
         if show_info:
             return {"shows": show_info}
 
-        raise HTTPException(status_code=404, detail="No Best Of shows found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No Best Of shows found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve Best Of shows from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving Best Of shows from the database",
-        ) from None
+            content={"detail": "Unable to retrieve Best Of shows from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving Best Of shows from the database"
+            },
+        )
 
 
 @router.get(
     "/id/{show_id}",
     summary="Retrieve Information by Show ID",
     response_model=ModelsShow,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/id/{show_id}", include_in_schema=False)
@@ -113,27 +130,32 @@ async def get_show_by_id(
         if show_info:
             return show_info
 
-        raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Show ID {show_id} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Show ID {show_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Show ID {show_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            status={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/date/iso/{show_date}",
     summary="Retrieve Information for Shows by Year, Month, and Day using ISO format date",
     response_model=ModelsShow,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/date/iso/{show_date}", include_in_schema=False)
@@ -151,27 +173,32 @@ async def get_show_by_date_string(
         if show_info:
             return show_info
 
-        raise HTTPException(status_code=404, detail=f"Show date {show_date} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Show date {show_date} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Show date {show_date} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Show date {show_date} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/date/{year}",
     summary="Retrieve Information for Shows by Year",
     response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/date/{year}", include_in_schema=False)
@@ -191,27 +218,179 @@ async def get_shows_by_year(
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail=f"Shows for {year:04d} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Shows for {year:04d} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Shows for {year:04d} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Shows for {year:04d} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
+
+
+@router.get(
+    "/date/{year}/best-ofs",
+    summary="Retrieve Information for Best Of Shows by Year",
+    response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
+    tags=["Shows"],
+)
+@router.head("/date/{year}/best-ofs", include_in_schema=False)
+async def get_shows_by_year_best_ofs(
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
+    inclusive: Annotated[
+        bool, Query(title="Include repeat Best Of shows with Best Of shows")
+    ] = True,
+):
+    """Retrieve All Bests Of Shows by Year.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
+
+    Shows are sorted by date.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        shows = show.retrieve_best_ofs_by_year(year=year, inclusive=inclusive)
+        if shows:
+            return {"shows": shows}
+
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ValueError:
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ProgrammingError:
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
+
+
+@router.get(
+    "/date/{year}/repeat-best-ofs",
+    summary="Retrieve Information for Repeat Best Of Shows by Year",
+    response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
+    tags=["Shows"],
+)
+@router.head("/date/{year}/repeat-best-ofs", include_in_schema=False)
+async def get_shows_by_year_repeat_best_ofs(
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
+):
+    """Retrieve All Repeat Bests Of Shows by Year.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
+
+    Shows are sorted by date.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        shows = show.retrieve_repeat_best_ofs_by_year(year=year)
+        if shows:
+            return {"shows": shows}
+
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Repeat Best Of Shows for {year:04d} not found"},
+        )
+    except ValueError:
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Repeat Best Of Shows for {year:04d} not found"},
+        )
+    except ProgrammingError:
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
+
+
+@router.get(
+    "/date/{year}/repeats",
+    summary="Retrieve Information for Repeat Shows by Year",
+    response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
+    tags=["Shows"],
+)
+@router.head("/date/{year}/repeats", include_in_schema=False)
+async def get_shows_by_year_repeats(
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
+    inclusive: Annotated[
+        bool, Query(title="Include repeat Best Of shows with repeat shows")
+    ] = True,
+):
+    """Retrieve All Repeat Shows by Year.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
+
+    Shows are sorted by date.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        shows = show.retrieve_repeats_by_year(year=year, inclusive=inclusive)
+        if shows:
+            return {"shows": shows}
+
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ValueError:
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ProgrammingError:
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/date/{year}/{month}",
     summary="Retrieve Information for Shows by Year and Month",
     response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/date/{year}/{month}", include_in_schema=False)
@@ -232,33 +411,38 @@ async def get_shows_by_year_month(
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(
-            status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Shows for {year:04d}-{month:02d} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Shows for {year:04d}-{month:02d} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/date/month-day/{month}/{day}",
     summary="Retrieve Information for Shows by Month and Day",
     response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/date/month-day/{month}/{day}", include_in_schema=False)
-async def get_show_by_month_day(
+async def get_shows_by_month_day(
     month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
     day: Annotated[int, Path(title="The day to get shows for", ge=1, le=31)],
 ):
@@ -275,31 +459,34 @@ async def get_show_by_month_day(
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Shows for month {month:02d} and {day:02d} not found",
+            content={"detail": f"Shows for month {month:02d} and {day:02d} not found"},
         )
     except ValueError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Shows for month {month:02d} and {day:02d} not found",
-        ) from None
+            content={"detail": f"Shows for month {month:02d} and {day:02d} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/date/{year}/{month}/{day}",
     summary="Retrieve Information for a Show by Year, Month, and Day",
     response_model=ModelsShow,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/date/{year}/{month}/{day}", include_in_schema=False)
@@ -319,31 +506,34 @@ async def get_show_by_date(
         if show_info:
             return show_info
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
+            content={"detail": f"Shows for {year:04d}-{month:02d}-{day:02d} not found"},
         )
     except ValueError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
-        ) from None
+            content={"detail": f"Shows for {year:04d}-{month:02d}-{day:02d} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/dates",
     summary="Retrieve All Show Dates",
     response_model=ModelsShowDates,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/dates", include_in_schema=False)
@@ -358,22 +548,26 @@ async def get_all_show_dates():
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail="No shows found")
+        return JSONResponse(status_code=404, content={"detail": "No shows found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve shows from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving shows from the database",
-        ) from None
+            content={"detail": "Unable to retrieve shows from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving shows from the database"
+            },
+        )
 
 
 @router.get(
     "/details",
     summary="Retrieve Detailed Information for All Shows",
     response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details", include_in_schema=False)
@@ -394,26 +588,34 @@ async def get_shows_details():
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail="No shows found")
+        return JSONResponse(status_code=404, content={"detail": "No shows found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve shows from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving shows from the database",
-        ) from None
+            content={"detail": "Unable to retrieve shows from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving shows from the database"
+            },
+        )
 
 
 @router.get(
     "/details/best-ofs",
     summary="Retrieve Detailed Information for All Best Of Shows",
-    response_model=ModelsShowDetails,
+    response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/best-ofs", include_in_schema=False)
-async def get_details_best_ofs():
+async def get_shows_details_best_ofs(
+    inclusive: Annotated[
+        bool, Query(title="Include repeat Best Of shows with Best Of shows")
+    ] = True,
+):
     """Retrieve all Best Of Shows.
 
     Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
@@ -421,26 +623,35 @@ async def get_details_best_ofs():
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_all_best_ofs_details()
-        if show_details:
-            return show_details
+        shows = show.retrieve_all_best_ofs_details(
+            inclusive=inclusive,
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
+        if shows:
+            return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail="No Best Of shows found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No Best Of shows found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve Best Of shows from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving Best Of shows from the database",
-        ) from None
+            content={"detail": "Unable to retrieve Best Of shows from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving Best Of shows from the database"
+            },
+        )
 
 
 @router.get(
     "/details/id/{show_id}",
     summary="Retrieve Detailed Information by Show ID",
     response_model=ModelsShowDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/id/{show_id}", include_in_schema=False)
@@ -461,27 +672,32 @@ async def get_show_details_by_id(
         if show_details:
             return show_details
 
-        raise HTTPException(status_code=404, detail=f"Show ID {show_id} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Show ID {show_id} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Show ID {show_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Show ID {show_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/details/date/iso/{show_date}",
     summary="Retrieve Detailed Information for Shows by Year, Month, and Day using ISO format date",
     response_model=ModelsShowDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/date/iso/{show_date}", include_in_schema=False)
@@ -503,27 +719,32 @@ async def get_show_details_by_date_string(
         if show_details:
             return show_details
 
-        raise HTTPException(status_code=404, detail=f"Show date {show_date} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Show date {show_date} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Show date {show_date} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Show date {show_date} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/details/date/{year}",
     summary="Retrieve Detailed Information for Shows by Year",
     response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/date/{year}", include_in_schema=False)
@@ -546,27 +767,190 @@ async def get_shows_details_by_year(
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail=f"Shows for {year:04d} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Shows for {year:04d} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Shows for {year:04d} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Shows for {year:04d} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
+
+
+@router.get(
+    "/details/date/{year}/best-ofs",
+    summary="Retrieve Detailed Information for Best Of Shows by Year",
+    response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
+    tags=["Shows"],
+)
+@router.head("/details/date/{year}/best-ofs", include_in_schema=False)
+async def get_shows_details_by_year_best_ofs(
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
+    inclusive: Annotated[
+        bool, Query(title="Include repeat Best Of shows with Best Of shows")
+    ] = True,
+):
+    """Retrieve Details for All Best Of Shows by Year.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
+
+    Shows are sorted by date.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        shows = show.retrieve_best_ofs_details_by_year(
+            year=year,
+            inclusive=inclusive,
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
+        if shows:
+            return {"shows": shows}
+
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ValueError:
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ProgrammingError:
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
+
+
+@router.get(
+    "/details/date/{year}/repeat-best-ofs",
+    summary="Retrieve Detailed Information for Repeat Best Of Shows by Year",
+    response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
+    tags=["Shows"],
+)
+@router.head("/details/date/{year}/repeat-best-ofs", include_in_schema=False)
+async def get_shows_details_by_year_repeat_best_ofs(
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
+):
+    """Retrieve Details for All Repeat Best Of Shows by Year.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
+
+    Shows are sorted by date.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        shows = show.retrieve_repeat_best_ofs_details_by_year(
+            year=year,
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
+        if shows:
+            return {"shows": shows}
+
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ValueError:
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ProgrammingError:
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
+
+
+@router.get(
+    "/details/date/{year}/repeats",
+    summary="Retrieve Detailed Information for Repeat Shows by Year",
+    response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
+    tags=["Shows"],
+)
+@router.head("/details/date/{year}/repeats", include_in_schema=False)
+async def get_shows_details_by_year_repeats(
+    year: Annotated[int, Path(title="The year to get shows for", ge=1998, le=9999)],
+    inclusive: Annotated[
+        bool, Query(title="Include repeat Best Of shows with repeat shows")
+    ] = True,
+):
+    """Retrieve Details for All Repeat Shows by Year.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and NPR.org
+    show URL
+
+    Shows are sorted by date.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        shows = show.retrieve_repeats_details_by_year(
+            year=year,
+            inclusive=inclusive,
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
+        if shows:
+            return {"shows": shows}
+
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ValueError:
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Best Of Shows for {year:04d} not found"},
+        )
+    except ProgrammingError:
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/details/date/{year}/{month}",
     summary="Retrieve Detailed Information for Shows by Year and Month",
     response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/date/{year}/{month}", include_in_schema=False)
@@ -592,33 +976,38 @@ async def get_shows_details_by_year_month(
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(
-            status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Shows for {year:04d}-{month:02d} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Shows for {year:04d}-{month:02d} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Shows for {year:04d}-{month:02d} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/details/date/month-day/{month}/{day}",
     summary="Retrieve Detailed Information for Shows by Month and Day",
     response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/date/month-day/{month}/{day}", include_in_schema=False)
-async def get_show_details_by_month_day(
+async def get_shows_details_by_month_day(
     month: Annotated[int, Path(title="The month to get shows for", ge=1, le=12)],
     day: Annotated[int, Path(title="The day to get shows for", ge=1, le=31)],
 ):
@@ -638,31 +1027,38 @@ async def get_show_details_by_month_day(
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Shows for month {month:02d} and day {day:02d} not found",
+            content={
+                "detail": f"Shows for month {month:02d} and day {day:02d} not found"
+            },
         )
     except ValueError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Shows for month {month:02d} and day {day:02d} not found",
-        ) from None
+            content={
+                "detail": f"Shows for month {month:02d} and day {day:02d} not found"
+            },
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/details/date/{year}/{month}/{day}",
     summary="Retrieve Detailed Information for a Show by Year, Month, and Day",
     response_model=ModelsShowDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/date/{year}/{month}/{day}", include_in_schema=False)
@@ -688,31 +1084,34 @@ async def get_show_details_by_date(
         if show_details:
             return show_details
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
+            content={"detail": f"Shows for {year:04d}-{month:02d}-{day:02d} not found"},
         )
     except ValueError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Shows for {year:04d}-{month:02d}-{day:02d} not found",
-        ) from None
+            content={"detail": f"Shows for {year:04d}-{month:02d}-{day:02d} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/details/random",
     summary="Retrieve Detailed Information for a Random Show",
     response_model=ModelsShowDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/random", include_in_schema=False)
@@ -731,25 +1130,32 @@ async def get_random_show_details():
         if show_details:
             return show_details
 
-        raise HTTPException(status_code=404, detail="Random show not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random show not found"}
+        )
     except ValueError:
-        raise HTTPException(status_code=404, detail="Random show not found") from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random show not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/details/random/year/{year}",
     summary="Retrieve Detailed Information for a Random Show for a Given Year",
     response_model=ModelsShowDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/random/year/{year}", include_in_schema=False)
@@ -771,29 +1177,32 @@ async def get_random_show_by_year_details(
         if show_details:
             return show_details
 
-        raise HTTPException(
-            status_code=404, detail=f"Random show for {year:04d} not found"
+        return JSONResponse(
+            status_code=404, content={"detail": f"Random show for {year:04d} not found"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Random show for {year:04d} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Random show for {year:04d} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/details/recent",
     summary="Retrieve Detailed Information for Recent Shows",
     response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/recent", include_in_schema=False)
@@ -814,26 +1223,32 @@ async def get_shows_recent_details():
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail="No recent shows found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No recent shows found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve shows from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving shows from the database",
-        ) from None
+            content={"detail": "Unable to retrieve shows from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving shows from the database"
+            },
+        )
 
 
 @router.get(
     "/details/repeat-best-ofs",
     summary="Retrieve Detailed Information for All Repeat Best Of Shows",
-    response_model=ModelsShowDetails,
+    response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/repeat-best-ofs", include_in_schema=False)
-async def get_details_repeat_best_ofs():
+async def get_shows_details_repeat_best_ofs():
     """Retrieve all Repeat Best Of Shows.
 
     Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
@@ -841,32 +1256,45 @@ async def get_details_repeat_best_ofs():
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_all_repeat_best_ofs_details()
-        if show_details:
-            return show_details
+        shows = show.retrieve_all_repeat_best_ofs_details(
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
+        if shows:
+            return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail="No Repeat Best Of shows found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No Repeat Best Of shows found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve Repeat Best Of shows from the database",
-        ) from None
+            content={
+                "detail": "Unable to retrieve Repeat Best Of shows from the database"
+            },
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving Repeat Best Of shows from "
-            "the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving Repeat Best Of shows from the database"
+            },
+        )
 
 
 @router.get(
     "/details/repeats",
     summary="Retrieve Detailed Information for All Repeat Shows",
-    response_model=ModelsShowDetails,
+    response_model=ModelsShowsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/details/repeats", include_in_schema=False)
-async def get_details_repeats():
+async def get_shows_details_repeats(
+    inclusive: Annotated[
+        bool, Query(title="Include Best Of shows with repeat shows")
+    ] = True,
+    include_decimal_scores=_config["settings"]["use_decimal_scores"],
+):
     """Retrieve all Repeat Shows.
 
     Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
@@ -874,27 +1302,35 @@ async def get_details_repeats():
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_all_repeats_details()
-        if show_details:
-            return show_details
+        shows = show.retrieve_all_repeats_details(
+            inclusive=inclusive,
+            include_decimal_scores=_config["settings"]["use_decimal_scores"],
+        )
+        if shows:
+            return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail="No Repeat shows found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No Repeat shows found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve Repeat shows from the database",
-        ) from None
+            content={"detail": "Unable to retrieve Repeat shows from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving Repeat shows from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving Repeat shows from the database"
+            },
+        )
 
 
 @router.get(
     "/random",
     summary="Retrieve Information for a Random Show",
     response_model=ModelsShow,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/random", include_in_schema=False)
@@ -910,60 +1346,32 @@ async def get_random_show():
         if show_info:
             return show_info
 
-        raise HTTPException(status_code=404, detail="Random show not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random show not found"}
+        )
     except ValueError:
-        raise HTTPException(status_code=404, detail="Random show not found") from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random show not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
-
-
-@router.get(
-    "/random/id",
-    summary="Retrieve a Random Show ID",
-    response_model=ModelsShowID,
-    tags=["Shows"],
-)
-@router.head("/random/id", include_in_schema=False)
-async def get_random_show_id():
-    """Retrieve a Random Show ID.
-
-    Returned data: Show ID.
-    """
-    try:
-        show = Show(database_connection=_database_connection)
-        _id = show.retrieve_random_id()
-        if _id:
-            return {"id": _id}
-
-        raise HTTPException(status_code=404, detail="Random show ID not found")
-    except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random show ID not found"
-        ) from None
-    except ProgrammingError:
-        raise HTTPException(
-            status_code=500,
-            detail="Unable to retrieve a random show ID",
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
-            status_code=500,
-            detail="Database error occurred while trying to retrieve a random show ID",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/random/date",
     summary="Retrieve a Random Show Date",
     response_model=ModelsShowDate,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/random/date", include_in_schema=False)
@@ -978,27 +1386,72 @@ async def get_random_show_date():
         if _date:
             return {"date": _date}
 
-        raise HTTPException(status_code=404, detail="Random show date not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random show date not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random show date not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random show date not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve a random show date",
-        ) from None
+            content={"detail": "Unable to retrieve a random show date"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random show date",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve a random show date"
+            },
+        )
+
+
+@router.get(
+    "/random/id",
+    summary="Retrieve a Random Show ID",
+    response_model=ModelsShowID,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
+    tags=["Shows"],
+)
+@router.head("/random/id", include_in_schema=False)
+async def get_random_show_id():
+    """Retrieve a Random Show ID.
+
+    Returned data: Show ID.
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        _id = show.retrieve_random_id()
+        if _id:
+            return {"id": _id}
+
+        return JSONResponse(
+            status_code=404, content={"detail": "Random show ID not found"}
+        )
+    except ValueError:
+        return JSONResponse(
+            status_code=404, content={"detail": "Random show ID not found"}
+        )
+    except ProgrammingError:
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Unable to retrieve a random show ID"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve a random show ID"
+            },
+        )
 
 
 @router.get(
     "/random/year/{year}",
     summary="Retrieve Information for a Random Show for a Given Year",
     response_model=ModelsShow,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/random/year/{year}", include_in_schema=False)
@@ -1018,29 +1471,32 @@ async def get_random_show_by_year(
         if show_info:
             return show_info
 
-        raise HTTPException(
-            status_code=404, detail=f"Random show for {year:04d} not found"
+        return JSONResponse(
+            status_code=404, content={"detail": f"Random show for {year:04d} not found"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Random show for {year:04d} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Random show for {year:04d} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve show information from the database",
-        ) from None
+            content={"detail": "Unable to retrieve show information from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving show information from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving show information from the database"
+            },
+        )
 
 
 @router.get(
     "/recent",
     summary="Retrieve Information for Recent Shows",
     response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/recent", include_in_schema=False)
@@ -1058,53 +1514,28 @@ async def get_shows_recent():
         if shows:
             return {"shows": shows}
 
-        raise HTTPException(status_code=404, detail="No recent shows found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No recent shows found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve shows from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving shows from the database",
-        ) from None
-
-
-@router.get(
-    "/repeats",
-    summary="Retrieve Information for All Repeat Shows",
-    response_model=ModelsShows,
-    tags=["Shows"],
-)
-@router.head("/repeats", include_in_schema=False)
-async def get_repeats():
-    """Retrieve all Repeat Shows.
-
-    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
-    show url
-    """
-    try:
-        show = Show(database_connection=_database_connection)
-        show_info = show.retrieve_all_repeats()
-        if show_info:
-            return {"shows": show_info}
-
-        raise HTTPException(status_code=404, detail="No Repeat shows found")
-    except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve Repeat shows from the database"
-        ) from None
+            content={"detail": "Unable to retrieve shows from the database"},
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving Repeat shows from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving shows from the database"
+            },
+        )
 
 
 @router.get(
     "/repeat-best-ofs",
     summary="Retrieve Information for All Repeat Best Of Shows",
     response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Shows"],
 )
 @router.head("/repeat-best-ofs", include_in_schema=False)
@@ -1120,15 +1551,61 @@ async def get_repeat_best_ofs():
         if show_info:
             return {"shows": show_info}
 
-        raise HTTPException(status_code=404, detail="No Repeat Best Of shows found")
+        return JSONResponse(
+            status_code=404, content={"detail": "No Repeat Best Of shows found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Unable to retrieve Repeat Best Of shows from the database",
-        ) from None
+            content={
+                "detail": "Unable to retrieve Repeat Best Of shows from the database"
+            },
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving Repeat Best Of shows "
-            "from the database",
-        ) from None
+            content={
+                "detail": "Database error occurred while retrieving Repeat Best Of shows from the database"
+            },
+        )
+
+
+@router.get(
+    "/repeats",
+    summary="Retrieve Information for All Repeat Shows",
+    response_model=ModelsShows,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
+    tags=["Shows"],
+)
+@router.head("/repeats", include_in_schema=False)
+async def get_shows_repeats(
+    inclusive: Annotated[
+        bool, Query(title="Include Best Of shows with repeat shows")
+    ] = True,
+):
+    """Retrieve all Repeat Shows.
+
+    Returned data: Show ID, date, Best Of flag, Repeat flag and  NPR.org
+    show url
+    """
+    try:
+        show = Show(database_connection=_database_connection)
+        show_info = show.retrieve_all_repeats(inclusive=inclusive)
+        if show_info:
+            return {"shows": show_info}
+
+        return JSONResponse(
+            status_code=404, content={"detail": "No Repeat shows found"}
+        )
+    except ProgrammingError:
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "Unable to retrieve Repeat shows from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving Repeat shows from the database"
+            },
+        )
