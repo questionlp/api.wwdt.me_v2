@@ -8,11 +8,13 @@
 from typing import Annotated
 
 import mysql.connector
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Path
+from fastapi.responses import JSONResponse
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.pronoun import Pronouns
 
 from app.config import API_VERSION, load_config
+from app.models.messages import MessageDetails
 from app.models.pronouns import Pronouns as ModelsPronouns
 from app.models.pronouns import PronounsInfoList as ModelsPronounsInfoList
 
@@ -26,6 +28,7 @@ _database_connection = mysql.connector.connect(**_database_config)
     "",
     summary="Retrieve Information for All Pronouns",
     response_model=ModelsPronounsInfoList,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Pronouns"],
 )
 @router.head("", include_in_schema=False)
@@ -42,22 +45,26 @@ async def get_pronouns():
         if all_pronouns:
             return {"pronouns": all_pronouns}
 
-        raise HTTPException(status_code=404, detail="No pronouns found")
+        return JSONResponse(status_code=404, content={"detail": "No pronouns found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve pronouns from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving pronouns from the database",
-        ) from None
+            content={"detail": "Unable to retrieve pronouns from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving pronouns from the database"
+            },
+        )
 
 
 @router.get(
     "/id/{pronouns_id}",
     summary="Retrieve Information by Pronouns ID",
     response_model=ModelsPronouns,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Pronouns"],
 )
 @router.head("/id/{pronouns_id}", include_in_schema=False)
@@ -76,19 +83,22 @@ async def get_pronouns_by_id(
         if pronouns_info:
             return pronouns_info
 
-        raise HTTPException(
-            status_code=404, detail=f"Pronouns ID {pronouns_id} not found"
+        return JSONResponse(
+            status_code=404, content={"detail": f"Pronouns ID {pronouns_id} not found"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Pronouns ID {pronouns_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Pronouns ID {pronouns_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve pronouns information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve pronouns information",
-        ) from None
+            content={"detail": "Unable to retrieve pronouns information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve pronouns information"
+            },
+        )

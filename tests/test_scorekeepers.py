@@ -14,7 +14,7 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_scorekeepers():
+def test_get_scorekeepers():
     """Test /v2.0/scorekeepers route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers")
     scorekeepers = response.json()
@@ -28,7 +28,7 @@ def test_scorekeepers():
 
 
 @pytest.mark.parametrize("scorekeeper_id", [11])
-def test_scorekeepers_id(scorekeeper_id: int):
+def test_get_scorekeeper_by_id(scorekeeper_id: int):
     """Test /v2.0/scorekeepers/id/{scorekeeper_id} route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/id/{scorekeeper_id}")
     scorekeeper = response.json()
@@ -41,8 +41,18 @@ def test_scorekeepers_id(scorekeeper_id: int):
     assert "slug" in scorekeeper
 
 
+@pytest.mark.parametrize("scorekeeper_id", [0])
+def test_get_scorekeeper_by_id_not_found(scorekeeper_id: int):
+    """Test /v2.0/scorekeepers/id/{scorekeeper_id} route."""
+    response = client.get(f"/v{API_VERSION}/scorekeepers/id/{scorekeeper_id}")
+    scorekeeper = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scorekeeper
+
+
 @pytest.mark.parametrize("scorekeeper_slug", ["bill-kurtis"])
-def test_scorekeepers_slug(scorekeeper_slug: str):
+def test_get_scorekeeper_by_slug(scorekeeper_slug: str):
     """Test /v2.0/scorekeepers/slug/{scorekeeper_slug} route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/slug/{scorekeeper_slug}")
     scorekeeper = response.json()
@@ -55,7 +65,17 @@ def test_scorekeepers_slug(scorekeeper_slug: str):
     assert scorekeeper["slug"] == scorekeeper_slug
 
 
-def test_scorekeepers_details():
+@pytest.mark.parametrize("scorekeeper_slug", ["-abcdef"])
+def test_get_scorekeeper_by_slug_not_found(scorekeeper_slug: str):
+    """Test /v2.0/scorekeepers/slug/{scorekeeper_slug} route."""
+    response = client.get(f"/v{API_VERSION}/scorekeepers/slug/{scorekeeper_slug}")
+    scorekeeper = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scorekeeper
+
+
+def test_get_scorekeepers_details():
     """Test /v2.0/scorekeepers/details route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/details")
     scorekeepers = response.json()
@@ -70,7 +90,7 @@ def test_scorekeepers_details():
 
 
 @pytest.mark.parametrize("scorekeeper_id", [11])
-def test_scorekeepers_details_id(scorekeeper_id: int):
+def test_get_scorekeeper_details_by_id(scorekeeper_id: int):
     """Test /v2.0/scorekeepers/details/id/{scorekeeper_id} route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/details/id/{scorekeeper_id}")
     scorekeeper = response.json()
@@ -84,8 +104,31 @@ def test_scorekeepers_details_id(scorekeeper_id: int):
     assert "appearances" in scorekeeper
 
 
+@pytest.mark.parametrize("scorekeeper_id", [0])
+def test_get_scorekeeper_details_by_id_not_found(scorekeeper_id: int):
+    """Test /v2.0/scorekeepers/details/id/{scorekeeper_id} route."""
+    response = client.get(f"/v{API_VERSION}/scorekeepers/details/id/{scorekeeper_id}")
+    scorekeeper = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scorekeeper
+
+
+def test_get_random_scorekeeper_details():
+    """Test /v2.0/scorekeepers/details/random route."""
+    response = client.get(f"/v{API_VERSION}/scorekeepers/details/random")
+    scorekeeper = response.json()
+
+    assert response.status_code == 200
+    assert "id" in scorekeeper
+    assert "name" in scorekeeper
+    assert "pronouns" in scorekeeper
+    assert "slug" in scorekeeper
+    assert "appearances" in scorekeeper
+
+
 @pytest.mark.parametrize("scorekeeper_slug", ["bill-kurtis"])
-def test_scorekeepers_details_slug(scorekeeper_slug: str):
+def test_get_scorekeeper_details_by_slug(scorekeeper_slug: str):
     """Test /v2.0/scorekeepers/details/slug/{scorekeeper_slug} route."""
     response = client.get(
         f"/v{API_VERSION}/scorekeepers/details/slug/{scorekeeper_slug}"
@@ -101,7 +144,19 @@ def test_scorekeepers_details_slug(scorekeeper_slug: str):
     assert "appearances" in scorekeeper
 
 
-def test_scorekeepers_random():
+@pytest.mark.parametrize("scorekeeper_slug", ["-abcdef"])
+def test_get_scorekeeper_details_by_slug_not_found(scorekeeper_slug: str):
+    """Test /v2.0/scorekeepers/details/slug/{scorekeeper_slug} route."""
+    response = client.get(
+        f"/v{API_VERSION}/scorekeepers/details/slug/{scorekeeper_slug}"
+    )
+    scorekeeper = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in scorekeeper
+
+
+def test_get_random_scorekeeper():
     """Test /v2.0/scorekeepers/random route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/random")
     scorekeeper = response.json()
@@ -113,20 +168,7 @@ def test_scorekeepers_random():
     assert "slug" in scorekeeper
 
 
-def test_scorekeepers_random_details():
-    """Test /v2.0/scorekeepers/details/random route."""
-    response = client.get(f"/v{API_VERSION}/scorekeepers/details/random")
-    scorekeeper = response.json()
-
-    assert response.status_code == 200
-    assert "id" in scorekeeper
-    assert "name" in scorekeeper
-    assert "pronouns" in scorekeeper
-    assert "slug" in scorekeeper
-    assert "appearances" in scorekeeper
-
-
-def test_scorekeepers_random_id():
+def test_get_random_scorekeeper_id():
     """Test /v2.0/scorekeepers/random/id route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/random/id")
     _id = response.json()
@@ -136,7 +178,7 @@ def test_scorekeepers_random_id():
     assert isinstance(_id["id"], int)
 
 
-def test_scorekeepers_random_slug():
+def test_get_random_scorekeepers_slug():
     """Test /v2.0/scorekeepers/random/slug route."""
     response = client.get(f"/v{API_VERSION}/scorekeepers/random/slug")
     _slug = response.json()

@@ -8,7 +8,8 @@
 from typing import Annotated
 
 import mysql.connector
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Path
+from fastapi.responses import JSONResponse
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.guest import Guest
 
@@ -19,6 +20,7 @@ from app.models.guests import GuestID as ModelsGuestID
 from app.models.guests import Guests as ModelsGuests
 from app.models.guests import GuestsDetails as ModelsGuestsDetails
 from app.models.guests import GuestSlug as ModelsGuestSlug
+from app.models.messages import MessageDetails
 
 router = APIRouter(prefix=f"/v{API_VERSION}/guests")
 _config = load_config()
@@ -30,6 +32,7 @@ _database_connection = mysql.connector.connect(**_database_config)
     "",
     summary="Retrieve Information for All Not My Job Guests",
     response_model=ModelsGuests,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("", include_in_schema=False)
@@ -46,22 +49,26 @@ async def get_guests():
         if guests:
             return {"guests": guests}
 
-        raise HTTPException(status_code=404, detail="No guests found")
+        return JSONResponse(status_code=404, content={"detail": "No guests found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guests from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving guests from the database",
-        ) from None
+            content={"detail": "Unable to retrieve guests from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving guests from the database"
+            },
+        )
 
 
 @router.get(
     "/id/{guest_id}",
     summary="Retrieve Information by Not My Job Guest ID",
     response_model=ModelsGuest,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/id/{guest_id}", include_in_schema=False)
@@ -78,26 +85,31 @@ async def get_guest_by_id(
         if guest_info:
             return guest_info
 
-        raise HTTPException(status_code=404, detail=f"Guest ID {guest_id} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Guest ID {guest_id} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Guest ID {guest_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Guest ID {guest_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guest information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve guest information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve guest information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve guest information"
+            },
+        )
 
 
 @router.get(
     "/slug/{guest_slug}",
     summary="Retrieve Information by Guest Slug String",
     response_model=ModelsGuest,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/slug/{guest_slug}", include_in_schema=False)
@@ -114,28 +126,33 @@ async def get_guest_by_slug(
         if guest_info:
             return guest_info
 
-        raise HTTPException(
-            status_code=404, detail=f"Guest slug string {guest_slug} not found"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Guest slug string {guest_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Guest slug string {guest_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Guest slug string {guest_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guest information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve guest information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve guest information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve guest information"
+            },
+        )
 
 
 @router.get(
     "/details",
     summary="Retrieve Information and Appearances for All Not My Job Guests",
     response_model=ModelsGuestsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/details", include_in_schema=False)
@@ -152,22 +169,26 @@ async def get_guests_details():
         if guests:
             return {"guests": guests}
 
-        raise HTTPException(status_code=404, detail="No guests found")
+        return JSONResponse(status_code=404, content={"detail": "No guests found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guests from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving guests from the database",
-        ) from None
+            content={"detail": "Unable to retrieve guests from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving guests from the database"
+            },
+        )
 
 
 @router.get(
     "/details/id/{guest_id}",
     summary="Retrieve Information and Appearances by Not My Job Guest ID",
     response_model=ModelsGuestDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/details/id/{guest_id}", include_in_schema=False)
@@ -186,26 +207,31 @@ async def get_guest_details_by_id(
         if guest_details:
             return guest_details
 
-        raise HTTPException(status_code=404, detail=f"Guest ID {guest_id} not found")
+        return JSONResponse(
+            status_code=404, content={"detail": f"Guest ID {guest_id} not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Guest ID {guest_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Guest ID {guest_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guest information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve guest information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve guest information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve guest information"
+            },
+        )
 
 
 @router.get(
     "/details/random",
     summary="Retrieve Information and Appearances for a Random Not My Job Guest",
     response_model=ModelsGuestDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/details/random", include_in_schema=False)
@@ -222,24 +248,31 @@ async def get_random_guest_details():
         if guest_details:
             return guest_details
 
-        raise HTTPException(status_code=404, detail="Random Guest not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Guest not found"}
+        )
     except ValueError:
-        raise HTTPException(status_code=404, detail="Random Guest not found") from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Guest not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guest information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve guest information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve guest information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve guest information"
+            },
+        )
 
 
 @router.get(
     "/details/slug/{guest_slug}",
     summary="Retrieve Information and Appearances by Guest Slug String",
     response_model=ModelsGuestDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/details/slug/{guest_slug}", include_in_schema=False)
@@ -258,28 +291,33 @@ async def get_guest_details_by_slug(
         if guest_details:
             return guest_details
 
-        raise HTTPException(
-            status_code=404, detail=f"Guest slug string {guest_slug} not found"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Guest slug string {guest_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Guest slug string {guest_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Guest slug string {guest_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guest information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve guest information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve guest information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve guest information"
+            },
+        )
 
 
 @router.get(
     "/random",
     summary="Retrieve Information for a Random Not My Job Guest",
     response_model=ModelsGuest,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/random", include_in_schema=False)
@@ -294,24 +332,31 @@ async def get_random_guest():
         if guest_info:
             return guest_info
 
-        raise HTTPException(status_code=404, detail="Random Guest not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Guest not found"}
+        )
     except ValueError:
-        raise HTTPException(status_code=404, detail="Random Guest not found") from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Guest not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve guest information"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve guest information"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve guest information",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve guest information"
+            },
+        )
 
 
 @router.get(
     "/random/id",
     summary="Retrieve a Random Not My Job Guest ID",
     response_model=ModelsGuestID,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/random/id", include_in_schema=False)
@@ -326,26 +371,31 @@ async def get_random_guest_id():
         if guest_id:
             return {"id": guest_id}
 
-        raise HTTPException(status_code=404, detail="Random Guest ID not returned")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Guest ID not returned"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Guest ID not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Guest ID not returned"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random guest ID"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve a random guest ID"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random guest ID",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve a random guest ID"
+            },
+        )
 
 
 @router.get(
     "/random/slug",
     summary="Retrieve a Random Not My Job Guest Slug String",
     response_model=ModelsGuestSlug,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Guests"],
 )
 @router.head("/random/slug", include_in_schema=False)
@@ -360,19 +410,22 @@ async def get_random_guest_slug():
         if guest_slug:
             return {"slug": guest_slug}
 
-        raise HTTPException(
-            status_code=404, detail="Random Guest slug string not returned"
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Guest slug string not returned"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Guest slug string not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Guest slug string not returned"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random guest slug string"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random guest slug string",
-        ) from None
+            content={"detail": "Unable to retrieve a random guest slug string"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve a random guest slug string"
+            },
+        )

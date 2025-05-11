@@ -8,11 +8,13 @@
 from typing import Annotated
 
 import mysql.connector
-from fastapi import APIRouter, HTTPException, Path
+from fastapi import APIRouter, Path
+from fastapi.responses import JSONResponse
 from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm.panelist import Panelist, PanelistDecimalScores, PanelistScores
 
 from app.config import API_VERSION, load_config
+from app.models.messages import MessageDetails
 from app.models.panelists import Panelist as ModelsPanelist
 from app.models.panelists import PanelistDetails as ModelsPanelistDetails
 from app.models.panelists import PanelistID as ModelsPanelistID
@@ -37,6 +39,7 @@ _database_connection = mysql.connector.connect(**_database_config)
     "",
     summary="Retrieve Information for All Panelists",
     response_model=ModelsPanelists,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("", include_in_schema=False)
@@ -53,22 +56,26 @@ async def get_panelists():
         if panelists:
             return {"panelists": panelists}
 
-        raise HTTPException(status_code=404, detail="No panelists found")
+        return JSONResponse(status_code=404, content={"detail": "No panelists found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelists from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving panelists from the database",
-        ) from None
+            content={"detail": "Unable to retrieve panelists from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving panelists from the database"
+            },
+        )
 
 
 @router.get(
     "/id/{panelist_id}",
     summary="Retrieve Information by Panelist ID",
     response_model=ModelsPanelist,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/id/{panelist_id}", include_in_schema=False)
@@ -87,28 +94,32 @@ async def get_panelist_by_id(
         if panelist_info:
             return panelist_info
 
-        raise HTTPException(
-            status_code=404, detail=f"Panelist ID {panelist_id} not found"
+        return JSONResponse(
+            status_code=404, content={"detail": f"Panelist ID {panelist_id} not found"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Panelist ID {panelist_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist information",
-        ) from None
+            content={"detail": "Unable to retrieve panelist information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist information"
+            },
+        )
 
 
 @router.get(
     "/slug/{panelist_slug}",
     summary="Retrieve Information by Panelist Slug String",
     response_model=ModelsPanelist,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/slug/{panelist_slug}", include_in_schema=False)
@@ -125,29 +136,34 @@ async def get_panelist_by_slug(
         if panelist_info:
             return panelist_info
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Panelist slug string {panelist_slug} not found",
+            content={"detail": f"Panelist slug string {panelist_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Panelist slug string {panelist_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist information",
-        ) from None
+            content={"detail": "Unable to retrieve panelist information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist information"
+            },
+        )
 
 
 @router.get(
     "/details",
     summary="Retrieve Information, Statistics, and Appearances for All Panelists",
     response_model=ModelsPanelistsDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/details", include_in_schema=False)
@@ -168,22 +184,26 @@ async def get_panelists_details():
         if panelists:
             return {"panelists": panelists}
 
-        raise HTTPException(status_code=404, detail="No panelists found")
+        return JSONResponse(status_code=404, content={"detail": "No panelists found"})
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelists from the database"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while retrieving panelists from the database",
-        ) from None
+            content={"detail": "Unable to retrieve panelists from the database"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while retrieving panelists from the database"
+            },
+        )
 
 
 @router.get(
     "/details/id/{panelist_id}",
     summary="Retrieve Information, Statistics, and Appearances by Panelist ID",
     response_model=ModelsPanelistDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/details/id/{panelist_id}", include_in_schema=False)
@@ -207,28 +227,32 @@ async def get_panelist_details_by_id(
         if panelist_details:
             return panelist_details
 
-        raise HTTPException(
-            status_code=404, detail=f"Panelist ID {panelist_id} not found"
+        return JSONResponse(
+            status_code=404, content={"detail": f"Panelist ID {panelist_id} not found"}
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Panelist ID {panelist_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist information",
-        ) from None
+            content={"detail": "Unable to retrieve panelist information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist information"
+            },
+        )
 
 
 @router.get(
     "/details/random",
     summary="Retrieve Information and Appearances for a Random Panelist",
     response_model=ModelsPanelistDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/details/random", include_in_schema=False)
@@ -248,26 +272,32 @@ async def get_random_panelist_details():
         if panelist_details:
             return panelist_details
 
-        raise HTTPException(status_code=404, detail="Random Panelist not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Panelist not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Panelist not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Panelist not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist information",
-        ) from None
+            content={"detail": "Unable to retrieve panelist information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist information"
+            },
+        )
 
 
 @router.get(
     "/details/slug/{panelist_slug}",
     summary="Retrieve Information, Statistics and Appearances by Panelist by Slug String",
     response_model=ModelsPanelistDetails,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/details/slug/{panelist_slug}", include_in_schema=False)
@@ -290,29 +320,34 @@ async def get_panelist_details_by_slug(
         if panelist_details:
             return panelist_details
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Panelist slug string {panelist_slug} not found",
+            content={"detail": f"Panelist slug string {panelist_slug} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Panelist slug string {panelist_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist information",
-        ) from None
+            content={"detail": "Unable to retrieve panelist information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist information"
+            },
+        )
 
 
 @router.get(
     "/scores/id/{panelist_id}",
     summary="Retrieve Panelist Scores for Each Appearance by Panelist ID",
     response_model=ModelsPanelistScoresList,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/scores/id/{panelist_id}", include_in_schema=False)
@@ -339,29 +374,32 @@ async def get_panelist_scores_by_id(
         if scores:
             return scores
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scoring data for Panelist ID {panelist_id} not found",
+            content={"detail": f"Scoring data for Panelist ID {panelist_id} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Panelist ID {panelist_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist scores"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve panelist scores"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist scores",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist scores"
+            },
+        )
 
 
 @router.get(
     "/scores/slug/{panelist_slug}",
     summary="Retrieve Panelist Scores for Each Appearance by Panelist Slug String",
     response_model=ModelsPanelistScoresList,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/scores/slug/{panelist_slug}", include_in_schema=False)
@@ -384,23 +422,28 @@ async def get_panelist_scores_by_slug(
         if scores:
             return scores
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
+            content={
+                "detail": f"Scoring data for Panelist slug string {panelist_slug} not found"
+            },
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Panelist slug string {panelist_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist scores"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve panelist scores"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist scores",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist scores"
+            },
+        )
 
 
 @router.get(
@@ -410,6 +453,7 @@ async def get_panelist_scores_by_slug(
         "Times It Has Been Earned by Panelist ID"
     ),
     response_model=ModelsPanelistScoresGroupedOrderedPair,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/scores/grouped-ordered-pair/id/{panelist_id}", include_in_schema=False)
@@ -439,23 +483,25 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
         if scores:
             return {"scores": scores}
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scoring data for Panelist ID {panelist_id} not found",
+            content={"detail": f"Scoring data for Panelist ID {panelist_id} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Panelist ID {panelist_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist scores"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve panelist scores"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist scores",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist scores"
+            },
+        )
 
 
 @router.get(
@@ -465,6 +511,7 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
         "Times It Has Been Earned by Panelist Slug String"
     ),
     response_model=ModelsPanelistScoresGroupedOrderedPair,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head(
@@ -494,29 +541,35 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
         if scores:
             return {"scores": scores}
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
+            content={
+                "detail": f"Scoring data for Panelist slug string {panelist_slug} not found"
+            },
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Panelist slug string {panelist_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist scores"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve panelist scores"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist scores",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist scores"
+            },
+        )
 
 
 @router.get(
     "/scores/ordered-pair/id/{panelist_id}",
     summary="Retrieve Panelist Scores as Ordered Pairs by Panelist ID",
     response_model=ModelsPanelistScoresOrderedPair,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/scores/ordered-pair/id/{panelist_id}", include_in_schema=False)
@@ -542,29 +595,32 @@ async def get_panelist_scores_ordered_pair_by_id(
         if scores:
             return {"scores": scores}
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scoring data for Panelist ID {panelist_id} not found",
+            content={"detail": f"Scoring data for Panelist ID {panelist_id} not found"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist ID {panelist_id} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": f"Panelist ID {panelist_id} not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist scores"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve panelist scores"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist scores",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist scores"
+            },
+        )
 
 
 @router.get(
     "/scores/ordered-pair/slug/{panelist_slug}",
     summary="Retrieve Panelist Scores as Ordered Pairs by Panelist Slug String",
     response_model=ModelsPanelistScoresOrderedPair,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/scores/ordered-pair/slug/{panelist_slug}", include_in_schema=False)
@@ -592,29 +648,35 @@ async def get_panelist_scores_ordered_pair_by_slug(
         if scores:
             return {"scores": scores}
 
-        raise HTTPException(
+        return JSONResponse(
             status_code=404,
-            detail=f"Scoring data for Panelist slug string {panelist_slug} not found",
+            content={
+                "detail": f"Scoring data for Panelist slug string {panelist_slug} not found"
+            },
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail=f"Panelist slug string {panelist_slug} not found"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": f"Panelist slug string {panelist_slug} not found"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist scores"
-        ) from None
+        return JSONResponse(
+            status_code=500, content={"detail": "Unable to retrieve panelist scores"}
+        )
     except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist scores",
-        ) from None
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist scores"
+            },
+        )
 
 
 @router.get(
     "/random",
     summary="Retrieve Information for a Random Panelist",
     response_model=ModelsPanelist,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/random", include_in_schema=False)
@@ -629,26 +691,32 @@ async def get_random_panelist():
         if panelist_info:
             return panelist_info
 
-        raise HTTPException(status_code=404, detail="Random Panelist not found")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Panelist not found"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Panelist not found"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Panelist not found"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve panelist information"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve panelist information",
-        ) from None
+            content={"detail": "Unable to retrieve panelist information"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve panelist information"
+            },
+        )
 
 
 @router.get(
     "/random/id",
     summary="Retrieve a Random Panelist ID",
     response_model=ModelsPanelistID,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/random/id", include_in_schema=False)
@@ -663,26 +731,32 @@ async def get_random_panelist_id():
         if panelist_id:
             return {"id": panelist_id}
 
-        raise HTTPException(status_code=404, detail="Random Panelist ID not returned")
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Panelist ID not returned"}
+        )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Panelist ID not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404, content={"detail": "Random Panelist ID not returned"}
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random panelist ID"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random panelist ID",
-        ) from None
+            content={"detail": "Unable to retrieve a random panelist ID"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve a random panelist ID"
+            },
+        )
 
 
 @router.get(
     "/random/slug",
     summary="Retrieve a Random Panelist Slug String",
     response_model=ModelsPanelistSlug,
+    responses={404: {"model": MessageDetails}, 500: {"model": MessageDetails}},
     tags=["Panelists"],
 )
 @router.head("/random/slug", include_in_schema=False)
@@ -697,19 +771,24 @@ async def get_random_panelist_slug():
         if panelist_slug:
             return {"slug": panelist_slug}
 
-        raise HTTPException(
-            status_code=404, detail="Random Panelist slug string not returned"
+        return JSONResponse(
+            status_code=404,
+            content={"detail": "Random Panelist slug string not returned"},
         )
     except ValueError:
-        raise HTTPException(
-            status_code=404, detail="Random Panelist slug string not returned"
-        ) from None
+        return JSONResponse(
+            status_code=404,
+            content={"detail": "Random Panelist slug string not returned"},
+        )
     except ProgrammingError:
-        raise HTTPException(
-            status_code=500, detail="Unable to retrieve a random panelist slug string"
-        ) from None
-    except DatabaseError:
-        raise HTTPException(
+        return JSONResponse(
             status_code=500,
-            detail="Database error occurred while trying to retrieve a random panelist slug string",
-        ) from None
+            content={"detail": "Unable to retrieve a random panelist slug string"},
+        )
+    except DatabaseError:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "detail": "Database error occurred while trying to retrieve a random panelist slug string"
+            },
+        )

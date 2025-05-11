@@ -14,7 +14,7 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_pronouns():
+def test_get_pronouns():
     """Test /v2.0/pronouns route."""
     response = client.get(f"/v{API_VERSION}/pronouns")
     pronouns = response.json()
@@ -26,7 +26,7 @@ def test_pronouns():
 
 
 @pytest.mark.parametrize("pronouns_id", [1])
-def test_pronouns_id(pronouns_id: int):
+def test_get_pronouns_by_id(pronouns_id: int):
     """Test /v2.0/pronouns/id/{pronouns_id} route."""
     response = client.get(f"/v{API_VERSION}/pronouns/id/{pronouns_id}")
     pronouns_info = response.json()
@@ -35,3 +35,13 @@ def test_pronouns_id(pronouns_id: int):
     assert "id" in pronouns_info
     assert pronouns_info["id"] == pronouns_id
     assert "pronouns" in pronouns_info
+
+
+@pytest.mark.parametrize("pronouns_id", [0])
+def test_get_pronouns_by_id_not_found(pronouns_id: int):
+    """Test /v2.0/pronouns/id/{pronouns_id} route."""
+    response = client.get(f"/v{API_VERSION}/pronouns/id/{pronouns_id}")
+    pronouns_info = response.json()
+
+    assert response.status_code == 404
+    assert "detail" in pronouns_info

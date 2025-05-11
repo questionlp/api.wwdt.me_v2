@@ -1,8 +1,33 @@
 # Changes
 
+## 2.18.0
+
+### Application Changes
+
+- Replace `raise HTTPException` with using `return JSONResponse` and use a new `MessageDetails` response model to validate the response. The returned message uses the same format, but this change adds a specific response model to the OpenAPI specification.
+- Updates to the Shows API endpoints
+  - Add optional `inclusive` boolean query paramter to `/best-ofs` and `/details/best-ofs` that will determine whether to include Repeat Best Of shows along with non-repeat Best Of shows (default: `true`)
+  - Add optional `inclusive` boolean query paramter to `/repeats` and `/details/repeats` that will determine whether to include Repeat Best Of shows along with non-Best Of repeat shows (default: `true`)
+  - Fix response model issue with `/details/best-ofs` and `/details/repeats`
+  - Add missing `include_decimal_scores` named parameter and values to show retrieval method calls for `/details/best-ofs`, `/details/repeat-best-ofs` and `/details/repeats` endpoints
+- Added the following Show endpoints:
+  - `/date/{year}/best-ofs`
+  - `/date/{year}/repeat-best-ofs`
+  - `/date/{year}/repeats`
+  - `/details/date/{year}/best-ofs`
+  - `/details/date/{year}/repeat-best-ofs`
+  - `/details/date/{year}/repeats`
+- Renamed endpoint function names in order to have a more consistent naming convention
+
+### Development Changes
+
+- Add missing tests for `/details/best-ofs`, `/details/repeat-best-ofs` and `/details/repeats`
+- Rename test function names to use a `test_` prefix and the name of the API endpoint function name
+- Add tests cases to check if endpoints are returning `404` when there are no corresponding values
+
 ## 2.17.2
 
-## Component Changes
+### Component Changes
 
 - Upgrade jinja2 from 3.1.5 to 3.1.6
 
