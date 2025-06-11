@@ -1,5 +1,17 @@
 # Changes
 
+## 2.18.1
+
+### Component Changes
+
+- Upgrade requests from 2.32.3 to 2.32.4
+
+### Development Changes
+
+- Upgrade ruff from 0.9.3 to 0.11.9
+- Upgrade pytest from 8.3.4 to 8.3.5
+- Upgrade pytest-cov from 6.0.0 to 6.1.1
+
 ## 2.18.0
 
 ### Application Changes
