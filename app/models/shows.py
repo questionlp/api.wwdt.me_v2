@@ -89,16 +89,16 @@ class ShowPanelist(BaseModel):
     name: str = Field(title="Panelist Name")
     slug: str | None = Field(default=None, title="Panelist Slug String")
     lightning_round_start: int | None = Field(
-        default=None, title="Lightning Fill-in-the-Blank Starting Score"
+        default=None, title="Lightning Fill In The Blank Starting Score"
     )
     lightning_round_start_decimal: Decimal | None = Field(
-        default=None, title="Lightning Fill-in-the-Blank Starting Decimal Score"
+        default=None, title="Lightning Fill In The Blank Starting Decimal Score"
     )
     lightning_round_correct: int | None = Field(
-        default=None, title="Lightning Fill-in-the-Blank Correct Answers"
+        default=None, title="Lightning Fill In The Blank Correct Answers"
     )
     lightning_round_correct_decimal: Decimal | None = Field(
-        default=None, title="Lightning Fill-in-the-Blank Correct Answers (Decimal)"
+        default=None, title="Lightning Fill In The Blank Correct Answers (Decimal)"
     )
     score: int | None = Field(default=None, title="Panelist Score")
     score_decimal: Decimal | None = Field(default=None, title="Panelist Decimal Score")

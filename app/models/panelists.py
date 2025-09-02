@@ -139,16 +139,17 @@ class ShowAppearance(BaseModel):
     best_of: bool = Field(title="Best Of Show")
     repeat_show: bool = Field(title="Repeat Show")
     lightning_round_start: int | None = Field(
-        default=None, title="Lightning Round Starting Score"
+        default=None, title="Lightning Fill In The Blank segment Starting Score"
     )
     lightning_round_start_decimal: Decimal | None = Field(
-        default=None, title="Lightning Round Starting Decimal Score"
+        default=None, title="Lightning Fill In The Blank segment Starting Decimal Score"
     )
     lightning_round_correct: int | None = Field(
-        default=None, title="Lightning Round Correct Answers"
+        default=None, title="Lightning Fill In The Blank segment Correct Answers"
     )
     lightning_round_correct_decimal: Decimal | None = Field(
-        default=None, title="Lightning Round Correct Answers (Decimal)"
+        default=None,
+        title="Lightning Fill In The Blank segment Correct Answers (Decimal)",
     )
     score: int | None = Field(default=None, title="Total Score")
     score_decimal: Decimal | None = Field(default=None, title="Total Decimal Score")
