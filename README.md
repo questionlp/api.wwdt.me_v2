@@ -31,7 +31,11 @@ Refer to [INSTALLING.md](INSTALLING.md) for information on how to set up an inst
 
 ## Code of Conduct
 
-This projects follows version 2.1 of the [Contributor Convenant's](https://www.contributor-covenant.org/) Code of Conduct. A copy of the [Code of Conduct](CODE_OF_CONDUCT.md) document is included in this repository.
+If you would like contribute to this project, please make sure to review both the [Code of Conduct](./CODE_OF_CONDUCT.md) and the [Contributing](./CONTRIBUTING.md) documents in this repository.
+
+### AI Generated Code
+
+Please note that this project does not accept pull requests or bugfixes that include code that has been partially or wholly generated using AI.
 
 ## License
 
