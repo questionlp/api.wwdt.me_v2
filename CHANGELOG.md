@@ -10,7 +10,7 @@
 
 ### Component Changes
 
-- Upgraded Pydantic from 2.11.4 to 2.12.1
+- Upgraded Pydantic from 2.11.4 to 2.12.2
 - Upgraded FastAPI from 0.115.12 to 0.119.0
 - Upgraded Uvicorn from 0.34.2 to 0.37.0
 - Upgraded aiofiles from 24.1.0 to 25.1.0
