@@ -8,8 +8,10 @@ Please note that version 1.0 of the Stats API has now been deprecated.
 
 ## Requirements
 
-- Python 3.10 through 3.12. Python 3.13 is currently not validated.
-- MySQL Server 8.0 or newer, or another MySQL Server distribution based on MySQL Server 8.0 or newer, hosting a version of the aforementioned Wait Wait Don't Tell Me! Stats database
+- Python 3.12 or newer
+- MySQL Server 8.0 or newer (or another MySQL Server distribution based on MySQL Server 8.0 or newer) or MariaDB Server 11.8 or newer *(Provisional)*
+
+**Note:** Provisional support for MariaDB Server is only available starting with version 2.19.0 of the application. Older versions of MariaDB Server are not supported.
 
 ## Changes from v1.0
 
@@ -29,9 +31,21 @@ This issue doesn't come up when querying the API through Swagger UI or directly 
 
 Refer to [INSTALLING.md](INSTALLING.md) for information on how to set up an instance of this web application that can be served through [Gunicorn](https://gunicorn.org) and [NGINX](https://nginx.org/).
 
-## Code of Conduct
+## Changes
 
-This projects follows version 2.1 of the [Contributor Convenant's](https://www.contributor-covenant.org/) Code of Conduct. A copy of the [Code of Conduct](CODE_OF_CONDUCT.md) document is included in this repository.
+For changelogs, refer to [CHANGELOG.md](./CHANGELOG.md).
+
+## Contributing
+
+If you would like contribute to this project, please make sure to review both the [Code of Conduct](./CODE_OF_CONDUCT.md) and the [Contributing](./CONTRIBUTING.md) documents in this repository.
+
+### AI Generated Code
+
+Please note that this project does not accept pull requests or bugfixes that include code that has been partially or wholly generated using AI.
+
+## Sponsoring
+
+If you would like to help sponsor the continued development and maintenance of the Wait Wait Stats project, please consider sponsoring me on [GitHub](https://github.com/sponsors/questionlp).
 
 ## License
 

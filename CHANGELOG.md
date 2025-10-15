@@ -1,5 +1,34 @@
 # Changes
 
+## 2.19.0
+
+### Application Changes
+
+- Python 3.12 is now the minimum supported version
+- Added `score_exception` to `models.panelists.ShowAppearance` and `models.shows.ShowPanelist` models as a boolean flag that denotes if a panelist score is an exception or an anomaly
+  - A panelist scoring exception or anomaly happens when the total score for an appearance does not equal the sum of Lightning Fill In The Blank starting score and the number of correct answers doubled
+
+### Component Changes
+
+- Upgraded Pydantic from 2.11.4 to 2.12.1
+- Upgraded FastAPI from 0.115.12 to 0.119.0
+- Upgraded Uvicorn from 0.34.2 to 0.37.0
+- Upgraded aiofiles from 24.1.0 to 25.1.0
+- Upgraded email-validator from 2.2.0 to 2.3.0
+- Upgraded Requests from 2.32.4 to 2.32.5
+- Upgraded wwdtm from 2.18.2 to 2.21.1
+
+### Development Changes
+
+- Added project information to `pyproject.toml` and updated additional settings
+  - Increased the minimum version of pytest from 8.3 to 8.4
+  - Increased the minimum required version of Ruff from 0.9.0 to 0.13.0
+  - Updated the target Python version from `py310` to `py312`
+- Added `runner.sh` and `runner-remote.sh` helper scripts to start a development instance of the application using Uvicorn
+- Upgraded Ruff from 0.11.9 to 0.13.3
+- Upgraded pytest from 8.3.5 to 8.4.1
+- Upgraded pytest-cov from 6.1.1 to 6.2.1
+
 ## 2.18.2
 
 ### Application Changes

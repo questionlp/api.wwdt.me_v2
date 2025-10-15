@@ -153,6 +153,7 @@ class ShowAppearance(BaseModel):
     )
     score: int | None = Field(default=None, title="Total Score")
     score_decimal: Decimal | None = Field(default=None, title="Total Decimal Score")
+    score_exception: bool = Field(default=False, title="Scoring Exception or Anomaly")
     rank: str | None = Field(default=None, title="Ranking Position")
 
 
