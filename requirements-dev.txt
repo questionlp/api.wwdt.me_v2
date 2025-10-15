@@ -1,15 +1,15 @@
-ruff==0.11.9
-pytest==8.3.5
-pytest-cov==6.1.1
+ruff==0.13.3
+pytest==8.4.1
+pytest-cov==6.2.1
 
-pydantic==2.11.4
-fastapi==0.115.12
-uvicorn[standard]==0.34.2
+pydantic==2.12.2
+fastapi==0.119.0
+uvicorn[standard]==0.37.0
 gunicorn==23.0.0
 httpx==0.28.1
-aiofiles==24.1.0
-jinja2==3.1.6
-email-validator==2.2.0
-requests==2.32.4
+aiofiles==25.1.0
+jinja2~=3.1.6
+email-validator==2.3.0
+requests==2.32.5
 
-wwdtm==2.18.2
+wwdtm==2.21.1

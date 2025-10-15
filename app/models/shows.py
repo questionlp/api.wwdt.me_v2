@@ -102,6 +102,9 @@ class ShowPanelist(BaseModel):
     )
     score: int | None = Field(default=None, title="Panelist Score")
     score_decimal: Decimal | None = Field(default=None, title="Panelist Decimal Score")
+    score_exception: bool = Field(
+        default=False, title="Panelist Scoring Exception or Anomaly"
+    )
     rank: str | None = Field(default=None, title="Panelist Rank")
 
 
