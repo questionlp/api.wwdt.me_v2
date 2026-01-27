@@ -1,5 +1,21 @@
 # Changes
 
+## 2.20.0
+
+### Component Changes
+
+- Upgraded wwdtm from 2.21.1 to 2.22.1
+- Upgraded Pydantic from 2.12.2 to 2.12.5
+- Upgraded FastAPI from 0.119.0 to 0.128.0
+- Upgraded Uvicorn from 0.37.0 to 0.40.0
+- Upgraded gunicorn from 23.0.0 to 24.1.1
+
+### Development Changes
+
+- Upgraded Ruff from 0.13.3 to 0.14.14
+- Upgraded pytest from 8.4.1 to 9.0.2
+- Upgraded pytest-cov from 6.2.1 to 7.0.0
+
 ## 2.19.0
 
 ### Application Changes
