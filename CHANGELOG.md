@@ -1,5 +1,15 @@
 # Changes
 
+## 2.20.0-post.1 (Unreleased)
+
+### Application Changes
+
+- No code changes included in this post-release update version. Application version has not changed.
+
+### Development Changes
+
+- Simplified the `runner.sh` and `runner-remote.sh` scripts used to run the Flask application for local development and testing
+
 ## 2.20.0
 
 ### Component Changes

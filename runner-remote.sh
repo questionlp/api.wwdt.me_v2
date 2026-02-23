@@ -1,5 +1,7 @@
 #!/bin/sh
 # Shell script used to start up FastAPI for local development and testing
+#
+# Requires a virtual environment (venv) created as venv and all
+# dependencies installed.
 
-. venv/bin/activate
-uvicorn app.main:app --reload --host 0.0.0.0
+venv/bin/uvicorn app.main:app --reload --host 0.0.0.0
