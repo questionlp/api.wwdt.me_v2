@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 API_VERSION = "2.0"
-APP_VERSION = "2.20.0"
+APP_VERSION = "2.21.0"
 
 
 def load_config(
