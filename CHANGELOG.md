@@ -1,5 +1,16 @@
 # Changes
 
+## 2.21.0
+
+### Application Changes
+
+- Added `mode` to the panelist `ScoringStatistics` and `DecimalScoringStatistics` models that contains the mode of a panelist's scores
+- Added `mode_multiple` to the panelist `ScoringStatistics` and `DecimalScoringStatistics` models that contains a list of modes of a panelist's scores
+
+### Component Changes
+
+- Upgraded wwdtm from 2.22.1 to 2.23.1
+
 ## 2.20.0-post.1 (Unreleased)
 
 ### Application Changes

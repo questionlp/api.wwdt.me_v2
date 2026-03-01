@@ -37,6 +37,8 @@ class ScoringStatistics(BaseModel):
     maximum: int = Field(title="Maximum Score")
     mean: float = Field(title="Mean Score")
     median: float = Field(title="Median Score")
+    mode: int = Field(title="Mode for All Scores")
+    mode_multiple: list[int] = Field(title="One or More Modes for All Scores")
     standard_deviation: float = Field(title="Standard Deviation")
     total: int = Field("Score Total")
 
@@ -48,6 +50,8 @@ class DecimalScoringStatistics(BaseModel):
     maximum: Decimal = Field(title="Maximum Score")
     mean: Decimal = Field(title="Mean Score")
     median: Decimal = Field(title="Median Score")
+    mode: Decimal = Field(title="Mode for All Scores")
+    mode_multiple: list[Decimal] = Field(title="One or More Modes for All Scores")
     standard_deviation: Decimal = Field(title="Standard Deviation")
     total: Decimal = Field("Score Total")
 
