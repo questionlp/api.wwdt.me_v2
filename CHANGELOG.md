@@ -9,7 +9,7 @@
 
 ### Component Changes
 
-- Upgraded wwdtm from 2.22.1 to 2.23.0
+- Upgraded wwdtm from 2.22.1 to 2.23.1
 
 ## 2.20.0-post.1 (Unreleased)
 
