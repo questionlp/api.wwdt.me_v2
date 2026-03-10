@@ -50,3 +50,5 @@ If you would like to help sponsor the continued development and maintenance of t
 ## License
 
 This web application is licensed under the terms of the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
+Although this project interfaces with [MySQL Connector/Python](https://github.com/mysql/mysql-connector-python), licensed under version 2 of the GNU General Public License (GPLv2) and is also subject to the terms included in [Universal FOSS Exception, version 1.0](https://oss.oracle.com/licenses/universal-foss-exception/). The exception permits this library to be licensed under an OSI-approved or a license categorized as "free" by the Freedom Software Foundation (FSF), such as Apache License 2.0.
