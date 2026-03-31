@@ -1,5 +1,11 @@
 # Changes
 
+## 2.21.1
+
+### Component Changes
+
+- Upgrade requests from 2.32.5 to 2.33.1
+
 ## 2.21.0
 
 ### Application Changes
