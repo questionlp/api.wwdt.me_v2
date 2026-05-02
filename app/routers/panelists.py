@@ -53,6 +53,7 @@ async def get_panelists():
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelists = panelist.retrieve_all()
+
         if panelists:
             return {"panelists": panelists}
 
@@ -91,6 +92,7 @@ async def get_panelist_by_id(
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_info = panelist.retrieve_by_id(panelist_id)
+
         if panelist_info:
             return panelist_info
 
@@ -133,6 +135,7 @@ async def get_panelist_by_slug(
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_info = panelist.retrieve_by_slug(panelist_slug.strip())
+
         if panelist_info:
             return panelist_info
 
@@ -178,9 +181,8 @@ async def get_panelists_details():
     """
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelists = panelist.retrieve_all_details(
-            use_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        panelists = panelist.retrieve_all_details()
+
         if panelists:
             return {"panelists": panelists}
 
@@ -221,9 +223,8 @@ async def get_panelist_details_by_id(
     """
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelist_details = panelist.retrieve_details_by_id(
-            panelist_id, use_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        panelist_details = panelist.retrieve_details_by_id(panelist_id)
+
         if panelist_details:
             return panelist_details
 
@@ -266,9 +267,8 @@ async def get_random_panelist_details():
     """
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelist_details = panelist.retrieve_random_details(
-            use_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        panelist_details = panelist.retrieve_random_details()
+
         if panelist_details:
             return panelist_details
 
@@ -313,10 +313,8 @@ async def get_panelist_details_by_slug(
     """
     try:
         panelist = Panelist(database_connection=_database_connection)
-        panelist_details = panelist.retrieve_details_by_slug(
-            panelist_slug.strip(),
-            use_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        panelist_details = panelist.retrieve_details_by_slug(panelist_slug.strip())
+
         if panelist_details:
             return panelist_details
 
@@ -361,16 +359,13 @@ async def get_panelist_scores_by_id(
     Returned data: One array with show dates and one array with scores.
     """
     try:
-        if _config["settings"]["use_decimal_scores"]:
-            panelist_scores = PanelistDecimalScores(
-                database_connection=_database_connection
-            )
-            scores = panelist_scores.retrieve_scores_list_by_id(
-                panelist_id,
-            )
-        else:
-            panelist_scores = PanelistScores(database_connection=_database_connection)
-            scores = panelist_scores.retrieve_scores_list_by_id(panelist_id)
+        panelist_scores = PanelistDecimalScores(
+            database_connection=_database_connection
+        )
+        scores = panelist_scores.retrieve_scores_list_by_id(
+            panelist_id,
+        )
+
         if scores:
             return scores
 
@@ -411,14 +406,11 @@ async def get_panelist_scores_by_slug(
     Returned data: One array with show dates and one array with scores.
     """
     try:
-        if _config["settings"]["use_decimal_scores"]:
-            panelist_scores = PanelistDecimalScores(
-                database_connection=_database_connection
-            )
-            scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug.strip())
-        else:
-            panelist_scores = PanelistScores(database_connection=_database_connection)
-            scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug.strip())
+        panelist_scores = PanelistDecimalScores(
+            database_connection=_database_connection
+        )
+        scores = panelist_scores.retrieve_scores_list_by_slug(panelist_slug.strip())
+
         if scores:
             return scores
 
@@ -468,18 +460,11 @@ async def get_panelist_scores_grouped_ordered_pair_by_id(
     and one element with corresponding score count.
     """
     try:
-        if _config["settings"]["use_decimal_scores"]:
-            panelist_scores = PanelistDecimalScores(
-                database_connection=_database_connection
-            )
-            scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(
-                panelist_id
-            )
-        else:
-            panelist_scores = PanelistScores(database_connection=_database_connection)
-            scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(
-                panelist_id
-            )
+        panelist_scores = PanelistDecimalScores(
+            database_connection=_database_connection
+        )
+        scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_id(panelist_id)
+
         if scores:
             return {"scores": scores}
 
@@ -526,18 +511,14 @@ async def get_panelist_scores_grouped_ordered_pair_by_slug(
     and one element with corresponding score count.
     """
     try:
-        if _config["settings"]["use_decimal_scores"]:
-            panelist_scores = PanelistDecimalScores(
-                database_connection=_database_connection
-            )
-            scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
-                panelist_slug.strip()
-            )
-        else:
-            panelist_scores = PanelistScores(database_connection=_database_connection)
-            scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
-                panelist_slug.strip()
-            )
+        panelist_scores = PanelistDecimalScores(
+            database_connection=_database_connection
+        )
+
+        scores = panelist_scores.retrieve_scores_grouped_ordered_pair_by_slug(
+            panelist_slug.strip()
+        )
+
         if scores:
             return {"scores": scores}
 
@@ -584,14 +565,11 @@ async def get_panelist_scores_ordered_pair_by_id(
     date and one element with corresponding score.
     """
     try:
-        if _config["settings"]["use_decimal_scores"]:
-            panelist_scores = PanelistDecimalScores(
-                database_connection=_database_connection
-            )
-            scores = panelist_scores.retrieve_scores_ordered_pair_by_id(panelist_id)
-        else:
-            panelist_scores = PanelistScores(database_connection=_database_connection)
-            scores = panelist_scores.retrieve_scores_ordered_pair_by_id(panelist_id)
+        panelist_scores = PanelistDecimalScores(
+            database_connection=_database_connection
+        )
+        scores = panelist_scores.retrieve_scores_ordered_pair_by_id(panelist_id)
+
         if scores:
             return {"scores": scores}
 
@@ -633,18 +611,13 @@ async def get_panelist_scores_ordered_pair_by_slug(
     date and one element with corresponding score.
     """
     try:
-        if _config["settings"]["use_decimal_scores"]:
-            panelist_scores = PanelistDecimalScores(
-                database_connection=_database_connection
-            )
-            scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(
-                panelist_slug.strip()
-            )
-        else:
-            panelist_scores = PanelistScores(database_connection=_database_connection)
-            scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(
-                panelist_slug.strip()
-            )
+        panelist_scores = PanelistDecimalScores(
+            database_connection=_database_connection
+        )
+        scores = panelist_scores.retrieve_scores_ordered_pair_by_slug(
+            panelist_slug.strip()
+        )
+
         if scores:
             return {"scores": scores}
 
@@ -688,6 +661,7 @@ async def get_random_panelist():
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_info = panelist.retrieve_random()
+
         if panelist_info:
             return panelist_info
 
@@ -728,6 +702,7 @@ async def get_random_panelist_id():
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_id = panelist.retrieve_random_id()
+
         if panelist_id:
             return {"id": panelist_id}
 
@@ -768,6 +743,7 @@ async def get_random_panelist_slug():
     try:
         panelist = Panelist(database_connection=_database_connection)
         panelist_slug = panelist.retrieve_random_slug()
+
         if panelist_slug:
             return {"slug": panelist_slug}
 

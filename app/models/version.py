@@ -13,4 +13,5 @@ class Version(BaseModel):
 
     api: str = Field(title="Wait Wait Stats API Version")
     app: str = Field(title="Application Version")
+    database: str | None = Field(title="Wait Wait Stats Database Version")
     wwdtm: str = Field(title="wwdtm Version")

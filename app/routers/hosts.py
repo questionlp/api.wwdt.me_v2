@@ -46,6 +46,7 @@ async def get_hosts():
     try:
         host = Host(database_connection=_database_connection)
         hosts = host.retrieve_all()
+
         if hosts:
             return {"hosts": hosts}
 
@@ -82,6 +83,7 @@ async def get_host_by_id(
     try:
         host = Host(database_connection=_database_connection)
         host_info = host.retrieve_by_id(host_id)
+
         if host_info:
             return host_info
 
@@ -123,6 +125,7 @@ async def get_host_by_slug(
     try:
         host = Host(database_connection=_database_connection)
         host_info = host.retrieve_by_slug(host_slug)
+
         if host_info:
             return host_info
 
@@ -166,6 +169,7 @@ async def get_hosts_details():
     try:
         host = Host(database_connection=_database_connection)
         hosts = host.retrieve_all_details()
+
         if hosts:
             return {"hosts": hosts}
 
@@ -204,6 +208,7 @@ async def get_host_details_by_id(
     try:
         host = Host(database_connection=_database_connection)
         host_details = host.retrieve_details_by_id(host_id)
+
         if host_details:
             return host_details
 
@@ -245,6 +250,7 @@ async def get_random_host_details():
     try:
         host = Host(database_connection=_database_connection)
         host_details = host.retrieve_random_details()
+
         if host_details:
             return host_details
 
@@ -288,6 +294,7 @@ async def get_host_details_by_slug(
     try:
         host = Host(database_connection=_database_connection)
         host_details = host.retrieve_details_by_slug(host_slug)
+
         if host_details:
             return host_details
 
@@ -329,6 +336,7 @@ async def get_random_host():
     try:
         host = Host(database_connection=_database_connection)
         host_info = host.retrieve_random()
+
         if host_info:
             return host_info
 
@@ -368,6 +376,7 @@ async def get_random_host_id():
     try:
         host = Host(database_connection=_database_connection)
         host_id = host.retrieve_random_id()
+
         if host_id:
             return {"id": host_id}
 
@@ -407,6 +416,7 @@ async def get_random_host_slug():
     try:
         host = Host(database_connection=_database_connection)
         host_slug = host.retrieve_random_slug()
+
         if host_slug:
             return {"slug": host_slug}
 
