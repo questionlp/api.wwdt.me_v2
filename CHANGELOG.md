@@ -1,6 +1,6 @@
 # Changes
 
-## 2.22.0-alpha (Pre-Release)
+## 2.22.0-beta (Pre-Release)
 
 ### Application Changes
 
