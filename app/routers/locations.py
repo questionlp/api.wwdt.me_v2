@@ -53,6 +53,7 @@ async def get_locations():
     try:
         location = Location(database_connection=_database_connection)
         locations = location.retrieve_all(sort_by_venue=True)
+
         if locations:
             return {"locations": locations}
 
@@ -91,6 +92,7 @@ async def get_location_by_id(
     try:
         location = Location(database_connection=_database_connection)
         location_info = location.retrieve_by_id(location_id)
+
         if location_info:
             return location_info
 
@@ -133,6 +135,7 @@ async def get_location_by_slug(
     try:
         location = Location(database_connection=_database_connection)
         location_info = location.retrieve_by_slug(location_slug.strip())
+
         if location_info:
             return location_info
 
@@ -179,6 +182,7 @@ async def get_locations_details():
     try:
         location = Location(database_connection=_database_connection)
         locations = location.retrieve_all_details(sort_by_venue=True)
+
         if locations:
             return {"locations": locations}
 
@@ -220,6 +224,7 @@ async def get_location_details_by_id(
     try:
         location = Location(database_connection=_database_connection)
         location_recordings = location.retrieve_details_by_id(location_id)
+
         if location_recordings:
             return location_recordings
 
@@ -262,6 +267,7 @@ async def get_random_location_details():
     try:
         location = Location(database_connection=_database_connection)
         location_details = location.retrieve_random_details()
+
         if location_details:
             return location_details
 
@@ -307,6 +313,7 @@ async def get_location_details_by_slug(
     try:
         location = Location(database_connection=_database_connection)
         location_details = location.retrieve_details_by_slug(location_slug.strip())
+
         if location_details:
             return location_details
 
@@ -352,6 +359,7 @@ async def get_postal_abbreviations() -> list[str]:
     try:
         location = Location(database_connection=_database_connection)
         abbreviations = location.retrieve_postal_abbreviations()
+
         if abbreviations:
             return list(abbreviations.keys())
 
@@ -391,6 +399,7 @@ async def get_postal_abbreviations_details() -> list[dict[str, str]]:
     try:
         location = Location(database_connection=_database_connection)
         abbreviations = location.retrieve_postal_abbreviations_list()
+
         if abbreviations:
             return {"postal_abbreviations": abbreviations}
 
@@ -434,6 +443,7 @@ async def get_postal_abbreviation_details(
         info = location.retrieve_postal_details_by_abbreviation(
             abbreviation=abbreviation
         )
+
         if info:
             return info
 
@@ -476,6 +486,7 @@ async def get_random_location():
     try:
         location = Location(database_connection=_database_connection)
         location_info = location.retrieve_random()
+
         if location_info:
             return location_info
 
@@ -516,6 +527,7 @@ async def get_random_location_id():
     try:
         location = Location(database_connection=_database_connection)
         location_id = location.retrieve_random_id()
+
         if location_id:
             return {"id": location_id}
 
@@ -556,6 +568,7 @@ async def get_random_location_slug():
     try:
         location = Location(database_connection=_database_connection)
         location_slug = location.retrieve_random_slug()
+
         if location_slug:
             return {"slug": location_slug}
 

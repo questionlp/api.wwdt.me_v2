@@ -1,5 +1,25 @@
 # Changes
 
+## 2.22.0-alpha (Pre-Release)
+
+### Application Changes
+
+- The Stats API now requires panelist decimal score columns in the Wait Wait Stats Database
+  - Removed the `settings.use_decimal_scores` configuration key references and logic
+- Added `database` field to the `Version` model and to the output of the `/version` endpoint
+- Replaced Google Fonts with Bunny Fonts as the web font provider for the required IBM Plex fonts
+
+### Component Changes
+
+- Upgraded FastAPI from 0.128.0 to 0.136.3
+- Upgraded Pydantic from 2.12.5 to 2.13.4
+- Upgraded uvicorn from 0.40.0 to 0.48.0
+- Upgraded wwdtm from 2.23.1 to 3.0.0
+
+### Development Changes
+
+- Added pydoclint 0.8.4 for docstring linting
+
 ## 2.21.1-post0
 
 ### Development Changes
@@ -10,7 +30,7 @@
 
 ### Component Changes
 
-- Upgrade requests from 2.32.5 to 2.33.1
+- Upgraded requests from 2.32.5 to 2.33.1
 
 ## 2.21.0
 

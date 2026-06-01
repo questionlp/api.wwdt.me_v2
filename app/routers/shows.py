@@ -49,6 +49,7 @@ async def get_shows():
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_all()
+
         if shows:
             return {"shows": shows}
 
@@ -88,6 +89,7 @@ async def get_shows_best_ofs(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_all_best_ofs(inclusive=inclusive)
+
         if show_info:
             return {"shows": show_info}
 
@@ -127,6 +129,7 @@ async def get_show_by_id(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_id(show_id)
+
         if show_info:
             return show_info
 
@@ -170,6 +173,7 @@ async def get_show_by_date_string(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_date_string(show_date.isoformat())
+
         if show_info:
             return show_info
 
@@ -215,6 +219,7 @@ async def get_shows_by_year(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_year(year)
+
         if shows:
             return {"shows": shows}
 
@@ -263,6 +268,7 @@ async def get_shows_by_year_best_ofs(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_best_ofs_by_year(year=year, inclusive=inclusive)
+
         if shows:
             return {"shows": shows}
 
@@ -310,6 +316,7 @@ async def get_shows_by_year_repeat_best_ofs(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_repeat_best_ofs_by_year(year=year)
+
         if shows:
             return {"shows": shows}
 
@@ -360,6 +367,7 @@ async def get_shows_by_year_repeats(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_repeats_by_year(year=year, inclusive=inclusive)
+
         if shows:
             return {"shows": shows}
 
@@ -408,6 +416,7 @@ async def get_shows_by_year_month(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_year_month(year, month)
+
         if shows:
             return {"shows": shows}
 
@@ -456,6 +465,7 @@ async def get_shows_by_month_day(
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_by_month_day(month, day)
+
         if shows:
             return {"shows": shows}
 
@@ -503,6 +513,7 @@ async def get_show_by_date(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_by_date(year, month, day)
+
         if show_info:
             return show_info
 
@@ -545,6 +556,7 @@ async def get_all_show_dates():
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_all_dates()
+
         if shows:
             return {"shows": shows}
 
@@ -582,9 +594,8 @@ async def get_shows_details():
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_all_details(
-            include_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        shows = show.retrieve_all_details()
+
         if shows:
             return {"shows": shows}
 
@@ -623,10 +634,8 @@ async def get_shows_details_best_ofs(
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_all_best_ofs_details(
-            inclusive=inclusive,
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        shows = show.retrieve_all_best_ofs_details(inclusive=inclusive)
+
         if shows:
             return {"shows": shows}
 
@@ -666,9 +675,8 @@ async def get_show_details_by_id(
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_details_by_id(
-            show_id, include_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        show_details = show.retrieve_details_by_id(show_id)
+
         if show_details:
             return show_details
 
@@ -712,10 +720,8 @@ async def get_show_details_by_date_string(
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_details_by_date_string(
-            show_date.isoformat(),
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        show_details = show.retrieve_details_by_date_string(show_date.isoformat())
+
         if show_details:
             return show_details
 
@@ -761,9 +767,8 @@ async def get_shows_details_by_year(
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_details_by_year(
-            year, include_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        shows = show.retrieve_details_by_year(year)
+
         if shows:
             return {"shows": shows}
 
@@ -811,11 +816,8 @@ async def get_shows_details_by_year_best_ofs(
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_best_ofs_details_by_year(
-            year=year,
-            inclusive=inclusive,
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        shows = show.retrieve_best_ofs_details_by_year(year=year, inclusive=inclusive)
+
         if shows:
             return {"shows": shows}
 
@@ -862,10 +864,8 @@ async def get_shows_details_by_year_repeat_best_ofs(
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_repeat_best_ofs_details_by_year(
-            year=year,
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        shows = show.retrieve_repeat_best_ofs_details_by_year(year=year)
+
         if shows:
             return {"shows": shows}
 
@@ -915,11 +915,8 @@ async def get_shows_details_by_year_repeats(
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_repeats_details_by_year(
-            year=year,
-            inclusive=inclusive,
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        shows = show.retrieve_repeats_details_by_year(year=year, inclusive=inclusive)
+
         if shows:
             return {"shows": shows}
 
@@ -968,11 +965,8 @@ async def get_shows_details_by_year_month(
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_details_by_year_month(
-            year,
-            month,
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        shows = show.retrieve_details_by_year_month(year, month)
+
         if shows:
             return {"shows": shows}
 
@@ -1021,9 +1015,8 @@ async def get_shows_details_by_month_day(
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_details_by_month_day(
-            month, day, include_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        shows = show.retrieve_details_by_month_day(month, day)
+
         if shows:
             return {"shows": shows}
 
@@ -1075,12 +1068,8 @@ async def get_show_details_by_date(
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_details_by_date(
-            year,
-            month,
-            day,
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        show_details = show.retrieve_details_by_date(year, month, day)
+
         if show_details:
             return show_details
 
@@ -1124,9 +1113,8 @@ async def get_random_show_details():
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_random_details(
-            include_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        show_details = show.retrieve_random_details()
+
         if show_details:
             return show_details
 
@@ -1171,9 +1159,8 @@ async def get_random_show_by_year_details(
     """
     try:
         show = Show(database_connection=_database_connection)
-        show_details = show.retrieve_random_details_by_year(
-            year=year, include_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        show_details = show.retrieve_random_details_by_year(year=year)
+
         if show_details:
             return show_details
 
@@ -1217,9 +1204,8 @@ async def get_shows_recent_details():
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_recent_details(
-            include_decimal_scores=_config["settings"]["use_decimal_scores"]
-        )
+        shows = show.retrieve_recent_details()
+
         if shows:
             return {"shows": shows}
 
@@ -1256,9 +1242,8 @@ async def get_shows_details_repeat_best_ofs():
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_all_repeat_best_ofs_details(
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        shows = show.retrieve_all_repeat_best_ofs_details()
+
         if shows:
             return {"shows": shows}
 
@@ -1293,7 +1278,6 @@ async def get_shows_details_repeats(
     inclusive: Annotated[
         bool, Query(title="Include Best Of shows with repeat shows")
     ] = True,
-    include_decimal_scores=_config["settings"]["use_decimal_scores"],
 ):
     """Retrieve all Repeat Shows.
 
@@ -1302,10 +1286,8 @@ async def get_shows_details_repeats(
     """
     try:
         show = Show(database_connection=_database_connection)
-        shows = show.retrieve_all_repeats_details(
-            inclusive=inclusive,
-            include_decimal_scores=_config["settings"]["use_decimal_scores"],
-        )
+        shows = show.retrieve_all_repeats_details(inclusive=inclusive)
+
         if shows:
             return {"shows": shows}
 
@@ -1343,6 +1325,7 @@ async def get_random_show():
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_random()
+
         if show_info:
             return show_info
 
@@ -1383,6 +1366,7 @@ async def get_random_show_date():
     try:
         show = Show(database_connection=_database_connection)
         _date = show.retrieve_random_date()
+
         if _date:
             return {"date": _date}
 
@@ -1423,6 +1407,7 @@ async def get_random_show_id():
     try:
         show = Show(database_connection=_database_connection)
         _id = show.retrieve_random_id()
+
         if _id:
             return {"id": _id}
 
@@ -1468,6 +1453,7 @@ async def get_random_show_by_year(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_random_by_year(year=year)
+
         if show_info:
             return show_info
 
@@ -1511,6 +1497,7 @@ async def get_shows_recent():
     try:
         show = Show(database_connection=_database_connection)
         shows = show.retrieve_recent()
+
         if shows:
             return {"shows": shows}
 
@@ -1548,6 +1535,7 @@ async def get_repeat_best_ofs():
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_all_repeat_best_ofs()
+
         if show_info:
             return {"shows": show_info}
 
@@ -1591,6 +1579,7 @@ async def get_shows_repeats(
     try:
         show = Show(database_connection=_database_connection)
         show_info = show.retrieve_all_repeats(inclusive=inclusive)
+
         if show_info:
             return {"shows": show_info}
 

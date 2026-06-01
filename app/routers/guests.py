@@ -46,6 +46,7 @@ async def get_guests():
     try:
         guest = Guest(database_connection=_database_connection)
         guests = guest.retrieve_all()
+
         if guests:
             return {"guests": guests}
 
@@ -82,6 +83,7 @@ async def get_guest_by_id(
     try:
         guest = Guest(database_connection=_database_connection)
         guest_info = guest.retrieve_by_id(guest_id)
+
         if guest_info:
             return guest_info
 
@@ -123,6 +125,7 @@ async def get_guest_by_slug(
     try:
         guest = Guest(database_connection=_database_connection)
         guest_info = guest.retrieve_by_slug(guest_slug.strip())
+
         if guest_info:
             return guest_info
 
@@ -166,6 +169,7 @@ async def get_guests_details():
     try:
         guest = Guest(database_connection=_database_connection)
         guests = guest.retrieve_all_details()
+
         if guests:
             return {"guests": guests}
 
@@ -204,6 +208,7 @@ async def get_guest_details_by_id(
     try:
         guest = Guest(database_connection=_database_connection)
         guest_details = guest.retrieve_details_by_id(guest_id)
+
         if guest_details:
             return guest_details
 
@@ -245,6 +250,7 @@ async def get_random_guest_details():
     try:
         guest = Guest(database_connection=_database_connection)
         guest_details = guest.retrieve_random_details()
+
         if guest_details:
             return guest_details
 
@@ -288,6 +294,7 @@ async def get_guest_details_by_slug(
     try:
         guest = Guest(database_connection=_database_connection)
         guest_details = guest.retrieve_details_by_slug(guest_slug.strip())
+
         if guest_details:
             return guest_details
 
@@ -329,6 +336,7 @@ async def get_random_guest():
     try:
         guest = Guest(database_connection=_database_connection)
         guest_info = guest.retrieve_random()
+
         if guest_info:
             return guest_info
 
@@ -368,6 +376,7 @@ async def get_random_guest_id():
     try:
         guest = Guest(database_connection=_database_connection)
         guest_id = guest.retrieve_random_id()
+
         if guest_id:
             return {"id": guest_id}
 
@@ -407,6 +416,7 @@ async def get_random_guest_slug():
     try:
         guest = Guest(database_connection=_database_connection)
         guest_slug = guest.retrieve_random_slug()
+
         if guest_slug:
             return {"slug": guest_slug}
 

@@ -46,6 +46,7 @@ async def get_scorekeepers():
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeepers = scorekeeper.retrieve_all()
+
         if scorekeepers:
             return {"scorekeepers": scorekeepers}
 
@@ -86,6 +87,7 @@ async def get_scorekeeper_by_id(
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_info = scorekeeper.retrieve_by_id(scorekeeper_id)
+
         if scorekeeper_info:
             return scorekeeper_info
 
@@ -132,6 +134,7 @@ async def get_scorekeeper_by_slug(
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_info = scorekeeper.retrieve_by_slug(scorekeeper_slug.strip())
+
         if scorekeeper_info:
             return scorekeeper_info
 
@@ -178,6 +181,7 @@ async def get_scorekeepers_details():
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeepers = scorekeeper.retrieve_all_details()
+
         if scorekeepers:
             return {"scorekeepers": scorekeepers}
 
@@ -221,6 +225,7 @@ async def get_scorekeeper_details_by_id(
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_details = scorekeeper.retrieve_details_by_id(scorekeeper_id)
+
         if scorekeeper_details:
             return scorekeeper_details
 
@@ -266,6 +271,7 @@ async def get_random_scorekeeper_details():
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_details = scorekeeper.retrieve_random_details()
+
         if scorekeeper_details:
             return scorekeeper_details
 
@@ -315,6 +321,7 @@ async def get_scorekeeper_details_by_slug(
         scorekeeper_details = scorekeeper.retrieve_details_by_slug(
             scorekeeper_slug.strip()
         )
+
         if scorekeeper_details:
             return scorekeeper_details
 
@@ -357,6 +364,7 @@ async def get_random_scorekeeper():
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_info = scorekeeper.retrieve_random()
+
         if scorekeeper_info:
             return scorekeeper_info
 
@@ -397,6 +405,7 @@ async def get_random_scorekeeper_id():
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_id = scorekeeper.retrieve_random_id()
+
         if scorekeeper_id:
             return {"id": scorekeeper_id}
 
@@ -437,6 +446,7 @@ async def get_random_scorekeeper_slug():
     try:
         scorekeeper = Scorekeeper(database_connection=_database_connection)
         scorekeeper_slug = scorekeeper.retrieve_random_slug()
+
         if scorekeeper_slug:
             return {"slug": scorekeeper_slug}
 
