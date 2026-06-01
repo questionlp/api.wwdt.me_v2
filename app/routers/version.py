@@ -7,7 +7,6 @@
 
 import mysql.connector
 from fastapi import APIRouter
-from mysql.connector.errors import DatabaseError, ProgrammingError
 from wwdtm import VERSION as WWDTM_VERSION
 from wwdtm import database_version
 
