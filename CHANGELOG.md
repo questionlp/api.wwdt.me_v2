@@ -7,6 +7,8 @@
 - The Stats API now requires panelist decimal score columns in the Wait Wait Stats Database
   - Removed the `settings.use_decimal_scores` configuration key references and logic
 - Added `database` field to the `Version` model and to the output of the `/version` endpoint
+- Added `variance` field to the `ScoringStatistics` and `DecimalScoringStatistics` model that includes the statistical variance for a given panelist
+- Added `number_decimal_places` to the `settings` section of `config.json` with a default value of 6 (an increase from 5)
 - Replaced Google Fonts with Bunny Fonts as the web font provider for the required IBM Plex fonts
 
 ### Component Changes
@@ -14,7 +16,7 @@
 - Upgraded FastAPI from 0.128.0 to 0.136.3
 - Upgraded Pydantic from 2.12.5 to 2.13.4
 - Upgraded uvicorn from 0.40.0 to 0.48.0
-- Upgraded wwdtm from 2.23.1 to 3.0.0
+- Upgraded wwdtm from 2.23.1 to 3.2.0
 
 ### Development Changes
 

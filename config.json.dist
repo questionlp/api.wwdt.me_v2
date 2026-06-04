@@ -29,6 +29,7 @@
             "data_domains": "",
             "data_host_url": "",
             "data_auto_track": true
-        }
+        },
+        "number_decimal_places": 6
     }
 }

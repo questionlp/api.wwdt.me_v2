@@ -8,4 +8,4 @@ pydantic==2.13.4
 requests==2.33.1
 uvicorn[standard]==0.48.0
 
-wwdtm>=3.0.0, <3.1
+wwdtm>=3.2.0, <3.3

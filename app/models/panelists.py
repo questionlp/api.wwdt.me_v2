@@ -40,6 +40,7 @@ class ScoringStatistics(BaseModel):
     mode: int = Field(title="Mode for All Scores")
     mode_multiple: list[int] = Field(title="One or More Modes for All Scores")
     standard_deviation: float = Field(title="Standard Deviation")
+    variance: float = Field(title="Variance")
     total: int = Field("Score Total")
 
 
@@ -53,6 +54,7 @@ class DecimalScoringStatistics(BaseModel):
     mode: Decimal = Field(title="Mode for All Scores")
     mode_multiple: list[Decimal] = Field(title="One or More Modes for All Scores")
     standard_deviation: Decimal = Field(title="Standard Deviation")
+    variance: Decimal = Field(title="Variance")
     total: Decimal = Field("Score Total")
 
 
