@@ -3,6 +3,8 @@
  * Copyright 2018-2023 Linh Pham
  * Apache License 2.0 (https://github.com/questionlp/api.wwdt.me_v2/blob/main/LICENSE)
  */
+@import url(https://fonts.bunny.net/css?family=ibm-plex-sans:400,700);
+
 @media all {
     html {
         font-family: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

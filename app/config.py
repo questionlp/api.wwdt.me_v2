@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 API_VERSION = "2.0"
-APP_VERSION = "2.21.1"
+APP_VERSION = "2.22.0"
 
 
 def load_config(
@@ -33,10 +33,18 @@ def load_config(
     with _config_file_path.open(mode="r", encoding="utf-8") as config_file:
         config_dict = json.load(config_file)
 
-    settings_config = config_dict.get("settings", None)
-    settings_config["use_decimal_scores"] = bool(
-        settings_config.get("use_decimal_scores", False)
-    )
+    settings_config: dict | None = config_dict.get("settings", None)
+
+    try:
+        number_decimal_places = int(settings_config.get("number_decimal_places", 6))
+        if 0 <= number_decimal_places <= 20:
+            settings_config["number_decimal_places"] = number_decimal_places
+        else:
+            settings_config["number_decimal_places"] = 6
+    except ValueError:
+        settings_config["number_decimal_places"] = 6
+    except TypeError:
+        settings_config["number_decimal_places"] = 6
 
     if "database" in config_dict:
         database_config = config_dict["database"]

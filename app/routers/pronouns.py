@@ -42,6 +42,7 @@ async def get_pronouns():
     try:
         _pronouns = Pronouns(database_connection=_database_connection)
         all_pronouns = _pronouns.retrieve_all()
+
         if all_pronouns:
             return {"pronouns": all_pronouns}
 
@@ -80,6 +81,7 @@ async def get_pronouns_by_id(
     try:
         _pronouns = Pronouns(database_connection=_database_connection)
         pronouns_info = _pronouns.retrieve_by_id(pronouns_id)
+
         if pronouns_info:
             return pronouns_info
 
