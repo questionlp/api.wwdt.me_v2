@@ -45,7 +45,7 @@ Job Guests, Show Hosts, Recording Locations, Panelists, Scorekeepers, and
 Shows.
 
 Source code for this application is available on
-[GitHub](https://github.com/questionlp/api.wwdt.me_v2).
+[Codeber](https://codeberg.org/qlp/api.wwdt.me).
     """,
     "contact_info": _contact_info,
     "license_info": {

@@ -1,6 +1,6 @@
 # Changes
 
-## 2.22.0-beta (Pre-Release)
+## 2.22.0
 
 ### Application Changes
 
@@ -9,6 +9,7 @@
 - Added `database` field to the `Version` model and to the output of the `/version` endpoint
 - Added `variance` field to the `ScoringStatistics` and `DecimalScoringStatistics` model that includes the statistical variance for a given panelist
 - Added `number_decimal_places` to the `settings` section of `config.json` with a default value of 6 (an increase from 5)
+- Changed Git repository in application metadata to point to Codeberg instead of GitHub
 - Replaced Google Fonts with Bunny Fonts as the web font provider for the required IBM Plex fonts
 
 ### Component Changes

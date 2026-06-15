@@ -1,5 +1,9 @@
 # Wait Wait Don't Tell Me! Stats API v2.0
 
+**Note:** The authoritative version of this repository now resides on Codeberg as [api.wwdt.me](https://codeberg.org/qlp/api.wwdt.me) and mirrors changes to GitHub. Going forward, issues and pull requests should be created on Codeberg rather than GitHub.
+
+Please note that repository on Codeberg is named `api.wwdt.me` while the repository on GitHub is named `api.wwdt.me_v2`. The deprecated Stats API v1 repository is named `api.wwdt.me_v1` on Codeberg.
+
 ## Overview
 
 The Stats API is written in Python and is built on [FastAPI](https://fastapi.tiangolo.com/) and provides endpoints that can be used to query guest, host, location, panelist, scorekeeper, and show data from a copy of the [Wait Wait Don't Tell Me! Stats database](https://github.com/questionlp/wwdtm_database).
