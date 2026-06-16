@@ -1,5 +1,16 @@
 # Changes
 
+## 2.22.0-post.0 (Non-Release)
+
+### Component Changes
+
+- Pinned wwdtm to version 3.2.0
+
+### Development Changes
+
+- Upgraded Ruff from 0.14.14 to 0.15.6
+  - Version 0.15.6 was chosen as it was released before Astral announced that they had joined OpenAI
+
 ## 2.22.0
 
 ### Application Changes
