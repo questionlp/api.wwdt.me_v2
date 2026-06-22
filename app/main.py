@@ -68,8 +68,9 @@ async def default_page(request: Request):
     umami_analytics = format_umami_analytics(umami_analytics=umami)
 
     return templates.TemplateResponse(
-        "index.html",
-        {
+        request=request,
+        name="index.html",
+        context={
             "request": request,
             "stats_url": stats_url,
             "patreon_url": patreon_url,
