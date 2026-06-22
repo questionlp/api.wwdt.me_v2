@@ -1,5 +1,15 @@
 # Changes
 
+## 2.22.1
+
+### Application Changes
+
+- Fixed `template.TemplateResponse()` call for the default page route due to a change in Starlette v1.0+
+
+### Component Changes
+
+- Replaced httpx 0.28.1 with httpx2 2.4.0
+
 ## 2.22.0-post.0 (Non-Release)
 
 ### Component Changes
