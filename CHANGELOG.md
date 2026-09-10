@@ -1,5 +1,13 @@
 # Changes
 
+## 2.22.2
+
+### Component Changes
+
+- Upgraded httpx2 from 2.4.0 to 2.12.0
+- Upgraded pydantic from 2.13.4 to 2.13.5
+- Upgraded requests from 2.33.1 to 2.34.2
+
 ## 2.22.1
 
 ### Application Changes
