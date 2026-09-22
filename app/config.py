@@ -10,14 +10,17 @@ import json
 from pathlib import Path
 from typing import Any
 
+from .utility import time_zone_parser
+
 API_VERSION = "2.0"
-APP_VERSION = "2.22.2"
+APP_VERSION = "2.23.0"
 
 
 def load_config(
     config_file_path: str = "config.json",
     connection_pool_size: int = 10,
     connection_pool_name: str = "wwdtm_api",
+    app_time_zone: str = "UTC",
 ) -> dict[str, Any]:
     """Reads application and database settings from JSON file.
 
@@ -73,6 +76,13 @@ def load_config(
 
             if "use_pool" in database_config:
                 del database_config["use_pool"]
+
+        # Process time zone configuration settings
+        time_zone = settings_config.get("time_zone", app_time_zone)
+        time_zone_object, time_zone_string = time_zone_parser(time_zone)
+        settings_config["app_time_zone"] = time_zone_object
+        settings_config["time_zone"] = time_zone_string
+        database_config["time_zone"] = time_zone_string
 
         return {"database": database_config, "settings": settings_config}
     else:

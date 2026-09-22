@@ -7,6 +7,7 @@
 
 from pathlib import Path
 
+import pytz
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -26,7 +27,7 @@ from app.routers import (
     version,
 )
 
-from .utility import format_umami_analytics
+from .utility import current_year, format_umami_analytics
 
 app = FastAPI(
     title=app_metadata["title"],
@@ -56,10 +57,17 @@ async def default_page(request: Request):
     """Route: Landing Page."""
     if "settings" in config and config["settings"]:
         settings = config["settings"]
-        stats_url: str | None = settings.get("stats_url", None)
-        patreon_url: str | None = settings.get("patreon_url", None)
-        github_sponsor_url: str | None = settings.get("github_sponsor_url", None)
+        time_zone: pytz.timezone = settings.get("app_time_zone")
+        stats_url: str | None = settings.get("stats_url")
+        patreon_url: str | None = settings.get("patreon_url")
+        github_sponsor_url: str | None = settings.get("github_sponsor_url")
+        mastodon_url: str | None = settings.get("mastodon_url")
+        mastodon_user: str | None = settings.get("mastodon_user")
+        bluesky_url: str | None = settings.get("bluesky_url")
+        bluesky_user: str | None = settings.get("bluesky_user")
+
     else:
+        time_zone: pytz.timezone = settings.get("app_time_zone")
         stats_url = None
         patreon_url = None
         github_sponsor_url = None
@@ -75,6 +83,11 @@ async def default_page(request: Request):
             "stats_url": stats_url,
             "patreon_url": patreon_url,
             "github_sponsor_url": github_sponsor_url,
+            "mastodon_url": mastodon_url,
+            "mastodon_user": mastodon_user,
+            "bluesky_url": bluesky_url,
+            "bluesky_user": bluesky_user,
+            "current_year": current_year(time_zone=time_zone),
             "umami_analytics": umami_analytics,
         },
     )
