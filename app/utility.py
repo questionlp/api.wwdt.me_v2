@@ -5,6 +5,18 @@
 # vim: set noai syntax=python ts=4 sw=4:
 """Utility functions used by api.wwdt.me."""
 
+from datetime import datetime
+
+import pytz
+
+_utc_timezone = pytz.timezone("UTC")
+
+
+def current_year(time_zone: pytz.timezone = _utc_timezone):
+    """Return the current year."""
+    now = datetime.now(time_zone)
+    return now.strftime("%Y")
+
 
 def format_umami_analytics(umami_analytics: dict = None) -> str:
     """Return formatted string for Umami Analytics."""
@@ -31,3 +43,19 @@ def format_umami_analytics(umami_analytics: dict = None) -> str:
         return f'<script defer src="{url}" data-website-id="{website_id}" {props.strip()}></script>'
 
     return None
+
+
+def time_zone_parser(time_zone: str) -> pytz.timezone:
+    """Parses a time zone name into a pytz.timezone object.
+
+    Returns pytz.timezone object and string if time_zone is valid.
+    Otherwise, returns UTC if time zone is not a valid tz value.
+    """
+    try:
+        time_zone_object = pytz.timezone(time_zone)
+        time_zone_string = time_zone_object.zone
+    except (pytz.UnknownTimeZoneError, AttributeError, ValueError):
+        time_zone_object = pytz.timezone("UTC")
+        time_zone_string = time_zone_object.zone
+
+    return time_zone_object, time_zone_string

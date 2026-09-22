@@ -13,13 +13,17 @@
         "compress": false,
         "charset": "utf8mb4",
         "collation": "utf8mb4_unicode_ci",
-        "time_zone": "America/Los_Angeles"
     },
     "settings": {
+        "time_zone": "America/Los_Angeles",
         "stats_url": "https://stats.wwdt.me/",
         "contact_email": "",
         "contact_name": "",
         "contact_url": "",
+        "mastodon_url": "",
+        "mastodon_user": "",
+        "bluesky_url": "",
+        "bluesky_user": "",
         "patreon_url": "",
         "github_sponsor_url": "",
         "umami_analytics": {

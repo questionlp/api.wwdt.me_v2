@@ -1,5 +1,22 @@
 # Changes
 
+## 2.23.0
+
+### Application Changes
+
+- Added new configuration keys to the `settings` section of the configuration file and the required code to handle the keys. All of the following keys are optional and default to `None`
+  - `bluesky_url`
+  - `bluesky_user`
+  - `mastodon_url`
+  - `mastodon_user`
+- Moved the `time_zone` configuration key from the `database` to the `settings` section to match the configuration structure used in other Wait Wait Stats Project applications
+- Added page footer section containing copyright, disclaimer and AI policy to the default page
+- Added utility functions that handle time zone parsing and returning the current year as a string
+
+### Development Changes
+
+- Added missing tests for main routes
+
 ## 2.22.2
 
 ### Component Changes
