@@ -13,7 +13,7 @@ from typing import Any
 from .utility import time_zone_parser
 
 API_VERSION = "2.0"
-APP_VERSION = "2.24.0-beta"
+APP_VERSION = "2.24.0"
 
 
 def load_config(
