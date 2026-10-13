@@ -30,7 +30,7 @@ def load_config(
         creating a connection pool
     :type connection_pool_size: int, optional
     :return: Dictionary containing database configuration settings
-    :rtype: Dict[str, Any]
+    :rtype: dict[str, Any]
     """
     _config_file_path = Path(config_file_path)
     with _config_file_path.open(mode="r", encoding="utf-8") as config_file:
