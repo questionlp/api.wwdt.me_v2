@@ -1,6 +1,6 @@
 # Changes
 
-## 2.24.0-beta
+## 2.24.0
 
 ### Application Changes
 
