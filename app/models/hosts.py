@@ -9,6 +9,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 
+from app.models.social_media import SocialMediaNetworkAccount
+
 
 class Host(BaseModel):
     """Host Information."""
@@ -18,6 +20,9 @@ class Host(BaseModel):
     slug: str | None = Field(default=None, title="Host Slug String")
     gender: str | None = Field(default=None, title="Host Gender")
     pronouns: list[str] | None = Field(default=None, title="Host Preferred Pronouns")
+    social_media_accounts: list[SocialMediaNetworkAccount] | None = Field(
+        default=None, title="Host Social Media Network Accounts"
+    )
 
 
 class Hosts(BaseModel):

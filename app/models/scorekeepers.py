@@ -9,6 +9,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 
+from app.models.social_media import SocialMediaNetworkAccount
+
 
 class Scorekeeper(BaseModel):
     """Scorekeeper Information."""
@@ -19,6 +21,9 @@ class Scorekeeper(BaseModel):
     gender: str | None = Field(default=None, title="Scorekeeper Gender")
     pronouns: list[str] | None = Field(
         default=None, title="Scorekeeper Preferred Pronouns"
+    )
+    social_media_accounts: list[SocialMediaNetworkAccount] | None = Field(
+        default=None, title="Scorekeeper Social Media Network Accounts"
     )
 
 

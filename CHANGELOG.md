@@ -1,5 +1,36 @@
 # Changes
 
+## 2.24.0-beta
+
+### Application Changes
+
+**Note:** The minimum version of the Wait Wait Stats Database is now 4.8.0
+
+- Added new `SocialMediaNetwork`, `SocialMediaNetworks` and `SocialMediaNetworkAccount` models that are used for the new social media network endpoints and `social_media_accounts` fields for hosts, panelists and scorekeepers
+- Added new `/social-media-networks` router that includes the following endpoints
+  - `/`: Used to retrieve available social media networks
+  - `/id/{social_media_network_id}`: Used to retrieve information for a given social media network ID
+  - `/slug/{social_media_network_slug}`: Used to retrieve information for a given social media network slug string
+- Added a new `social_media_accounts` field to the base information and detailed information models for hosts, panelists and scorekeepers
+  - If no social media accounts are available for a host, panelist or scoreekeeper, an empty JSON array is returned
+
+### Component Changes
+
+- Upgraded fastapi from 0.136.3 to 0.143.0
+- Upgraded gunicorn from 24.1.1 to 26.2.0
+- Upgraded httpx2 from 2.12.0 to 2.13.1
+- Upgraded pydantic from 2.13.5 to 2.14.1
+- Upgraded uvicorn from 0.48.0 to 0.54.0
+- Upgraded wwdtm from 3.2.0 to 3.3.0
+
+### Development Changes
+
+- Upgraded pydoclint from 0.8.4 to 0.11.0
+- Upgraded pytest from 9.0.3 to 9.1.1
+- Upgraded pytest-cov from 7.0.0 to 7.1.0
+- Upgraded ruff from 0.15.6 to 0.17.0
+  - Minimum version of ruff in `pyproject.toml` has been increased to 0.17.0 to match
+
 ## 2.23.0
 
 ### Application Changes

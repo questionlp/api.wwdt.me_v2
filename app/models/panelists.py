@@ -11,6 +11,8 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field, RootModel
 
+from app.models.social_media import SocialMediaNetworkAccount
+
 
 class Panelist(BaseModel):
     """Panelist Information."""
@@ -21,6 +23,9 @@ class Panelist(BaseModel):
     gender: str | None = Field(default=None, title="Panelist Gender")
     pronouns: list[str] | None = Field(
         default=None, title="Panelist Preferred Pronouns"
+    )
+    social_media_accounts: list[SocialMediaNetworkAccount] | None = Field(
+        default=None, title="Panelist Social Media Network Accounts"
     )
 
 

@@ -73,7 +73,7 @@ tags_metadata = [
     },
     {
         "name": "Pronouns",
-        "description": "Retrieve information, statistics and appearances for Pronouns",
+        "description": "Retrieve information for Pronouns",
     },
     {
         "name": "Scorekeepers",
@@ -82,6 +82,10 @@ tags_metadata = [
     {
         "name": "Shows",
         "description": "Retrieve information and details for Shows",
+    },
+    {
+        "name": "SocialMediaNetworks",
+        "description": "Retrieve information for Social Media Networks",
     },
     {
         "name": "Version",
