@@ -24,6 +24,7 @@ from app.routers import (
     pronouns,
     scorekeepers,
     shows,
+    social_media_networks,
     version,
 )
 
@@ -42,6 +43,7 @@ app = FastAPI(
     swagger_ui_parameters={
         "deepLinking": False,
         "defaultModelsExpandDepth": 0,
+        "docExpansion": "none",
         "syntaxHighlight.theme": "arta",
     },
 )
@@ -167,4 +169,5 @@ app.include_router(panelists.router)
 app.include_router(pronouns.router)
 app.include_router(scorekeepers.router)
 app.include_router(shows.router)
+app.include_router(social_media_networks.router)
 app.include_router(version.router)
